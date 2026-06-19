@@ -13,7 +13,11 @@ use App\Http\Controllers\Ceo\LetterApprovalController;
 use App\Http\Controllers\Ceo\ReadonlyController;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        $role = auth()->user()->role;
+        return redirect($role === 'admin' ? '/admin/dashboard' : '/ceo/dashboard');
+    }
+    return redirect()->route('login');
 });
 
 Route::middleware('auth')->group(function () {

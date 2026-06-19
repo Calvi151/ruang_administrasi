@@ -9,20 +9,20 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalIncoming = \App\Models\IncomingLetter::count();
-        $totalOutgoing = \App\Models\OutgoingLetter::count();
+        $totalIncoming   = \App\Models\IncomingLetter::count();
+        $totalOutgoing   = \App\Models\OutgoingLetter::count();
         $outgoingPending = \App\Models\OutgoingLetter::where('status', 'pending')->count();
-        $outgoingAcc = \App\Models\OutgoingLetter::where('status', 'acc')->count();
-        $outgoingReject = \App\Models\OutgoingLetter::where('status', 'reject')->count();
+        $outgoingAcc     = \App\Models\OutgoingLetter::where('status', 'acc')->count();
+        $outgoingReject  = \App\Models\OutgoingLetter::where('status', 'reject')->count();
+        $totalEmployees  = \App\Models\Employee::count();
+        $recentOutgoing  = \App\Models\OutgoingLetter::latest()->take(5)->get();
+        $recentIncoming  = \App\Models\IncomingLetter::latest()->take(5)->get();
 
-        return response()->json([
-            'total_incoming' => $totalIncoming,
-            'total_outgoing' => $totalOutgoing,
-            'outgoing_by_status' => [
-                'pending' => $outgoingPending,
-                'acc' => $outgoingAcc,
-                'reject' => $outgoingReject
-            ]
-        ]);
+        return view('admin.dashboard', compact(
+            'totalIncoming', 'totalOutgoing',
+            'outgoingPending', 'outgoingAcc', 'outgoingReject',
+            'totalEmployees', 'recentOutgoing', 'recentIncoming'
+        ));
     }
 }
+
