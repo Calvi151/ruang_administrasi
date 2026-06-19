@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\IncomingLetterController;
 use App\Http\Controllers\Admin\OutgoingLetterController;
 use App\Http\Controllers\Admin\LetterTypeController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Ceo\DashboardController as CeoDashboardController;
 use App\Http\Controllers\Ceo\LetterApprovalController;
 use App\Http\Controllers\Ceo\ReadonlyController;
@@ -24,6 +25,7 @@ Route::middleware('auth')->group(function () {
         Route::apiResource('/outgoing-letters', OutgoingLetterController::class);
         Route::apiResource('/letter-types', LetterTypeController::class);
         Route::apiResource('/employees', EmployeeController::class);
+        Route::apiResource('/users', UserController::class);
     });
 
     // CEO Routes
