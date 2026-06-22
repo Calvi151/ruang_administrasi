@@ -31,7 +31,6 @@ Route::middleware('auth')->group(function () {
         Route::apiResource('/employees', EmployeeController::class);
         Route::apiResource('/users', UserController::class);
     });
-
     // CEO Routes
     Route::middleware('role.ceo')->prefix('ceo')->group(function () {
         Route::get('/dashboard', [CeoDashboardController::class, 'index'])->name('ceo.dashboard');
