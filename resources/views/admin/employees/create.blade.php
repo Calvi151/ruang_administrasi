@@ -1,108 +1,121 @@
-@extends('layouts.admin')
+@extends('admin.layouts.app')
 
-@section('admin_content')
-<div class="mb-4">
-    <a href="{{ route('employees.index') }}" class="btn btn-sm btn-outline-secondary border-0 mb-3">
-        <i class="fa-solid fa-arrow-left me-2"></i>Kembali ke Daftar
-    </a>
-    <h1 class="h3 mb-0 text-gray-800" style="font-weight: 700;">Tambah Karyawan Baru</h1>
+@section('title','Tambah Karyawan')
+@section('page-title','Tambah Karyawan Baru')
+@section('page-subtitle','Isi informasi pribadi dan akses login karyawan')
+
+@section('styles')
+<style>
+    .back-link{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--on-surface-v);text-decoration:none;margin-bottom:20px;transition:color 0.2s}
+    .back-link:hover{color:var(--primary)}
+    .back-link svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+    .section-label{font-size:11px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .section-label svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+    .field{margin-bottom:18px}
+    .field-hint{font-size:11px;color:var(--outline);margin-top:4px}
+    .field-error{font-size:11px;color:var(--error);margin-top:4px;font-weight:600}
+    .divider{border:none;border-top:1px solid var(--outline-v);margin:24px 0}
+    .form-actions{display:flex;justify-content:flex-end;gap:10px}
+    .btn-reset{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 20px;border:1.5px solid var(--outline-v);border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:var(--white);color:var(--on-surface-v);transition:all 0.2s;text-decoration:none}
+    .btn-reset:hover{border-color:var(--outline);color:var(--on-surface)}
+</style>
+@endsection
+
+@section('content')
+<a href="{{ route('employees.index') }}" class="back-link">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Kembali ke Daftar Karyawan
+</a>
+
+@if($errors->any())
+<div style="background:#fff5f5;border:1px solid #fecaca;border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--error);font-weight:500">
+    <strong>Terjadi kesalahan:</strong>
+    <ul style="margin:4px 0 0 20px;padding:0">
+        @foreach($errors->all() as $err)
+        <li>{{ $err }}</li>
+        @endforeach
+    </ul>
 </div>
+@endif
 
-<div class="card shadow-sm border-0">
-    <div class="card-header bg-white py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Form Informasi & Akun Karyawan</h6>
-    </div>
-    <div class="card-body p-4">
-        <form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            <div class="row">
-                <!-- Kolom Kiri: Informasi Pribadi -->
-                <div class="col-md-6 border-end pe-md-4">
-                    <h5 class="mb-3 text-muted" style="font-size: 0.95rem; font-weight: 600; text-transform: uppercase;">
-                        <i class="fa-solid fa-address-card me-2 text-primary"></i>Informasi Pribadi
-                    </h5>
-
-                    <div class="mb-3">
-                        <label for="name" class="form-label" style="font-weight: 500;">Nama Lengkap <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Masukkan nama lengkap" required>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label" style="font-weight: 500;">Email Karyawan <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="contoh@domain.com" required>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="number" class="form-label" style="font-weight: 500;">Nomor Telepon</label>
-                        <input type="text" class="form-control @error('number') is-invalid @enderror" id="number" name="number" value="{{ old('number') }}" placeholder="08xxxxxxxxxx">
-                        @error('number')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="photo" class="form-label" style="font-weight: 500;">Foto Profil</label>
-                        <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo" accept="image/*">
-                        <div class="form-text text-muted">Format yang didukung: JPG, JPEG, PNG. Ukuran maks 2MB.</div>
-                        @error('photo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+<form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="card">
+        <div class="form-grid">
+            {{-- Kolom Kiri: Informasi Pribadi --}}
+            <div>
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Informasi Pribadi
                 </div>
 
-                <!-- Kolom Kanan: Akses Sistem (User Auth) -->
-                <div class="col-md-6 ps-md-4">
-                    <h5 class="mb-3 text-muted" style="font-size: 0.95rem; font-weight: 600; text-transform: uppercase;">
-                        <i class="fa-solid fa-lock me-2 text-primary"></i>Akses Login Karyawan
-                    </h5>
+                <div class="field">
+                    <label class="form-label" for="name">Nama Lengkap <span style="color:var(--error)">*</span></label>
+                    <input type="text" class="form-input" id="name" name="name" value="{{ old('name') }}" placeholder="Masukkan nama lengkap" required>
+                    @error('name')<div class="field-error">{{ $message }}</div>@enderror
+                </div>
 
-                    <div class="mb-3">
-                        <label for="nip" class="form-label" style="font-weight: 500;">NIP (Nomor Induk Pegawai) <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('nip') is-invalid @enderror" id="nip" name="nip" value="{{ old('nip') }}" placeholder="Masukkan NIP resmi" required>
-                        <div class="form-text text-muted">Akan digunakan sebagai username saat masuk ke aplikasi.</div>
-                        @error('nip')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div class="field">
+                    <label class="form-label" for="email">Email <span style="color:var(--error)">*</span></label>
+                    <input type="email" class="form-input" id="email" name="email" value="{{ old('email') }}" placeholder="contoh@domain.com" required>
+                    @error('email')<div class="field-error">{{ $message }}</div>@enderror
+                </div>
 
-                    <div class="mb-3">
-                        <label for="role" class="form-label" style="font-weight: 500;">Peran Akses <span class="text-danger">*</span></label>
-                        <select class="form-select @error('role') is-invalid @enderror" id="role" name="role" required>
-                            <option value="" disabled selected>-- Pilih Peran --</option>
-                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin (Staff Administrasi)</option>
-                            <option value="ceo" {{ old('role') === 'ceo' ? 'selected' : '' }}>CEO (Kepala Sekolah/Pimpinan)</option>
-                        </select>
-                        @error('role')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div class="field">
+                    <label class="form-label" for="number">Nomor Telepon</label>
+                    <input type="text" class="form-input" id="number" name="number" value="{{ old('number') }}" placeholder="08xxxxxxxxxx">
+                    @error('number')<div class="field-error">{{ $message }}</div>@enderror
+                </div>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label" style="font-weight: 500;">Kata Sandi (Password) <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Minimal 6 karakter" required>
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div class="field">
+                    <label class="form-label" for="photo">Foto Profil</label>
+                    <input type="file" class="form-input" id="photo" name="photo" accept="image/*" style="padding:8px 14px;height:auto">
+                    <div class="field-hint">Format: JPG, JPEG, PNG. Maks 2MB.</div>
+                    @error('photo')<div class="field-error">{{ $message }}</div>@enderror
                 </div>
             </div>
 
-            <hr class="my-4 text-muted">
+            {{-- Kolom Kanan: Akses Login --}}
+            <div>
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Akses Login Karyawan
+                </div>
 
-            <div class="d-flex justify-content-end gap-2">
-                <button type="reset" class="btn btn-light px-4 py-2" style="border-radius: 8px;">Reset</button>
-                <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 8px;">
-                    <i class="fa-solid fa-floppy-disk me-2"></i>Simpan Karyawan
-                </button>
+                <div class="field">
+                    <label class="form-label" for="nip">NIP (Nomor Induk Pegawai) <span style="color:var(--error)">*</span></label>
+                    <input type="text" class="form-input" id="nip" name="nip" value="{{ old('nip') }}" placeholder="Masukkan NIP resmi" required>
+                    <div class="field-hint">Digunakan sebagai username saat login.</div>
+                    @error('nip')<div class="field-error">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="field">
+                    <label class="form-label" for="role">Peran Akses <span style="color:var(--error)">*</span></label>
+                    <select class="form-select" id="role" name="role" required>
+                        <option value="" disabled selected>-- Pilih Peran --</option>
+                        <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin (Staff Administrasi)</option>
+                        <option value="ceo" {{ old('role') === 'ceo' ? 'selected' : '' }}>CEO (Kepala Sekolah / Pimpinan)</option>
+                    </select>
+                    @error('role')<div class="field-error">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="field">
+                    <label class="form-label" for="password">Password <span style="color:var(--error)">*</span></label>
+                    <input type="password" class="form-input" id="password" name="password" placeholder="Minimal 6 karakter" required>
+                    @error('password')<div class="field-error">{{ $message }}</div>@enderror
+                </div>
             </div>
-        </form>
+        </div>
+
+        <hr class="divider">
+        <div class="form-actions">
+            <a href="{{ route('employees.index') }}" class="btn-reset">Batal</a>
+            <button type="submit" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Simpan Karyawan
+            </button>
+        </div>
     </div>
-</div>
+</form>
 @endsection
