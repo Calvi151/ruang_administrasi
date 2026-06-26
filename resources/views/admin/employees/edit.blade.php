@@ -1,121 +1,150 @@
 @extends('admin.layouts.app')
 
-@section('title','Edit Karyawan')
-@section('page-title','Edit Karyawan')
-@section('page-subtitle','Ubah informasi karyawan: {{ $employee->name }}')
-
-@section('styles')
-<style>
-    .back-link{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--on-surface-v);text-decoration:none;margin-bottom:20px;transition:color 0.2s}
-    .back-link:hover{color:var(--primary)}
-    .back-link svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-    .section-label{font-size:11px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-    .section-label svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
-    .field{margin-bottom:18px}
-    .field-hint{font-size:11px;color:var(--outline);margin-top:4px}
-    .field-error{font-size:11px;color:var(--error);margin-top:4px;font-weight:600}
-    .divider{border:none;border-top:1px solid var(--outline-v);margin:24px 0}
-    .form-actions{display:flex;justify-content:flex-end;gap:10px}
-    .btn-cancel{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 20px;border:1.5px solid var(--outline-v);border-radius:9999px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:var(--white);color:var(--on-surface-v);transition:all 0.2s;text-decoration:none}
-    .btn-cancel:hover{border-color:var(--outline);color:var(--on-surface)}
-    .avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--tertiary));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden}
-    .avatar-lg img{width:100%;height:100%;object-fit:cover}
-    .field-disabled{width:100%;height:42px;padding:0 14px;border:1.5px solid var(--outline-v);border-radius:10px;background:var(--surface-cnt);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--outline);display:flex;align-items:center}
-</style>
-@endsection
+@section('title', 'Edit Karyawan - Ruang Administrasi')
+@section('page-title', 'Edit Karyawan')
+@section('page-subtitle', 'Perbarui detail profil dan akses sistem karyawan')
 
 @section('content')
-<a href="{{ route('employees.index') }}" class="back-link">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    Kembali ke Daftar Karyawan
-</a>
-
-@if($errors->any())
-<div style="background:#fff5f5;border:1px solid #fecaca;border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--error);font-weight:500">
-    <strong>Terjadi kesalahan:</strong>
-    <ul style="margin:4px 0 0 20px;padding:0">
-        @foreach($errors->all() as $err)
-        <li>{{ $err }}</li>
-        @endforeach
-    </ul>
+<!-- Back Button -->
+<div class="mb-4">
+    <a href="{{ route('employees.index') }}" class="inline-flex items-center gap-4 text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md">
+        <span class="material-symbols-outlined text-[14px]">arrow_back</span>
+        Kembali ke Daftar Karyawan
+    </a>
 </div>
-@endif
 
-<form action="{{ route('employees.update', $employee->id) }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
-    <div class="card">
-        <div class="form-grid">
-            {{-- Kolom Kiri: Informasi Pribadi --}}
-            <div>
-                <div class="section-label">
-                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    Informasi Karyawan
+<!-- Form Card -->
+<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 max-w-4xl mx-auto">
+    
+    <div class="flex items-center gap-4 mb-5 pb-8 border-b border-border-muted">
+        @if($employee->photo)
+            <img src="{{ asset('storage/' . $employee->photo) }}" alt="Current Profile" class="w-24 h-24 rounded-full object-cover shadow-md border-4 border-surface-container-lowest">
+        @else
+            <div class="w-24 h-24 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-3xl shadow-md border-4 border-surface-container-lowest">
+                {{ strtoupper(substr($employee->name, 0, 2)) }}
+            </div>
+        @endif
+        <div>
+            <h3 class="font-headline-md text-headline-md text-on-background font-bold">{{ $employee->name }}</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-1">{{ $employee->nip }} &bull; {{ ucfirst($employee->user ? $employee->user->role : 'karyawan') }}</p>
+        </div>
+    </div>
+
+    <form action="{{ route('employees.update', $employee->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
+        @csrf
+        @method('PUT')
+
+        @if ($errors->any())
+        <div class="bg-error-container text-on-error-container p-4 rounded-3xl font-body-md text-body-md border border-error-container/50">
+            <div class="flex items-center gap-4 mb-2 font-bold">
+                <span class="material-symbols-outlined">error</span>
+                Terdapat kesalahan pada input Anda:
+            </div>
+            <ul class="list-disc pl-8 space-y-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Left Column -->
+            <div class="flex flex-col gap-4">
+                <!-- Name -->
+                <div class="flex flex-col gap-4">
+                    <label for="name" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Nama Lengkap <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">person</span>
+                        <input type="text" name="name" id="name" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md" value="{{ old('name', $employee->name) }}" required>
+                    </div>
                 </div>
 
-                <div class="field">
-                    <label class="form-label" for="name">Nama Lengkap <span style="color:var(--error)">*</span></label>
-                    <input type="text" class="form-input" id="name" name="name" value="{{ old('name', $employee->name) }}" required>
-                    @error('name')<div class="field-error">{{ $message }}</div>@enderror
+                <!-- Email -->
+                <div class="flex flex-col gap-4">
+                    <label for="email" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Alamat Email <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">mail</span>
+                        <input type="email" name="email" id="email" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md" value="{{ old('email', $employee->email) }}" required>
+                    </div>
                 </div>
 
-                <div class="field">
-                    <label class="form-label" for="email">Email <span style="color:var(--error)">*</span></label>
-                    <input type="email" class="form-input" id="email" name="email" value="{{ old('email', $employee->email) }}" required>
-                    @error('email')<div class="field-error">{{ $message }}</div>@enderror
+                <!-- Password -->
+                <div class="flex flex-col gap-4">
+                    <label for="password" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Password (Kosongkan jika tidak diubah)</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">lock</span>
+                        <input type="password" name="password" id="password" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md" placeholder="Ketik password baru">
+                    </div>
                 </div>
 
-                <div class="field">
-                    <label class="form-label" for="number">Nomor Telepon</label>
-                    <input type="text" class="form-input" id="number" name="number" value="{{ old('number', $employee->number) }}" placeholder="08xxxxxxxxxx">
-                    @error('number')<div class="field-error">{{ $message }}</div>@enderror
+                <!-- NIP -->
+                <div class="flex flex-col gap-4">
+                    <label for="nip" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">NIP <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">badge</span>
+                        <input type="text" name="nip" id="nip" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md" value="{{ old('nip', $employee->nip) }}" required>
+                    </div>
                 </div>
             </div>
 
-            {{-- Kolom Kanan: Foto & NIP --}}
-            <div>
-                <div class="section-label">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6 21v-1a6 6 0 0 1 12 0v1"/></svg>
-                    Foto Profil & NIP
-                </div>
-
-                <div class="field">
-                    <label class="form-label">NIP Pegawai</label>
-                    <div class="field-disabled">{{ $employee->nip }}</div>
-                    <div class="field-hint">NIP tidak dapat diubah (ID sistem utama).</div>
-                </div>
-
-                <div class="field">
-                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px">
-                        <div class="avatar-lg">
-                            @if($employee->photo)
-                                <img src="{{ asset('storage/' . $employee->photo) }}" alt="{{ $employee->name }}">
-                            @else
-                                {{ strtoupper(substr($employee->name, 0, 2)) }}
-                            @endif
-                        </div>
-                        <div>
-                            <div style="font-weight:700;font-size:14px">{{ $employee->name }}</div>
-                            <div style="font-size:12px;color:var(--on-surface-v)">Foto profil saat ini</div>
-                        </div>
+            <!-- Right Column -->
+            <div class="flex flex-col gap-4">
+                <!-- Role -->
+                <div class="flex flex-col gap-4">
+                    <label for="role" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Hak Akses Sistem <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">admin_panel_settings</span>
+                        <select name="role" id="role" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md appearance-none" required>
+                            <option value="karyawan" {{ old('role', ($employee->user ? $employee->user->role : '')) == 'karyawan' ? 'selected' : '' }}>Karyawan (Standard)</option>
+                            <option value="ceo" {{ old('role', ($employee->user ? $employee->user->role : '')) == 'ceo' ? 'selected' : '' }}>Admin / CEO (Full Access)</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
                     </div>
-                    <label class="form-label" for="photo">Unggah Foto Baru</label>
-                    <input type="file" class="form-input" id="photo" name="photo" accept="image/*" style="padding:8px 14px;height:auto">
-                    <div class="field-hint">Biarkan kosong jika tidak ingin mengubah foto (JPG, PNG, maks 2MB).</div>
-                    @error('photo')<div class="field-error">{{ $message }}</div>@enderror
+                </div>
+
+                <!-- Contact Number -->
+                <div class="flex flex-col gap-4">
+                    <label for="number" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Nomor Telepon</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">phone</span>
+                        <input type="text" name="number" id="number" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md" value="{{ old('number', $employee->number) }}">
+                    </div>
+                </div>
+
+                <!-- Photo -->
+                <div class="flex flex-col gap-4">
+                    <label for="photo" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Ubah Foto Profil</label>
+                    <div class="border-2 border-dashed border-outline-variant bg-slate-50/50 hover:bg-slate-50 rounded-2xl p-10 flex flex-col items-center justify-center gap-3 transition-colors cursor-pointer group relative">
+                        <span class="material-symbols-outlined text-[40px] text-outline group-hover:text-primary mb-2">add_photo_alternate</span>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant">Klik atau drag foto baru ke sini</p>
+                        <p class="text-[10px] text-outline mt-1">Biarkan kosong jika tidak ingin mengubah</p>
+                        <input type="file" name="photo" id="photo" class="w-full h-full absolute inset-0 opacity-0 cursor-pointer">
+                    </div>
                 </div>
             </div>
         </div>
 
-        <hr class="divider">
-        <div class="form-actions">
-            <a href="{{ route('employees.index') }}" class="btn-cancel">Batal</a>
-            <button type="submit" class="btn btn-primary">
-                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <div class="mt-10 pt-6 border-t border-muted flex flex-col-reverse md:flex-row justify-end items-center gap-4">
+            <a href="{{ route('employees.index') }}" class="w-full md:w-auto px-6 py-3 rounded-full font-label-md text-label-md text-slate-600 hover:bg-slate-100 transition-colors">
+                Batal
+            </a>
+            <button type="submit" class="w-full md:w-auto px-8 py-3 rounded-full font-label-md text-label-md text-white bg-gradient-to-r from-primary to-primary-container shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[14px]">save</span>
                 Simpan Perubahan
             </button>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+

@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         
         Route::resource('/incoming-letters', IncomingLetterController::class);
+        Route::get('/outgoing-letters/{outgoingLetter}/export-pdf', [OutgoingLetterController::class, 'exportPdf'])->name('outgoing-letters.export-pdf');
+        Route::get('/outgoing-letters/{outgoingLetter}/export-word', [OutgoingLetterController::class, 'exportWord'])->name('outgoing-letters.export-word');
         Route::resource('/outgoing-letters', OutgoingLetterController::class);
         Route::resource('/letter-types', LetterTypeController::class);
         Route::resource('/employees', EmployeeController::class);

@@ -9,7 +9,7 @@
 </div>
 
 <div class="card shadow-sm border-0">
-    <div class="card-header bg-white py-3">
+    <div class="card-header bg-white py-1">
         <h6 class="m-0 font-weight-bold text-primary">Detail Informasi Akun</h6>
     </div>
     <div class="card-body p-4">
@@ -29,27 +29,27 @@
                 
                 <div class="row g-3">
                     <div class="col-sm-6">
-                        <div class="p-3 bg-light rounded" style="border-left: 4px solid #3b82f6;">
+                        <div class="p-4 bg-light rounded" style="border-left: 4px solid #3b82f6;">
                             <small class="text-muted d-block uppercase mb-1" style="font-size: 0.75rem; font-weight: 600;">Email Resmi</small>
                             <strong>{{ $employee->email }}</strong>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="p-3 bg-light rounded" style="border-left: 4px solid #3b82f6;">
+                        <div class="p-4 bg-light rounded" style="border-left: 4px solid #3b82f6;">
                             <small class="text-muted d-block uppercase mb-1" style="font-size: 0.75rem; font-weight: 600;">Nomor Handphone</small>
                             <strong>{{ $employee->number ?? 'Tidak tersedia' }}</strong>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="p-3 bg-light rounded" style="border-left: 4px solid #f59e0b;">
+                        <div class="p-4 bg-light rounded" style="border-left: 4px solid #f59e0b;">
                             <small class="text-muted d-block uppercase mb-1" style="font-size: 0.75rem; font-weight: 600;">Hak Akses Sistem</small>
-                            <span class="badge bg-dark px-3 py-1 rounded-pill mt-1">
+                            <span class="badge bg-dark px-2 py-1 rounded-pill mt-1">
                                 {{ strtoupper($employee->user->role ?? 'N/A') }}
                             </span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="p-3 bg-light rounded" style="border-left: 4px solid #10b981;">
+                        <div class="p-4 bg-light rounded" style="border-left: 4px solid #10b981;">
                             <small class="text-muted d-block uppercase mb-1" style="font-size: 0.75rem; font-weight: 600;">Tanggal Registrasi</small>
                             <strong>{{ $employee->created_at ? $employee->created_at->format('d M Y H:i') : '-' }}</strong>
                         </div>
@@ -58,11 +58,19 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-end gap-2">
-            <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary px-4 py-2" style="border-radius: 8px;">
+        <div class="d-flex justify-content-end gap-4">
+            <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary px-2 py-1" style="border-radius: 8px;">
                 <i class="fa-solid fa-pen-to-square me-2"></i>Edit Data
             </a>
         </div>
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+

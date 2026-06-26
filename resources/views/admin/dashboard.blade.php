@@ -1,143 +1,199 @@
 @extends('admin.layouts.app')
 
-@section('title','Dashboard')
-@section('page-title','Dashboard')
-@section('page-subtitle','Selamat datang kembali, {{ auth()->user()->nip }}')
-
-@section('styles')
-<style>
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px}
-    .stat-card{background:var(--white);border-radius:20px;padding:24px;position:relative;overflow:hidden;box-shadow:0 4px 20px var(--shadow);transition:transform 0.2s,box-shadow 0.2s}
-    .stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px var(--shadow)}
-    .stat-card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-    .stat-card-icon svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .stat-num{font-size:36px;font-weight:800;color:var(--on-surface);letter-spacing:-0.03em;line-height:1;margin-bottom:6px}
-    .stat-label{font-size:13px;font-weight:600;color:var(--on-surface-v)}
-    .stat-badge{position:absolute;top:20px;right:20px;font-size:11px;font-weight:700;letter-spacing:0.04em;padding:4px 10px;border-radius:9999px}
-    .stat-badge.blue{background:var(--primary-light);color:var(--primary-dark)}
-    .stat-badge.green{background:#dcfce7;color:#15803d}
-    .stat-badge.amber{background:#fef3c7;color:#b45309}
-    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .view-all{font-size:12px;font-weight:700;color:var(--primary);text-decoration:none;padding:5px 12px;border-radius:9999px;background:var(--primary-light);transition:opacity 0.2s}
-    .view-all:hover{opacity:0.8}
-    .card-title{font-size:15px;font-weight:800;color:var(--on-surface)}
-    .card-subtitle{font-size:12px;color:var(--on-surface-v);margin-top:2px}
-    .status-ring{display:flex;gap:12px;margin-bottom:24px}
-    .ring-item{flex:1;padding:14px 16px;border-radius:14px;text-align:center;border:1.5px solid transparent}
-    .ring-item.pending{background:#fef9ee;border-color:#fde68a}
-    .ring-item.acc{background:#f0fdf4;border-color:#bbf7d0}
-    .ring-item.reject{background:#fff1f2;border-color:#fecdd3}
-    .ring-num{font-size:28px;font-weight:800;letter-spacing:-0.02em}
-    .ring-label{font-size:11px;font-weight:600;margin-top:2px}
-    .ring-item.pending .ring-num{color:#b45309}.ring-item.pending .ring-label{color:#92400e}
-    .ring-item.acc .ring-num{color:#15803d}.ring-item.acc .ring-label{color:#166534}
-    .ring-item.reject .ring-num{color:#b91c1c}.ring-item.reject .ring-label{color:#991b1b}
-    .empty-state{text-align:center;padding:40px 0;color:var(--outline);font-size:13px;font-weight:500}
-</style>
-@endsection
+@section('title', 'Ruang Administrasi - Dashboard')
+@section('page-title', 'Dashboard')
+@section('page-subtitle', 'Selamat datang kembali, ' . Auth::user()->name . '.')
 
 @section('content')
-
-{{-- Stat Cards --}}
-<div class="stats-grid">
-    <div class="stat-card">
-        <span class="stat-badge blue">TOTAL</span>
-        <div class="stat-card-icon" style="background:linear-gradient(135deg,var(--primary),var(--tertiary))">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+<!-- Stats Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
+    <!-- Card 1: Surat Masuk -->
+    <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,74,198,0.08)] transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute -right-6 -top-4 text-primary-fixed-dim/20 group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined text-[48px] icon-fill">mark_email_unread</span>
         </div>
-        <div class="stat-num">{{ $totalIncoming }}</div>
-        <div class="stat-label">Surat Masuk</div>
-    </div>
-    <div class="stat-card">
-        <span class="stat-badge blue">TOTAL</span>
-        <div class="stat-card-icon" style="background:linear-gradient(135deg,#4648d4,#7c3aed)">
-            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </div>
-        <div class="stat-num">{{ $totalOutgoing }}</div>
-        <div class="stat-label">Surat Keluar</div>
-    </div>
-    <div class="stat-card">
-        <span class="stat-badge amber">PENDING</span>
-        <div class="stat-card-icon" style="background:linear-gradient(135deg,#b45309,#d97706)">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <div class="stat-num">{{ $outgoingPending }}</div>
-        <div class="stat-label">Menunggu Approval</div>
-    </div>
-    <div class="stat-card">
-        <span class="stat-badge green">AKTIF</span>
-        <div class="stat-card-icon" style="background:linear-gradient(135deg,#15803d,#16a34a)">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="stat-num">{{ $totalEmployees }}</div>
-        <div class="stat-label">Total Karyawan</div>
-    </div>
-</div>
-
-{{-- Content Grid --}}
-<div class="content-grid">
-    <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-            <div>
-                <div class="card-title">Surat Keluar Terbaru</div>
-                <div class="card-subtitle">5 surat keluar terakhir</div>
+        <div class="flex justify-between items-start mb-4 relative z-10">
+            <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined icon-fill">inbox</span>
             </div>
-            <a href="{{ url('/admin/outgoing-letters') }}" class="view-all">Lihat Semua</a>
+            <span class="bg-primary/5 text-primary border border-primary/10 px-2 py-1 rounded-full font-label-sm text-label-sm tracking-wider">TOTAL</span>
         </div>
-        <div class="status-ring">
-            <div class="ring-item pending"><div class="ring-num">{{ $outgoingPending }}</div><div class="ring-label">Pending</div></div>
-            <div class="ring-item acc"><div class="ring-num">{{ $outgoingAcc }}</div><div class="ring-label">Disetujui</div></div>
-            <div class="ring-item reject"><div class="ring-num">{{ $outgoingReject }}</div><div class="ring-label">Ditolak</div></div>
+        <div class="relative z-10">
+            <p class="font-body-md text-body-md text-on-surface-variant mb-1">Surat Masuk</p>
+            <h3 class="font-headline-xl text-headline-xl text-on-background tracking-tighter">{{ $totalIncoming }}</h3>
+            <p class="font-label-sm text-label-sm text-secondary mt-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">history</span>
+                Semua data
+            </p>
         </div>
-        @if($recentOutgoing->count())
-        <table class="data-table">
-            <thead><tr><th>Nomor / Perihal</th><th>Status</th><th>Tanggal</th></tr></thead>
-            <tbody>
-                @foreach($recentOutgoing as $letter)
-                <tr>
-                    <td>
-                        <div style="font-weight:600">{{ $letter->letter_number ?? '-' }}</div>
-                        <div class="sub">{{ Str::limit($letter->subject ?? $letter->perihal ?? '-', 30) }}</div>
-                    </td>
-                    <td><span class="badge badge-{{ $letter->status }}">{{ $letter->status === 'acc' ? 'Disetujui' : ($letter->status === 'reject' ? 'Ditolak' : 'Pending') }}</span></td>
-                    <td style="color:var(--on-surface-v);font-size:12px">{{ \Carbon\Carbon::parse($letter->created_at)->format('d M Y') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @else
-        <div class="empty-state">Belum ada surat keluar</div>
-        @endif
     </div>
-
-    <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-            <div>
-                <div class="card-title">Surat Masuk Terbaru</div>
-                <div class="card-subtitle">5 surat masuk terakhir</div>
+    
+    <!-- Card 2: Surat Keluar -->
+    <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(147,0,10,0.04)] transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute -right-6 -top-4 text-status-lilac group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined text-[48px] icon-fill">send</span>
+        </div>
+        <div class="flex justify-between items-start mb-4 relative z-10">
+            <div class="w-12 h-12 rounded-full bg-status-lilac flex items-center justify-center text-primary-container">
+                <span class="material-symbols-outlined icon-fill">outbox</span>
             </div>
-            <a href="{{ url('/admin/incoming-letters') }}" class="view-all">Lihat Semua</a>
         </div>
-        @if($recentIncoming->count())
-        <table class="data-table">
-            <thead><tr><th>Nomor / Pengirim</th><th>Perihal</th><th>Tanggal</th></tr></thead>
-            <tbody>
-                @foreach($recentIncoming as $letter)
-                <tr>
-                    <td>
-                        <div style="font-weight:600">{{ $letter->letter_number ?? $letter->nomor_surat ?? '-' }}</div>
-                        <div class="sub">{{ $letter->sender ?? $letter->pengirim ?? '-' }}</div>
-                    </td>
-                    <td style="font-size:12px">{{ Str::limit($letter->subject ?? $letter->perihal ?? '-', 28) }}</td>
-                    <td style="color:var(--on-surface-v);font-size:12px">{{ \Carbon\Carbon::parse($letter->created_at)->format('d M Y') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @else
-        <div class="empty-state">Belum ada surat masuk</div>
-        @endif
+        <div class="relative z-10">
+            <p class="font-body-md text-body-md text-on-surface-variant mb-1">Surat Keluar</p>
+            <h3 class="font-headline-xl text-headline-xl text-on-background tracking-tighter">{{ $totalOutgoing }}</h3>
+            <p class="font-label-sm text-label-sm text-outline mt-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">history</span>
+                Semua data
+            </p>
+        </div>
     </div>
-</div>
+    
+    <!-- Card 3: Menunggu Approval -->
+    <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(188,72,0,0.06)] transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute -right-6 -top-4 text-status-peach group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined text-[48px] icon-fill">pending_actions</span>
+        </div>
+        <div class="flex justify-between items-start mb-4 relative z-10">
+            <div class="w-12 h-12 rounded-full bg-status-peach flex items-center justify-center text-tertiary-container">
+                <span class="material-symbols-outlined icon-fill">hourglass_empty</span>
+            </div>
+            @if($outgoingPending > 0)
+                <span class="w-3 h-3 rounded-full bg-tertiary-container animate-pulse"></span>
+            @endif
+        </div>
+        <div class="relative z-10">
+            <p class="font-body-md text-body-md text-on-surface-variant mb-1">Menunggu Approval</p>
+            <h3 class="font-headline-xl text-headline-xl text-on-background tracking-tighter">{{ $outgoingPending }}</h3>
+            <p class="font-label-sm text-label-sm text-tertiary-container mt-3 flex items-center gap-1">
+                @if($outgoingPending > 0)
+                    <span class="material-symbols-outlined text-[14px]">error</span>
+                    Membutuhkan perhatian
+                @else
+                    <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                    Semua sudah diproses
+                @endif
+            </p>
+        </div>
+    </div>
+    
+    <!-- Card 4: Total Karyawan -->
+    <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,106,97,0.06)] transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute -right-6 -top-4 text-status-mint group-hover:scale-110 transition-transform duration-500">
+            <span class="material-symbols-outlined text-[48px] icon-fill">groups</span>
+        </div>
+        <div class="flex justify-between items-start mb-4 relative z-10">
+            <div class="w-12 h-12 rounded-full bg-status-mint flex items-center justify-center text-secondary">
+                <span class="material-symbols-outlined icon-fill">badge</span>
+            </div>
+        </div>
+        <div class="relative z-10">
+            <p class="font-body-md text-body-md text-on-surface-variant mb-1">Total Karyawan</p>
+            <h3 class="font-headline-xl text-headline-xl text-on-background tracking-tighter">{{ $totalEmployees }}</h3>
+            <p class="font-label-sm text-label-sm text-secondary mt-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">group</span>
+                Data karyawan aktif
+            </p>
+        </div>
+    </div>
+</section>
 
+<!-- Recent Sections -->
+<section class="grid grid-cols-1 xl:grid-cols-2 gap-gutter pb-margin-desktop mt-4">
+    <!-- Left: Surat Keluar Terbaru -->
+    <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow flex flex-col h-[500px]">
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="font-headline-md text-headline-md font-bold text-on-background">Surat Keluar Terbaru</h3>
+            <a href="{{ route('outgoing-letters.index') }}" class="bg-inverse-surface text-inverse-on-surface px-5 py-1 rounded-full font-label-sm text-label-sm hover:bg-heading-slate transition-colors flex items-center gap-4">
+                Lihat Semua
+                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </a>
+        </div>
+        <div class="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
+            @forelse($recentOutgoing as $letter)
+            <div class="group flex items-center justify-between p-4 rounded-3xl border border-border-muted hover:border-primary-fixed-dim hover:bg-surface-container-lowest transition-all cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-8 h-8 rounded-full @if($letter->status == 'pending') bg-status-peach text-tertiary-container @elseif($letter->status == 'acc') bg-status-mint text-secondary @else bg-error-container/30 text-error @endif flex items-center justify-center">
+                        <span class="material-symbols-outlined">description</span>
+                    </div>
+                    <div>
+                        <p class="font-label-md text-label-md text-on-background">{{ $letter->letter_number }}</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant text-sm mt-0.5">{{ Str::limit($letter->subject, 35) }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    @if($letter->status == 'pending')
+                        <span class="bg-status-peach text-tertiary border border-tertiary-fixed px-2 py-1 rounded-full font-label-sm text-label-sm">Pending</span>
+                    @elseif($letter->status == 'acc')
+                        <span class="bg-status-mint text-secondary border border-secondary-fixed px-2 py-1 rounded-full font-label-sm text-label-sm">Disetujui</span>
+                    @else
+                        <span class="bg-error-container text-on-error-container border border-error-container px-2 py-1 rounded-full font-label-sm text-label-sm">Ditolak</span>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <div class="flex-1 flex flex-col items-center justify-center text-center p-4">
+                <div class="w-16 h-16 mb-4 relative">
+                    <div class="absolute inset-0 bg-surface-container rounded-full opacity-50 scale-110"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-primary-fixed-dim">
+                        <span class="material-symbols-outlined text-[48px] font-light">drafts</span>
+                    </div>
+                </div>
+                <h4 class="font-headline-md text-headline-md text-on-background mb-2">Belum ada surat keluar</h4>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto">
+                    Data surat keluar akan muncul di sini.
+                </p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- Right: Surat Masuk Terbaru -->
+    <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow flex flex-col h-[500px]">
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="font-headline-md text-headline-md font-bold text-on-background">Surat Masuk Terbaru</h3>
+            <a href="{{ route('incoming-letters.index') }}" class="bg-inverse-surface text-inverse-on-surface px-5 py-1 rounded-full font-label-sm text-label-sm hover:bg-heading-slate transition-colors flex items-center gap-4">
+                Lihat Semua
+                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </a>
+        </div>
+        <div class="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
+            @forelse($recentIncoming as $letter)
+            <div class="group flex items-center justify-between p-4 rounded-3xl border border-border-muted hover:border-primary-fixed-dim hover:bg-surface-container-lowest transition-all cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-8 h-8 rounded-full bg-primary-fixed/50 text-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined">inbox</span>
+                    </div>
+                    <div>
+                        <p class="font-label-md text-label-md text-on-background">{{ $letter->letter_number }}</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant text-sm mt-0.5">{{ Str::limit($letter->subject, 35) }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="bg-surface-variant text-on-surface-variant border border-outline-variant px-2 py-1 rounded-full font-label-sm text-label-sm">{{ \Carbon\Carbon::parse($letter->date_received)->format('d M') }}</span>
+                </div>
+            </div>
+            @empty
+            <div class="flex-1 flex flex-col items-center justify-center text-center p-4">
+                <div class="w-16 h-16 mb-4 relative">
+                    <div class="absolute inset-0 bg-surface-container rounded-full opacity-50 scale-110"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-primary-fixed-dim">
+                        <span class="material-symbols-outlined text-[48px] font-light">mark_email_unread</span>
+                    </div>
+                </div>
+                <h4 class="font-headline-md text-headline-md text-on-background mb-2">Belum ada surat masuk</h4>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto">
+                    Kotak masuk Anda saat ini bersih. Surat yang baru tiba akan langsung muncul di panel ini.
+                </p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+</section>
 @endsection
+
+
+
+
+
+
+

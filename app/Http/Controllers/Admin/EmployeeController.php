@@ -74,7 +74,12 @@ class EmployeeController extends Controller
             'number' => 'nullable|string',
         ]);
 
-        if ($request->hasFile('photo')) {
+        if ($request->has('remove_photo') && $request->remove_photo == '1') {
+            if ($employee->photo) {
+                Storage::disk('public')->delete($employee->photo);
+            }
+            $validated['photo'] = null;
+        } elseif ($request->hasFile('photo')) {
             if ($employee->photo) {
                 Storage::disk('public')->delete($employee->photo);
             }

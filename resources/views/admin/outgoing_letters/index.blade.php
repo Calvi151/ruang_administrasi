@@ -1,8 +1,8 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Surat Masuk - Ruang Administrasi')
-@section('page-title', 'Surat Masuk')
-@section('page-subtitle', 'Manajemen data surat masuk dari pihak eksternal')
+@section('title', 'Surat Keluar - Ruang Administrasi')
+@section('page-title', 'Surat Keluar')
+@section('page-subtitle', 'Manajemen pembuatan dan persetujuan surat keluar')
 
 @section('content')
 <!-- Action Bar -->
@@ -15,9 +15,9 @@
         </div>
     </div>
     <!-- Primary Action Button -->
-    <a href="{{ route('incoming-letters.create') }}" class="flex items-center gap-4 px-2 py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-lg shadow-primary/30 transform hover:-translate-y-0.5">
+    <a href="{{ route('outgoing-letters.create') }}" class="flex items-center gap-4 px-2 py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-lg shadow-primary/30 transform hover:-translate-y-0.5">
         <span class="material-symbols-outlined text-[14px]">add</span>
-        Catat Surat Masuk
+        Buat Surat Keluar
     </a>
 </div>
 
@@ -29,8 +29,9 @@
                 <tr class="border-b border-border-muted">
                     <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Nomor Surat</th>
                     <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Tanggal</th>
-                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Pengirim</th>
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Tujuan</th>
                     <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Perihal</th>
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Status</th>
                     <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold text-right">Aksi</th>
                 </tr>
             </thead>
@@ -41,23 +42,43 @@
                         {{ $letter->letter_number }}
                     </td>
                     <td class="py-3 px-4 font-body-md text-body-md text-outline">
-                        {{ \Carbon\Carbon::parse($letter->date_received)->format('d M Y') }}
+                        {{ \Carbon\Carbon::parse($letter->date_sent)->format('d M Y') }}
                     </td>
                     <td class="py-3 px-4 font-body-md text-body-md text-on-surface-variant">
-                        {{ $letter->sender }}
+                        {{ $letter->recipient }}
                     </td>
                     <td class="py-3 px-4 font-body-md text-body-md text-on-surface-variant max-w-xs truncate">
                         {{ $letter->subject }}
                     </td>
+                    <td class="py-3 px-4">
+                        @if($letter->status == 'pending')
+                            <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-status-peach text-tertiary-container font-label-sm text-label-sm border border-tertiary-fixed">
+                                <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                Pending
+                            </span>
+                        @elseif($letter->status == 'acc')
+                            <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-status-mint text-secondary font-label-sm text-label-sm border border-secondary-fixed">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                Disetujui
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm border border-error-container/50">
+                                <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                Ditolak
+                            </span>
+                        @endif
+                    </td>
                     <td class="py-3 px-4 text-right">
                         <div class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <a href="{{ route('incoming-letters.show', $letter->id) }}" class="w-7 h-7 flex items-center justify-center rounded-full text-primary hover:bg-primary-fixed transition-colors" title="Detail">
+                            <a href="{{ route('outgoing-letters.show', $letter->id) }}" class="w-7 h-7 flex items-center justify-center rounded-full text-primary hover:bg-primary-fixed transition-colors" title="Detail">
                                 <span class="material-symbols-outlined text-[14px]">visibility</span>
                             </a>
-                            <a href="{{ route('incoming-letters.edit', $letter->id) }}" class="w-7 h-7 flex items-center justify-center rounded-full text-primary hover:bg-primary-fixed transition-colors" title="Edit">
+                            @if($letter->status == 'pending')
+                            <a href="{{ route('outgoing-letters.edit', $letter->id) }}" class="w-7 h-7 flex items-center justify-center rounded-full text-primary hover:bg-primary-fixed transition-colors" title="Edit">
                                 <span class="material-symbols-outlined text-[14px]">edit</span>
                             </a>
-                            <form action="{{ route('incoming-letters.destroy', $letter->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                            @endif
+                            <form action="{{ route('outgoing-letters.destroy', $letter->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors" title="Hapus">
@@ -69,17 +90,17 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="py-1">
+                    <td colspan="6" class="py-1">
                         <div class="flex-1 flex flex-col items-center justify-center text-center p-4">
-                            <div class="w-16 h-16 mb-4 relative">
+                            <div class="w-16 h-16 mb-3 relative">
                                 <div class="absolute inset-0 bg-surface-container rounded-full opacity-50 scale-110"></div>
                                 <div class="absolute inset-0 flex items-center justify-center text-primary-fixed-dim">
                                     <span class="material-symbols-outlined text-[48px] font-light">drafts</span>
                                 </div>
                             </div>
-                            <h4 class="font-headline-md text-headline-md text-on-background mb-2">Belum ada surat masuk</h4>
-                            <p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto">
-                                Kotak masuk Anda saat ini bersih. Surat yang baru tiba akan muncul di sini.
+                            <h4 class="font-headline-md text-headline-md text-[14px] text-on-background mb-1">Belum ada surat keluar</h4>
+                            <p class="font-body-md text-body-md text-[13px] text-on-surface-variant max-w-sm mx-auto">
+                                Daftar surat keluar masih kosong.
                             </p>
                         </div>
                     </td>
