@@ -6,7 +6,7 @@
 
 @section('content')
 <!-- Stats Grid -->
-<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
     <!-- Card 1: Surat Masuk -->
     <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,74,198,0.08)] transition-all duration-300 relative overflow-hidden group">
         <div class="absolute -right-6 -top-4 text-primary-fixed-dim/20 group-hover:scale-110 transition-transform duration-500">
@@ -98,7 +98,7 @@
 </section>
 
 <!-- Recent Sections -->
-<section class="grid grid-cols-1 xl:grid-cols-2 gap-gutter pb-margin-desktop mt-4">
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-gutter pb-margin-desktop mt-4">
     <!-- Left: Surat Keluar Terbaru -->
     <div class="bg-surface-container-lowest rounded-3xl p-4 border border-border-muted ambient-shadow flex flex-col h-[500px]">
         <div class="flex justify-between items-center mb-5">

@@ -128,7 +128,7 @@
 <body class="bg-background font-body-md text-body-md text-on-background min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
     
     <!-- SideNavBar -->
-    <nav class="w-64 h-full fixed left-0 top-0 border-r border-border-muted bg-background-pristine flex flex-col py-macro-padding z-50">
+    <nav class="w-64 h-full fixed left-0 top-0 border-r border-border-muted bg-[#f4f7fc] flex flex-col py-macro-padding z-50">
         <!-- Brand Header -->
         <div class="px-2 mb-10 flex items-center gap-4">
             <div class="w-8 h-8 rounded-2xl bg-gradient-to-br from-primary to-secondary-container flex items-center justify-center shadow-lg shadow-primary/20">
@@ -186,7 +186,7 @@
         <!-- CTA & Footer -->
         <div class="px-2 mt-4 flex flex-col gap-4">
             <a href="{{ route('incoming-letters.create') }}" class="w-full bg-primary text-on-primary font-label-md text-label-md py-1 rounded-full hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-4">
-                <span class="material-symbols-outlined text-sm">add</span>
+                <span class="material-symbols-outlined text-[14px]">add</span>
                 Entri Surat
             </a>
             <div class="h-px bg-border-muted w-full my-2"></div>
