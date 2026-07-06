@@ -13,7 +13,11 @@ use App\Http\Controllers\Ceo\LetterApprovalController;
 use App\Http\Controllers\Ceo\ReadonlyController;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        $role = auth()->user()->role;
+        return redirect($role === 'admin' ? '/admin/dashboard' : '/ceo/dashboard');
+    }
+    return redirect()->route('login');
 });
 
 Route::middleware('auth')->group(function () {
@@ -21,13 +25,14 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role.admin')->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         
-        Route::apiResource('/incoming-letters', IncomingLetterController::class);
-        Route::apiResource('/outgoing-letters', OutgoingLetterController::class);
-        Route::apiResource('/letter-types', LetterTypeController::class);
-        Route::apiResource('/employees', EmployeeController::class);
-        Route::apiResource('/users', UserController::class);
+        Route::resource('/incoming-letters', IncomingLetterController::class);
+        Route::get('/outgoing-letters/{outgoingLetter}/export-pdf', [OutgoingLetterController::class, 'exportPdf'])->name('outgoing-letters.export-pdf');
+        Route::get('/outgoing-letters/{outgoingLetter}/export-word', [OutgoingLetterController::class, 'exportWord'])->name('outgoing-letters.export-word');
+        Route::resource('/outgoing-letters', OutgoingLetterController::class);
+        Route::resource('/letter-types', LetterTypeController::class);
+        Route::resource('/employees', EmployeeController::class);
+        Route::resource('/users', UserController::class);
     });
-
     // CEO Routes
     Route::middleware('role.ceo')->prefix('ceo')->group(function () {
         Route::get('/dashboard', [CeoDashboardController::class, 'index'])->name('ceo.dashboard');
