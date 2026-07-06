@@ -33,13 +33,14 @@ class IncomingLetterController extends Controller
             'letter_number' => 'required|string|unique:incoming_letters',
             'date_received' => 'required|date',
             'sender'        => 'required|string|max:255',
-            'subject'       => 'required|string|max:255',
+            'subject'       => 'required|string',
             'file'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
         if ($request->hasFile('file')) {
-            $validated['file'] = $request->file('file')->store('incoming_letters', 'public');
+            $validated['file_path'] = $request->file('file')->store('incoming_letters', 'public');
         }
+        unset($validated['file']);
 
         IncomingLetter::create($validated);
 
@@ -63,16 +64,17 @@ class IncomingLetterController extends Controller
             'letter_number' => 'required|string|unique:incoming_letters,letter_number,' . $incomingLetter->id,
             'date_received' => 'required|date',
             'sender'        => 'required|string|max:255',
-            'subject'       => 'required|string|max:255',
+            'subject'       => 'required|string',
             'file'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
         if ($request->hasFile('file')) {
-            if ($incomingLetter->file) {
-                Storage::disk('public')->delete($incomingLetter->file);
+            if ($incomingLetter->file_path) {
+                Storage::disk('public')->delete($incomingLetter->file_path);
             }
-            $validated['file'] = $request->file('file')->store('incoming_letters', 'public');
+            $validated['file_path'] = $request->file('file')->store('incoming_letters', 'public');
         }
+        unset($validated['file']);
 
         $incomingLetter->update($validated);
 
@@ -82,8 +84,8 @@ class IncomingLetterController extends Controller
 
     public function destroy(IncomingLetter $incomingLetter)
     {
-        if ($incomingLetter->file) {
-            Storage::disk('public')->delete($incomingLetter->file);
+        if ($incomingLetter->file_path) {
+            Storage::disk('public')->delete($incomingLetter->file_path);
         }
         $incomingLetter->delete();
 

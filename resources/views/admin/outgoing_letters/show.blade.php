@@ -90,45 +90,23 @@
                     </div>
                 </div>
                 
-                @if($outgoingLetter->status == 'pending')
                 <div class="mt-6 flex gap-4 border-t border-border-muted pt-6">
-                    @if(Auth::user()->role === 'admin' || Auth::user()->role === 'ceo')
-                        <!-- Approval Actions for Admin/CEO -->
-                        <form action="{{ route('outgoing-letters.update-status', $outgoingLetter->id) }}" method="POST" class="inline">
-                            @csrf
-                            <input type="hidden" name="status" value="acc">
-                            <button type="submit" class="px-2 py-1 rounded-full bg-secondary text-on-secondary font-label-md text-label-md hover:shadow-lg hover:shadow-secondary/20 hover:-translate-y-0.5 transition-all flex items-center gap-4" onclick="return confirm('Setujui surat keluar ini?');">
-                                <span class="material-symbols-outlined text-[14px]">check_circle</span>
-                                Setujui (ACC)
-                            </button>
-                        </form>
-                        
-                        <form action="{{ route('outgoing-letters.update-status', $outgoingLetter->id) }}" method="POST" class="inline">
-                            @csrf
-                            <input type="hidden" name="status" value="rejected">
-                            <button type="submit" class="px-2 py-1 rounded-full bg-error text-on-error font-label-md text-label-md hover:shadow-lg hover:shadow-error/20 hover:-translate-y-0.5 transition-all flex items-center gap-4" onclick="return confirm('Tolak surat keluar ini?');">
-                                <span class="material-symbols-outlined text-[14px]">cancel</span>
-                                Tolak
-                            </button>
-                        </form>
-                    @endif
-                    
-                    <a href="{{ route('outgoing-letters.edit', $outgoingLetter->id) }}" class="px-2 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md hover:bg-primary-fixed-dim transition-all flex items-center gap-4 ml-auto">
-                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    <a href="{{ route('outgoing-letters.edit', $outgoingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md hover:bg-primary-fixed-dim transition-all flex items-center gap-2 ml-auto">
+                        <span class="material-symbols-outlined text-[18px]">edit</span>
                         Edit Surat
                     </a>
                 </div>
-                @endif
                 
+
                 <!-- Print/Export Actions -->
                 @if($outgoingLetter->status == 'acc')
                 <div class="mt-6 flex gap-4 border-t border-border-muted pt-6">
-                    <a href="{{ route('outgoing-letters.export-word', $outgoingLetter->id) }}" class="px-2 py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-4">
-                        <span class="material-symbols-outlined text-[14px]">description</span>
+                    <a href="{{ route('outgoing-letters.export-word', $outgoingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">description</span>
                         Export Word Document
                     </a>
-                    <a href="{{ route('outgoing-letters.export-pdf', $outgoingLetter->id) }}" target="_blank" class="px-2 py-1 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary-fixed transition-all flex items-center gap-4">
-                        <span class="material-symbols-outlined text-[14px]">picture_as_pdf</span>
+                    <a href="{{ route('outgoing-letters.export-pdf', $outgoingLetter->id) }}" target="_blank" class="px-5 py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary-fixed transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
                         Cetak PDF
                     </a>
                 </div>
@@ -153,8 +131,8 @@
                     <h4 class="font-label-md text-label-md text-on-background font-bold truncate max-w-[200px]" title="{{ basename($outgoingLetter->file_path) }}">File Dokumen</h4>
                     <p class="font-label-sm text-label-sm text-outline mt-1">Format PDF</p>
                 </div>
-                <a href="{{ asset('storage/' . $outgoingLetter->file_path) }}" target="_blank" class="mt-2 w-full px-2 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-4">
-                    <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                <a href="{{ asset('storage/' . $outgoingLetter->file_path) }}" target="_blank" class="mt-2 w-full px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">open_in_new</span>
                     Buka Dokumen
                 </a>
             </div>

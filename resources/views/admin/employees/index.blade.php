@@ -15,8 +15,8 @@
         </div>
     </div>
     <!-- Primary Action Button -->
-    <a href="{{ route('employees.create') }}" class="flex items-center gap-4 px-2 py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-lg shadow-primary/30 transform hover:-translate-y-0.5">
-        <span class="material-symbols-outlined text-[14px]">person_add</span>
+    <a href="{{ route('employees.create') }}" class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-lg shadow-primary/30 transform hover:-translate-y-0.5">
+        <span class="material-symbols-outlined text-[18px]">person_add</span>
         Tambah Karyawan
     </a>
 </div>

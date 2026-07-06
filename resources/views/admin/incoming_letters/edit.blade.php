@@ -14,7 +14,7 @@
 </div>
 
 <!-- Form Card -->
-<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 max-w-4xl mx-auto">
+<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 w-full">
     <form action="{{ route('incoming-letters.update', $incomingLetter->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
         @csrf
         @method('PUT')
@@ -62,16 +62,6 @@
                         <input type="date" name="date_received" id="date_received" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md" value="{{ old('date_received', $incomingLetter->date_received) }}" required>
                     </div>
                 </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="flex flex-col gap-4">
-                <!-- Subject -->
-                <div class="flex flex-col gap-4">
-                    <label for="subject" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Perihal / Ringkasan <span class="text-error">*</span></label>
-                    <textarea name="subject" id="subject" rows="4" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y shadow-sm font-body-md text-body-md" required>{{ old('subject', $incomingLetter->subject) }}</textarea>
-                </div>
-
                 <!-- File Attachment -->
                 <div class="flex flex-col gap-4">
                     <label for="file" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Ganti Lampiran (PDF)</label>
@@ -81,7 +71,7 @@
                             <span class="material-symbols-outlined">attach_file</span>
                             File tersimpan saat ini
                         </div>
-                        <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank" class="text-xs bg-primary text-on-primary px-2 py-1 rounded-full hover:bg-primary-container transition-colors">Lihat File</a>
+                        <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank" class="text-xs bg-primary text-on-primary px-4 py-1.5 rounded-full hover:bg-primary-container transition-colors">Lihat File</a>
                     </div>
                     @endif
                     <div class="border-2 border-dashed border-outline-variant bg-slate-50/50 hover:bg-slate-50 rounded-2xl p-10 flex flex-col items-center justify-center gap-3 transition-colors cursor-pointer group relative">
@@ -90,6 +80,15 @@
                         <p class="text-[10px] text-outline mt-1">Biarkan kosong jika tidak ingin mengubah</p>
                         <input type="file" name="file" id="file" accept=".pdf" class="w-full h-full absolute inset-0 opacity-0 cursor-pointer">
                     </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="flex flex-col gap-4">
+                <!-- Subject -->
+                <div class="flex flex-col gap-4 h-full">
+                    <label for="subject" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Perihal / Ringkasan <span class="text-error">*</span></label>
+                    <textarea name="subject" id="subject" rows="12" class="w-full h-full bg-slate-50 border-0 rounded-2xl p-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y shadow-sm font-body-md text-body-md" required>{{ old('subject', $incomingLetter->subject) }}</textarea>
                 </div>
             </div>
         </div>
@@ -107,12 +106,21 @@
 </div>
 @endsection
 
-
-
-
-
-
-
-
-
-
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#subject',
+        height: 300,
+        menubar: false,
+        plugins: 'lists link table',
+        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | table',
+        content_style: 'body { font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; }',
+        setup: function(editor) {
+            editor.on('change', function() {
+                editor.save();
+            });
+        }
+    });
+</script>
+@endsection

@@ -11,7 +11,7 @@ class OutgoingLetter extends Model
     
     protected $fillable = [
         'letter_number', 'date_sent', 'letter_type_id', 
-        'creator_id', 'recipient', 'subject', 'content', 'status'
+        'creator_id', 'recipient', 'subject', 'content', 'status', 'file_path'
     ];
 
     public function letterType()

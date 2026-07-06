@@ -136,7 +136,7 @@
             </div>
             <div>
                 <h1 class="font-headline-md text-headline-md font-bold text-on-background tracking-tight">Ruang Administrasi</h1>
-                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mt-0.5" style="font-size: 9px;">Management Suite</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mt-0.5" style="font-size: 9px;">Sistem Manajemen</p>
             </div>
         </div>
         
@@ -144,7 +144,7 @@
         <div class="flex-1 overflow-y-auto flex flex-col gap-1">
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'bg-secondary-container text-on-secondary-container rounded-full px-2 py-1 mx-2 flex items-center gap-4 transition-transform scale-95 active:scale-90 group relative font-label-md text-label-md' : 'text-on-surface-variant font-label-md text-label-md px-2 py-1 mx-2 rounded-full hover:bg-surface-variant transition-colors flex items-center gap-4 group' }}">
                 <span class="material-symbols-outlined {{ request()->routeIs('admin.dashboard') ? 'icon-fill' : 'group-hover:text-primary transition-colors' }}">dashboard</span>
-                Dashboard
+                Dasbor
                 @if(request()->routeIs('admin.dashboard'))
                     <div class="absolute right-4 w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
                 @endif
@@ -185,17 +185,17 @@
         
         <!-- CTA & Footer -->
         <div class="px-2 mt-4 flex flex-col gap-4">
-            <a href="{{ route('incoming-letters.create') }}" class="w-full bg-primary text-on-primary font-label-md text-label-md py-1 rounded-full hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-4">
-                <span class="material-symbols-outlined text-[14px]">add</span>
+            <a href="{{ route('incoming-letters.create') }}" class="w-full bg-primary text-on-primary font-label-md text-label-md py-3 rounded-full hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">add</span>
                 Entri Surat
             </a>
             <div class="h-px bg-border-muted w-full my-2"></div>
             
             <form action="{{ route('logout') }}" method="POST" style="width: 100%;">
                 @csrf
-                <button type="submit" class="w-full text-on-surface-variant font-label-md text-label-md px-2 py-1 rounded-2xl hover:bg-error-container hover:text-error transition-colors flex items-center gap-4">
-                    <span class="material-symbols-outlined">logout</span>
-                    Logout
+                <button type="submit" class="w-full text-on-surface-variant font-label-md text-label-md px-4 py-2.5 rounded-full hover:bg-error-container hover:text-error transition-colors flex items-center gap-3">
+                    <span class="material-symbols-outlined text-[18px]">logout</span>
+                    Keluar
                 </button>
             </form>
         </div>

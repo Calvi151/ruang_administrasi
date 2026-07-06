@@ -14,7 +14,7 @@
 </div>
 
 <!-- Form Card -->
-<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 max-w-4xl mx-auto">
+<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 w-full">
     <form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
         @csrf
 

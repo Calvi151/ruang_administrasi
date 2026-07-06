@@ -47,16 +47,16 @@
                     <div>
                         <h4 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2">Perihal / Ringkasan</h4>
                         <div class="bg-surface-bright border border-border-muted rounded-2xl p-4">
-                            <p class="font-body-lg text-body-lg text-on-background leading-relaxed">
-                                {{ $incomingLetter->subject }}
-                            </p>
+                            <div class="font-body-lg text-body-lg text-on-background leading-relaxed prose prose-slate max-w-none">
+                                {!! $incomingLetter->subject !!}
+                            </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="mt-6 flex gap-4">
-                    <a href="{{ route('incoming-letters.edit', $incomingLetter->id) }}" class="px-2 py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-4">
-                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    <a href="{{ route('incoming-letters.edit', $incomingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">edit</span>
                         Edit Surat
                     </a>
                 </div>
@@ -80,8 +80,8 @@
                     <h4 class="font-label-md text-label-md text-on-background font-bold truncate max-w-[200px]" title="{{ basename($incomingLetter->file_path) }}">File Dokumen</h4>
                     <p class="font-label-sm text-label-sm text-outline mt-1">Format PDF</p>
                 </div>
-                <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank" class="mt-2 w-full px-2 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-4">
-                    <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank" class="mt-2 w-full px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">open_in_new</span>
                     Buka Dokumen
                 </a>
             </div>

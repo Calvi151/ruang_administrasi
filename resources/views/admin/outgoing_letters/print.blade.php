@@ -111,7 +111,7 @@
 
     <!-- ISI SURAT -->
     <div class="isi-surat">
-        {!! nl2br(e($outgoingLetter->content)) !!}
+        {!! $outgoingLetter->content !!}
     </div>
 
     <!-- TANDA TANGAN -->

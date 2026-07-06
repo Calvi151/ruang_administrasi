@@ -15,8 +15,8 @@
         </div>
     </div>
     <!-- Primary Action Button -->
-    <a href="{{ route('incoming-letters.create') }}" class="flex items-center gap-4 px-2 py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-lg shadow-primary/30 transform hover:-translate-y-0.5">
-        <span class="material-symbols-outlined text-[14px]">add</span>
+    <a href="{{ route('incoming-letters.create') }}" class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-lg shadow-primary/30 transform hover:-translate-y-0.5">
+        <span class="material-symbols-outlined text-[18px]">add</span>
         Catat Surat Masuk
     </a>
 </div>
@@ -47,7 +47,7 @@
                         {{ $letter->sender }}
                     </td>
                     <td class="py-3 px-4 font-body-md text-body-md text-on-surface-variant max-w-xs truncate">
-                        {{ $letter->subject }}
+                        {{ strip_tags($letter->subject) }}
                     </td>
                     <td class="py-3 px-4 text-right">
                         <div class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">

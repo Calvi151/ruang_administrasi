@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class IncomingLetter extends Model
 {
     use HasFactory;
-    protected $fillable = ['letter_number', 'date_received', 'sender', 'subject', 'file'];
+    protected $fillable = ['letter_number', 'date_received', 'sender', 'subject', 'file', 'file_path'];
 }

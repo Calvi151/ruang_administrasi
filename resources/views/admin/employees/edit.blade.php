@@ -14,7 +14,7 @@
 </div>
 
 <!-- Form Card -->
-<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 max-w-4xl mx-auto">
+<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 w-full">
     
     <div class="flex items-center gap-4 mb-5 pb-8 border-b border-border-muted">
         @if($employee->photo)

@@ -43,12 +43,21 @@ class OutgoingLetterController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'date_sent' => 'required|date',
-            'letter_type_id' => 'required|exists:letter_type,id',
             'recipient' => 'required|string',
             'subject' => 'required|string',
             'content' => 'required|string',
+            'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
+
+        // Otomatis set tanggal (hari ini)
+        $validated['date_sent'] = Carbon::now()->format('Y-m-d');
+        
+        // Otomatis ambil Jenis Surat default (karena hanya 1 jenis/otomatis)
+        $defaultLetterType = LetterType::first();
+        if (!$defaultLetterType) {
+            return back()->with('error', 'Harap tambahkan Jenis Surat di master data terlebih dahulu.');
+        }
+        $validated['letter_type_id'] = $defaultLetterType->id;
 
         // Generate Nomor Surat Otomatis
         // Format: {No urut}/{kodesurat}/TAP/{bulan_romawi}/{Tahun}
@@ -82,6 +91,12 @@ class OutgoingLetterController extends Controller
         $validated['status'] = 'pending'; // Butuh ACC CEO
         $validated['creator_id'] = auth()->id() ?? 1;
 
+        if ($request->hasFile('file_path')) {
+            $validated['file_path'] = $request->file('file_path')->store('outgoing_letters', 'public');
+        } else {
+            unset($validated['file_path']);
+        }
+
         OutgoingLetter::create($validated);
 
         return redirect()->route('outgoing-letters.index')->with('success', "Surat Keluar berhasil dibuat dengan nomor: {$letterNumber}");
@@ -110,12 +125,24 @@ class OutgoingLetterController extends Controller
         }
 
         $validated = $request->validate([
-            'date_sent' => 'required|date',
-            'letter_type_id' => 'required|exists:letter_type,id',
             'recipient' => 'required|string',
             'subject' => 'required|string',
             'content' => 'required|string',
+            'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
+
+        // Pertahankan tanggal dan jenis surat yang sudah ada
+        $validated['date_sent'] = $outgoingLetter->date_sent;
+        $validated['letter_type_id'] = $outgoingLetter->letter_type_id;
+
+        if ($request->hasFile('file_path')) {
+            if ($outgoingLetter->file_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($outgoingLetter->file_path);
+            }
+            $validated['file_path'] = $request->file('file_path')->store('outgoing_letters', 'public');
+        } else {
+            unset($validated['file_path']);
+        }
 
         // Cek jika jenis surat atau tanggal berubah, kita mungkin perlu mereset nomor urut (opsional)
         // Namun untuk kesederhanaan, nomor surat biasanya dipertahankan kecuali format total berubah.

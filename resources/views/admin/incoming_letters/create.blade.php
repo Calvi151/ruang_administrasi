@@ -14,7 +14,7 @@
 </div>
 
 <!-- Form Card -->
-<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 max-w-4xl mx-auto">
+<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 w-full">
     <form action="{{ route('incoming-letters.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
         @csrf
 
@@ -61,16 +61,6 @@
                         <input type="date" name="date_received" id="date_received" class="w-full bg-slate-50 border-0 rounded-xl py-3 pl-10 pr-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm font-body-md text-body-md" value="{{ old('date_received', date('Y-m-d')) }}" required>
                     </div>
                 </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="flex flex-col gap-4">
-                <!-- Subject -->
-                <div class="flex flex-col gap-4">
-                    <label for="subject" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Perihal / Ringkasan <span class="text-error">*</span></label>
-                    <textarea name="subject" id="subject" rows="4" class="w-full bg-slate-50 border-0 rounded-2xl p-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y shadow-sm font-body-md text-body-md" placeholder="Tuliskan ringkasan isi surat secara singkat dan jelas..." required>{{ old('subject') }}</textarea>
-                </div>
-
                 <!-- File Attachment -->
                 <div class="flex flex-col gap-4">
                     <label for="file" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Lampiran File (PDF)</label>
@@ -80,6 +70,15 @@
                         <p class="text-[10px] text-outline mt-1">Maks. 5MB</p>
                         <input type="file" name="file" id="file" accept=".pdf" class="w-full h-full absolute inset-0 opacity-0 cursor-pointer">
                     </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="flex flex-col gap-4">
+                <!-- Subject -->
+                <div class="flex flex-col gap-4 h-full">
+                    <label for="subject" class="font-label-md text-label-md text-slate-700 flex items-center gap-1">Perihal / Ringkasan <span class="text-error">*</span></label>
+                    <textarea name="subject" id="subject" rows="12" class="w-full h-full bg-slate-50 border-0 rounded-2xl p-4 text-sm text-heading-slate focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y shadow-sm font-body-md text-body-md" placeholder="Tuliskan ringkasan isi surat secara singkat dan jelas..." required>{{ old('subject') }}</textarea>
                 </div>
             </div>
         </div>
@@ -97,12 +96,21 @@
 </div>
 @endsection
 
-
-
-
-
-
-
-
-
-
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#subject',
+        height: 300,
+        menubar: false,
+        plugins: 'lists link table',
+        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | table',
+        content_style: 'body { font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; }',
+        setup: function(editor) {
+            editor.on('change', function() {
+                editor.save();
+            });
+        }
+    });
+</script>
+@endsection
