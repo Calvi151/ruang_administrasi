@@ -1,125 +1,229 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'CEO') — {{ config('app.name') }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@yield('title', 'Ruang Administrasi - Dashboard Pimpinan')</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Bootstrap (if needed for old components) via Vite -->
+    @vite('resources/css/bootstrap.css')
+    
     <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{--primary:#0058be;--primary-dark:#003d8a;--primary-light:#d8e2ff;--neon:#00D2FF;--navy:#1E1B4B;--surface:#f7f9fb;--surface-low:#f2f4f6;--surface-cnt:#eceef0;--white:#ffffff;--on-surface:#191c1e;--on-surface-v:#424754;--outline:#727785;--outline-v:#c2c6d6;--tertiary:#4648d4;--error:#ba1a1a;--shadow:rgba(30,27,75,0.08)}
-        html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--on-surface);-webkit-font-smoothing:antialiased}
-        .app-layout{display:flex;min-height:100vh}
-        /* Sidebar */
-        .sidebar{width:260px;flex-shrink:0;background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
-        .sidebar-brand{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
-        .brand-logo{display:flex;align-items:center;gap:12px}
-        .brand-icon{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--tertiary));display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .brand-icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-        .brand-name{font-size:15px;font-weight:800;color:#fff;line-height:1.2}
-        .brand-sub{font-size:11px;color:rgba(255,255,255,0.45);font-weight:500;letter-spacing:0.04em}
-        .sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
-        .nav-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;padding:12px 12px 6px}
-        .nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;transition:background 0.2s,color 0.2s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
-        .nav-item:hover{background:rgba(255,255,255,0.07);color:#fff}
-        .nav-item.active{background:rgba(255,255,255,0.12);color:#fff;font-weight:700;position:relative}
-        .nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--neon);border-radius:0 3px 3px 0}
-        .nav-item svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-        .sidebar-footer{padding:16px 12px;border-top:1px solid rgba(255,255,255,0.08)}
-        .user-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.07)}
-        .user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--tertiary));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
-        .user-info{flex:1;min-width:0}
-        .user-name{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .user-role{font-size:11px;color:rgba(255,255,255,0.45);text-transform:capitalize}
-        /* Main */
-        .main-content{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh}
-        .topbar{height:68px;background:var(--white);border-bottom:1px solid var(--outline-v);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:50}
-        .topbar-left h1{font-size:20px;font-weight:800;color:var(--on-surface);letter-spacing:-0.01em}
-        .topbar-left p{font-size:13px;color:var(--on-surface-v);margin-top:1px}
-        .topbar-date{display:flex;align-items:center;gap:8px;background:var(--surface-low);border:1px solid var(--outline-v);border-radius:9999px;padding:7px 16px;font-size:13px;font-weight:600;color:var(--on-surface-v)}
-        .topbar-date svg{width:15px;height:15px;stroke:var(--primary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-        .page-body{padding:32px;flex:1}
-        /* Shared */
-        .card{background:var(--white);border-radius:20px;padding:24px;box-shadow:0 4px 20px var(--shadow)}
-        .badge{display:inline-block;padding:3px 10px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.03em}
-        .data-table{width:100%;border-collapse:collapse}
-        .data-table th{font-size:11px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:0.06em;padding:0 12px 12px;text-align:left;border-bottom:1px solid var(--outline-v)}
-        .data-table td{padding:13px 12px;border-bottom:1px solid var(--surface-cnt);font-size:13px;color:var(--on-surface);vertical-align:middle}
-        .data-table tr:last-child td{border-bottom:none}
-        .data-table tr:hover td{background:var(--surface-low)}
-        .sub{font-size:11px;color:var(--on-surface-v);margin-top:2px}
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
     </style>
-    @yield('styles')
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#434655",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-on-surface": "#edf1f5",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-dim": "#d6dade",
+                        "surface-container-highest": "#dfe3e7",
+                        "outline": "#737686",
+                        "outline-variant": "#c3c6d7",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#dfe3e7",
+                        "on-primary-container": "#eeefff",
+                        "background": "#f6fafe",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#00714e",
+                        "on-tertiary-container": "#ffecea",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary": "#004ac6",
+                        "on-background": "#171c1f",
+                        "tertiary-fixed-dim": "#ffb4ab",
+                        "tertiary-fixed": "#ffdad6",
+                        "surface-container-low": "#f0f4f8",
+                        "on-secondary-fixed": "#002114",
+                        "secondary-fixed": "#85f8c4",
+                        "surface-tint": "#0053db",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#171c1f",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#005137",
+                        "inverse-surface": "#2c3134",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#00174b",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#410002",
+                        "surface-bright": "#f6fafe",
+                        "surface-container": "#eaeef2",
+                        "secondary": "#006c4a",
+                        "surface-container-high": "#e4e9ed",
+                        "primary-container": "#2563eb",
+                        "secondary-fixed-dim": "#68dba9",
+                        "inverse-primary": "#b4c5ff",
+                        "surface": "#f6fafe",
+                        "secondary-container": "#82f5c1",
+                        "tertiary-container": "#d52022",
+                        "on-tertiary-fixed-variant": "#93000b",
+                        "tertiary": "#ae0010"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "16rem",
+                        "topbar-height": "4rem",
+                        "container-padding": "1.25rem",
+                        "stack-gap": "0.75rem",
+                        "gutter": "1rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "body-base": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-<div class="app-layout">
-    <aside class="sidebar">
-        <div class="sidebar-brand">
-            <div class="brand-logo">
-                <div class="brand-icon" style="background:linear-gradient(135deg,#047857,#059669)">
-                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                </div>
-                <div>
-                    <div class="brand-name">{{ config('app.name','HR Portal') }}</div>
-                    <div class="brand-sub">CEO Workspace</div>
-                </div>
+<body class="bg-background text-on-background font-body-base antialiased flex min-h-screen">
+    <!-- SideNavBar -->
+    <aside class="w-sidebar-width h-screen sticky top-0 left-0 bg-surface-container-lowest shadow-sm flex flex-col py-6 px-4 gap-stack-gap z-50">
+        <!-- Brand -->
+        <div class="flex items-center gap-3 mb-4 px-2">
+            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary font-display font-bold">RA</div>
+            <div>
+                <h1 class="font-display text-label-md font-bold text-primary">Ruang Administrasi</h1>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Panel Pimpinan</p>
             </div>
         </div>
-        <nav class="sidebar-nav">
-            <div class="nav-label">Menu Utama</div>
-            <a href="{{ route('ceo.dashboard') }}" class="nav-item {{ request()->routeIs('ceo.dashboard') ? 'active' : '' }}">
-                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard
+        
+        <!-- Navigation Tabs -->
+        <nav class="flex-1 flex flex-col gap-1">
+            <!-- Active Tab: Dashboard -->
+            <a href="{{ route('ceo.dashboard') }}" class="{{ request()->routeIs('ceo.dashboard') ? 'flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-xl font-semibold active:scale-95 transition-transform' : 'flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl active:scale-95 transition-transform' }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('ceo.dashboard') ? 'icon-fill' : '' }}">dashboard</span>
+                <span class="font-label-md text-label-md">Dasbor</span>
             </a>
-            <a href="{{ url('/ceo/letter-approvals') }}" class="nav-item {{ request()->is('ceo/letter-approvals*') ? 'active' : '' }}">
-                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>Approval Surat
+            <a href="{{ url('ceo/letter-approvals') }}" class="{{ request()->is('ceo/letter-approvals*') ? 'flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-xl font-semibold active:scale-95 transition-transform' : 'flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl active:scale-95 transition-transform' }}">
+                <span class="material-symbols-outlined {{ request()->is('ceo/letter-approvals*') ? 'icon-fill' : '' }}">fact_check</span>
+                <span class="font-label-md text-label-md">Persetujuan Surat</span>
             </a>
-            <a href="{{ url('/ceo/incoming-letters') }}" class="nav-item {{ request()->is('ceo/incoming*') ? 'active' : '' }}">
-                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Surat Masuk
+            <a href="{{ url('ceo/incoming-letters') }}" class="{{ request()->is('ceo/incoming-letters*') ? 'flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-xl font-semibold active:scale-95 transition-transform' : 'flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl active:scale-95 transition-transform' }}">
+                <span class="material-symbols-outlined {{ request()->is('ceo/incoming-letters*') ? 'icon-fill' : '' }}">inbox</span>
+                <span class="font-label-md text-label-md">Surat Masuk</span>
             </a>
-            <a href="{{ url('/ceo/outgoing-letters') }}" class="nav-item {{ request()->is('ceo/outgoing*') ? 'active' : '' }}">
-                <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Surat Keluar
+            <a href="{{ url('ceo/outgoing-letters') }}" class="{{ request()->is('ceo/outgoing-letters*') ? 'flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-xl font-semibold active:scale-95 transition-transform' : 'flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl active:scale-95 transition-transform' }}">
+                <span class="material-symbols-outlined {{ request()->is('ceo/outgoing-letters*') ? 'icon-fill' : '' }}">send</span>
+                <span class="font-label-md text-label-md">Surat Keluar</span>
             </a>
-            <a href="{{ url('/ceo/employees') }}" class="nav-item {{ request()->is('ceo/employees*') ? 'active' : '' }}">
-                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Karyawan
+            <a href="{{ url('ceo/employees') }}" class="{{ request()->is('ceo/employees*') ? 'flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-xl font-semibold active:scale-95 transition-transform' : 'flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl active:scale-95 transition-transform' }}">
+                <span class="material-symbols-outlined {{ request()->is('ceo/employees*') ? 'icon-fill' : '' }}">group</span>
+                <span class="font-label-md text-label-md">Karyawan</span>
             </a>
         </nav>
-        <div class="sidebar-footer">
-            <div class="user-card">
-                <div class="user-avatar" style="background:linear-gradient(135deg,#047857,#059669)">{{ strtoupper(substr(auth()->user()->nip,0,2)) }}</div>
-                <div class="user-info">
-                    <div class="user-name">{{ auth()->user()->nip }}</div>
-                    <div class="user-role">{{ auth()->user()->role }}</div>
+        
+        <!-- Footer / Profile -->
+        <div class="mt-auto flex flex-col gap-2 pt-4 border-t border-outline-variant">
+            <div class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors cursor-pointer">
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs uppercase">
+                    {{ substr(auth()->user()->nip ?? 'CEO', 0, 2) }}
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-label-md text-label-md text-on-surface">{{ auth()->user()->nip ?? 'CEO' }}</span>
+                    <span class="font-label-xs text-label-xs capitalize">{{ auth()->user()->role ?? 'Pimpinan' }}</span>
                 </div>
             </div>
-            <form method="POST" action="{{ route('logout') }}" style="margin-top:10px">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="nav-item" style="color:rgba(255,100,100,0.8)">
-                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Keluar
+                <button type="submit" class="flex items-center gap-3 px-3 py-2 text-error hover:bg-error-container hover:text-on-error-container rounded-xl transition-colors text-left w-full">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="font-label-md text-label-md">Keluar</span>
                 </button>
             </form>
         </div>
     </aside>
-
-    <div class="main-content">
-        <header class="topbar">
-            <div class="topbar-left">
-                <h1>@yield('page-title','Dashboard')</h1>
-                <p>@yield('page-subtitle','CEO Workspace')</p>
+    
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- TopNavBar -->
+        <header class="sticky top-0 w-full h-topbar-height z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-container-padding">
+            <div class="flex items-center">
+                <div class="relative w-64 hidden md:block">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                    <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-sm text-body-sm focus:border-primary focus:ring-4 focus:ring-primary-fixed-dim focus:outline-none transition-all placeholder:text-outline" placeholder="Cari surat atau dokumen..." type="text"/>
+                </div>
             </div>
-            <div>
-                <div class="topbar-date">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    {{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}
+            <div class="flex items-center gap-4 text-on-surface-variant">
+                <button class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:opacity-80 hover:text-primary relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full"></span>
+                </button>
+                <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold uppercase ml-2 block md:hidden">
+                    {{ substr(auth()->user()->nip ?? 'C', 0, 1) }}
                 </div>
             </div>
         </header>
-        <div class="page-body">
+        
+        <!-- Main Canvas -->
+        <main class="flex-1 p-container-padding flex flex-col gap-6">
+            @if(session('success'))
+                <div class="bg-secondary-container text-on-secondary-container p-4 rounded-xl flex items-center gap-3">
+                    <span class="material-symbols-outlined icon-fill">check_circle</span>
+                    <p class="font-body-sm">{{ session('success') }}</p>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="bg-error-container text-on-error-container p-4 rounded-xl flex items-center gap-3">
+                    <span class="material-symbols-outlined icon-fill">error</span>
+                    <p class="font-body-sm">{{ session('error') }}</p>
+                </div>
+            @endif
+
+            <!-- Content Area -->
             @yield('content')
-        </div>
+        </main>
     </div>
-</div>
-@yield('scripts')
+    
+    @vite('resources/js/bootstrap-bundle.js')
+    
+    <!-- Alpine.js (if used) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>
 

@@ -2,87 +2,73 @@
 
 @section('title', 'Surat Keluar - Ruang Administrasi')
 @section('page-title', 'Surat Keluar')
-@section('page-subtitle', 'Manajemen pembuatan dan persetujuan surat keluar')
 
 @section('content')
 <!-- Action Bar -->
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5">
-    <div class="flex items-center gap-4">
-        <!-- Search Input -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+    <div class="flex items-center gap-3">
         <div class="relative">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
-            <input class="w-64 pl-10 pr-4 py-1 rounded-full bg-surface-container-lowest border border-border-muted focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-md text-body-md text-on-background placeholder:text-outline shadow-sm" placeholder="Cari nomor surat, perihal..." type="text">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+            <input class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Cari nomor surat, perihal..." type="text">
         </div>
     </div>
-    <!-- Primary Action Button -->
-    <a href="{{ route('outgoing-letters.create') }}" class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-lg shadow-primary/30 transform hover:-translate-y-0.5">
+    <a href="{{ route('outgoing-letters.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
         <span class="material-symbols-outlined text-[18px]">add</span>
         Buat Surat Keluar
     </a>
 </div>
 
 <!-- Table Card -->
-<div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow overflow-hidden p-4">
+<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse min-w-[900px]">
             <thead>
-                <tr class="border-b border-border-muted">
-                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Nomor Surat</th>
-                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Tanggal</th>
-                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Tujuan</th>
-                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Perihal</th>
-                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Status</th>
-                    <th class="py-3 px-4 font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold text-right">Aksi</th>
+                <tr class="bg-surface-container-lowest border-b border-outline-variant/30 font-label-sm text-label-sm text-on-surface-variant">
+                    <th class="px-6 py-3 font-medium">Nomor Surat</th>
+                    <th class="px-6 py-3 font-medium">Tanggal</th>
+                    <th class="px-6 py-3 font-medium">Tujuan</th>
+                    <th class="px-6 py-3 font-medium">Perihal</th>
+                    <th class="px-6 py-3 font-medium">Status</th>
+                    <th class="px-6 py-3 font-medium text-right">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-border-muted/50">
+            <tbody class="font-body-sm text-body-sm">
                 @forelse($letters as $letter)
-                <tr class="hover:bg-surface-container-low transition-colors group">
-                    <td class="py-3 px-4 font-label-md text-label-md text-on-background font-bold">
-                        {{ $letter->letter_number }}
-                    </td>
-                    <td class="py-3 px-4 font-body-md text-body-md text-outline">
-                        {{ \Carbon\Carbon::parse($letter->date_sent)->format('d M Y') }}
-                    </td>
-                    <td class="py-3 px-4 font-body-md text-body-md text-on-surface-variant">
-                        {{ $letter->recipient }}
-                    </td>
-                    <td class="py-3 px-4 font-body-md text-body-md text-on-surface-variant max-w-xs truncate">
-                        {{ $letter->subject }}
-                    </td>
-                    <td class="py-3 px-4">
+                <tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest transition-colors group">
+                    <td class="px-6 py-3 text-on-surface font-medium">{{ $letter->letter_number }}</td>
+                    <td class="px-6 py-3 text-on-surface-variant">{{ \Carbon\Carbon::parse($letter->date_sent)->format('d M Y') }}</td>
+                    <td class="px-6 py-3 text-on-surface-variant">{{ $letter->recipient }}</td>
+                    <td class="px-6 py-3 text-on-surface-variant max-w-xs truncate">{{ $letter->subject }}</td>
+                    <td class="px-6 py-3">
                         @if($letter->status == 'pending')
-                            <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-status-peach text-tertiary-container font-label-sm text-label-sm border border-tertiary-fixed">
-                                <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
-                                Pending
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> PENDING
                             </span>
                         @elseif($letter->status == 'acc')
-                            <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-status-mint text-secondary font-label-sm text-label-sm border border-secondary-fixed">
-                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                                Disetujui
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-[11px]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> ACC
                             </span>
                         @else
-                            <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm border border-error-container/50">
-                                <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
-                                Ditolak
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container/40 text-error font-label-sm text-[11px]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-error"></span> DITOLAK
                             </span>
                         @endif
                     </td>
-                    <td class="py-3 px-4 text-right">
-                        <div class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <a href="{{ route('outgoing-letters.show', $letter->id) }}" class="w-7 h-7 flex items-center justify-center rounded-full text-primary hover:bg-primary-fixed transition-colors" title="Detail">
-                                <span class="material-symbols-outlined text-[14px]">visibility</span>
+                    <td class="px-6 py-3 text-right">
+                        <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <a href="{{ route('outgoing-letters.show', $letter->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-primary hover:bg-primary-fixed transition-colors" title="Detail">
+                                <span class="material-symbols-outlined text-[18px]">visibility</span>
                             </a>
                             @if($letter->status == 'pending')
-                            <a href="{{ route('outgoing-letters.edit', $letter->id) }}" class="w-7 h-7 flex items-center justify-center rounded-full text-primary hover:bg-primary-fixed transition-colors" title="Edit">
-                                <span class="material-symbols-outlined text-[14px]">edit</span>
+                            <a href="{{ route('outgoing-letters.edit', $letter->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-primary hover:bg-primary-fixed transition-colors" title="Edit">
+                                <span class="material-symbols-outlined text-[18px]">edit</span>
                             </a>
                             @endif
                             <form action="{{ route('outgoing-letters.destroy', $letter->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors" title="Hapus">
-                                    <span class="material-symbols-outlined text-[14px]">delete</span>
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg text-error hover:bg-error-container transition-colors" title="Hapus">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
                                 </button>
                             </form>
                         </div>
@@ -90,18 +76,11 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-1">
-                        <div class="flex-1 flex flex-col items-center justify-center text-center p-4">
-                            <div class="w-16 h-16 mb-3 relative">
-                                <div class="absolute inset-0 bg-surface-container rounded-full opacity-50 scale-110"></div>
-                                <div class="absolute inset-0 flex items-center justify-center text-primary-fixed-dim">
-                                    <span class="material-symbols-outlined text-[48px] font-light">drafts</span>
-                                </div>
-                            </div>
-                            <h4 class="font-headline-md text-headline-md text-[14px] text-on-background mb-1">Belum ada surat keluar</h4>
-                            <p class="font-body-md text-body-md text-[13px] text-on-surface-variant max-w-sm mx-auto">
-                                Daftar surat keluar masih kosong.
-                            </p>
+                    <td colspan="6" class="px-6 py-12 text-center">
+                        <div class="flex flex-col items-center gap-3 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[48px] text-outline/30">send</span>
+                            <h4 class="font-h3 text-h3 text-on-surface">Belum ada surat keluar</h4>
+                            <p class="font-body-sm text-body-sm max-w-sm">Daftar surat keluar masih kosong.</p>
                         </div>
                     </td>
                 </tr>
@@ -111,10 +90,3 @@
     </div>
 </div>
 @endsection
-
-
-
-
-
-
-

@@ -12,7 +12,7 @@
     </a>
 </div>
 
-<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 max-w-2xl mx-auto">
+<div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-6 md:p-8 w-full">
     <form action="{{ route('letter-types.update', $letterType->id) }}" method="POST" class="flex flex-col gap-4">
         @csrf
         @method('PUT')

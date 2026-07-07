@@ -14,7 +14,7 @@
 </div>
 
 <!-- Form Card -->
-<div class="bg-white rounded-3xl border border-muted p-6 md:p-8 w-full">
+<div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-6 md:p-8 w-full">
     
     <div class="mb-5 p-4 bg-surface-container border border-border-muted rounded-3xl flex items-center justify-between">
         <div class="flex items-center gap-4">

@@ -4,108 +4,113 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>@yield('title', 'Ruang Administrasi - Dashboard')</title>
-    <!-- Fonts -->
+    <!-- Fonts (Inter — sesuai Stitch) -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Tailwind Config -->
+    <!-- Tailwind Config (sesuai Stitch design system) -->
     <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             "colors": {
-                    "on-primary-fixed-variant": "#003ea8",
-                    "surface-bright": "#f8f9ff",
-                    "on-tertiary-fixed": "#360f00",
-                    "status-lilac": "#f5f3ff",
-                    "on-background": "#0b1c30",
-                    "background": "#f8f9ff",
-                    "on-error": "#ffffff",
-                    "primary-fixed": "#dbe1ff",
-                    "inverse-surface": "#213145",
-                    "primary-fixed-dim": "#b4c5ff",
-                    "background-pristine": "#ffffff",
-                    "secondary": "#006a61",
-                    "primary-container": "#2563eb",
-                    "tertiary-fixed": "#ffdbcd",
-                    "surface-container": "#e5eeff",
-                    "heading-slate": "#0f172a",
-                    "on-primary": "#ffffff",
-                    "tertiary-container": "#bc4800",
-                    "inverse-primary": "#b4c5ff",
-                    "status-peach": "#fff7ed",
-                    "on-primary-container": "#eeefff",
-                    "on-secondary-fixed": "#00201d",
-                    "surface-variant": "#d3e4fe",
-                    "on-tertiary": "#ffffff",
-                    "surface-dim": "#cbdbf5",
-                    "secondary-container": "#86f2e4",
-                    "on-tertiary-container": "#ffede6",
-                    "on-primary-fixed": "#00174b",
-                    "error-container": "#ffdad6",
-                    "error": "#ba1a1a",
-                    "on-surface-variant": "#434655",
-                    "surface-container-lowest": "#ffffff",
-                    "tertiary-fixed-dim": "#ffb596",
-                    "outline-variant": "#c3c6d7",
-                    "on-secondary": "#ffffff",
-                    "surface-tint": "#0053db",
-                    "outline": "#737686",
-                    "status-mint": "#ecfdf5",
-                    "secondary-fixed-dim": "#6bd8cb",
-                    "inverse-on-surface": "#eaf1ff",
-                    "on-error-container": "#93000a",
-                    "on-surface": "#0b1c30",
-                    "on-secondary-fixed-variant": "#005049",
-                    "on-tertiary-fixed-variant": "#7d2d00",
-                    "border-muted": "#f1f5f9",
-                    "surface-container-high": "#dce9ff",
-                    "secondary-fixed": "#89f5e7",
-                    "tertiary": "#943700",
-                    "surface-container-low": "#eff4ff",
-                    "surface-container-highest": "#d3e4fe",
-                    "surface": "#f8f9ff",
+                    "on-secondary-fixed-variant": "#005137",
+                    "secondary": "#006c4a",
                     "primary": "#004ac6",
-                    "on-secondary-container": "#006f66"
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d9d9e5",
+                    "primary-container": "#2563eb",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c3c6d7",
+                    "on-primary-container": "#eeefff",
+                    "on-error-container": "#93000a",
+                    "background": "#faf8ff",
+                    "tertiary": "#4338d9",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary-fixed": "#0f0069",
+                    "secondary-fixed-dim": "#68dba9",
+                    "inverse-primary": "#b4c5ff",
+                    "tertiary-fixed": "#e2dfff",
+                    "tertiary-container": "#5d55f3",
+                    "surface-bright": "#faf8ff",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#faf8ff",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-tertiary-container": "#f2eeff",
+                    "tertiary-fixed-dim": "#c3c0ff",
+                    "inverse-surface": "#2e3039",
+                    "secondary-fixed": "#85f8c4",
+                    "surface-tint": "#0053db",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#00174b",
+                    "surface-variant": "#e1e2ed",
+                    "on-secondary-container": "#00714e",
+                    "surface-container-highest": "#e1e2ed",
+                    "on-background": "#191b23",
+                    "on-surface": "#191b23",
+                    "surface-container-high": "#e7e7f3",
+                    "inverse-on-surface": "#f0f0fb",
+                    "surface-container-low": "#f3f3fe",
+                    "on-tertiary-fixed-variant": "#3323cc",
+                    "outline": "#737686",
+                    "on-secondary-fixed": "#002114",
+                    "on-surface-variant": "#434655",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#82f5c1",
+                    "surface-container": "#ededf9",
+                    "status-mint": "#ecfdf5",
+                    "status-peach": "#fff7ed",
+                    "status-lilac": "#f5f3ff",
+                    "heading-slate": "#0f172a",
+                    "border-muted": "#f1f5f9"
             },
             "borderRadius": {
-                    "DEFAULT": "0.75rem",
-                    "lg": "1rem",
-                    "xl": "1.5rem",
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
                     "full": "9999px"
             },
             "spacing": {
-                    "gutter": "24px",
-                    "unit": "8px",
-                    "margin-mobile": "16px",
-                    "margin-desktop": "40px",
-                    "container-max": "1440px",
+                    "container_max_width": "1280px",
+                    "margin_desktop": "2rem",
+                    "gutter": "1.5rem",
+                    "margin_mobile": "1rem",
+                    "sidebar_width": "256px",
                     "macro-padding": "32px"
             },
             "fontFamily": {
-                    "body-md": ["Plus Jakarta Sans"],
-                    "label-sm": ["Plus Jakarta Sans"],
-                    "headline-xl": ["Plus Jakarta Sans"],
-                    "body-lg": ["Plus Jakarta Sans"],
-                    "label-md": ["Plus Jakarta Sans"],
-                    "headline-md": ["Plus Jakarta Sans"],
-                    "headline-xl-mobile": ["Plus Jakarta Sans"],
-                    "headline-lg": ["Plus Jakarta Sans"]
+                    "label-sm": ["Inter"],
+                    "display": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "h1": ["Inter"],
+                    "h1-mobile": ["Inter"],
+                    "h2": ["Inter"],
+                    "h3": ["Inter"],
+                    "label-md": ["Inter"]
             },
             "fontSize": {
-                    "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
-                    "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
-                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                    "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600"}],
-                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-                    "headline-xl-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "h1": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "h1-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "h2": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
             }
           }
         }
@@ -118,132 +123,101 @@
         .icon-fill {
             font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        /* Custom Ambient Shadow for ultra-premium feel */
-        .ambient-shadow {
-            box-shadow: 0 8px 30px rgba(0, 74, 198, 0.04), 0 2px 10px rgba(0, 0, 0, 0.02);
-        }
     </style>
     @yield('styles')
 </head>
-<body class="bg-background font-body-md text-body-md text-on-background min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
+<body class="bg-surface-variant/20 text-on-surface antialiased min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
     
-    <!-- SideNavBar -->
-    <nav class="w-64 h-full fixed left-0 top-0 border-r border-border-muted bg-[#f4f7fc] flex flex-col py-macro-padding z-50">
-        <!-- Brand Header -->
-        <div class="px-2 mb-10 flex items-center gap-4">
-            <div class="w-8 h-8 rounded-2xl bg-gradient-to-br from-primary to-secondary-container flex items-center justify-center shadow-lg shadow-primary/20">
-                <span class="material-symbols-outlined text-on-primary icon-fill text-[14px]">dashboard_customize</span>
+    <!-- SideNavBar (sesuai Stitch: bg-surface, border-l-4 active, rounded-lg) -->
+    <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col border-r border-outline-variant shadow-sm bg-surface justify-between py-6 px-4 z-50">
+        <div>
+            <!-- Brand Header -->
+            <div class="px-4 mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined text-on-primary icon-fill text-[18px]">dashboard_customize</span>
+                    </div>
+                    <div>
+                        <h1 class="font-display text-h3 text-primary truncate">Ruang Administrasi</h1>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant truncate">Tertib Administrasi</p>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h1 class="font-headline-md text-headline-md font-bold text-on-background tracking-tight">Ruang Administrasi</h1>
-                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mt-0.5" style="font-size: 9px;">Sistem Manajemen</p>
+            
+            <!-- Main Navigation -->
+            <div class="flex flex-col gap-1">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 {{ request()->routeIs('admin.dashboard') ? 'border-primary bg-secondary-container text-on-secondary-container font-label-md text-label-md' : 'border-transparent text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md' }} transition-colors duration-200">
+                    <span class="material-symbols-outlined {{ request()->routeIs('admin.dashboard') ? 'icon-fill' : '' }}">dashboard</span>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="{{ route('incoming-letters.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 {{ request()->routeIs('incoming-letters.*') ? 'border-primary bg-secondary-container text-on-secondary-container font-label-md text-label-md' : 'border-transparent text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md' }} transition-colors duration-200">
+                    <span class="material-symbols-outlined {{ request()->routeIs('incoming-letters.*') ? 'icon-fill' : '' }}">inbox</span>
+                    <span>Surat Masuk</span>
+                </a>
+                
+                <a href="{{ route('outgoing-letters.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 {{ request()->routeIs('outgoing-letters.*') ? 'border-primary bg-secondary-container text-on-secondary-container font-label-md text-label-md' : 'border-transparent text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md' }} transition-colors duration-200">
+                    <span class="material-symbols-outlined {{ request()->routeIs('outgoing-letters.*') ? 'icon-fill' : '' }}">send</span>
+                    <span>Surat Keluar</span>
+                </a>
+                
+                <a href="{{ route('letter-types.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 {{ request()->routeIs('letter-types.*') ? 'border-primary bg-secondary-container text-on-secondary-container font-label-md text-label-md' : 'border-transparent text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md' }} transition-colors duration-200">
+                    <span class="material-symbols-outlined {{ request()->routeIs('letter-types.*') ? 'icon-fill' : '' }}">description</span>
+                    <span>Jenis Surat</span>
+                </a>
+                
+                <a href="{{ route('employees.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 {{ request()->routeIs('employees.*') ? 'border-primary bg-secondary-container text-on-secondary-container font-label-md text-label-md' : 'border-transparent text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md' }} transition-colors duration-200">
+                    <span class="material-symbols-outlined {{ request()->routeIs('employees.*') ? 'icon-fill' : '' }}">badge</span>
+                    <span>Karyawan</span>
+                </a>
             </div>
         </div>
         
-        <!-- Main Navigation -->
-        <div class="flex-1 overflow-y-auto flex flex-col gap-1">
-            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'bg-secondary-container text-on-secondary-container rounded-full px-2 py-1 mx-2 flex items-center gap-4 transition-transform scale-95 active:scale-90 group relative font-label-md text-label-md' : 'text-on-surface-variant font-label-md text-label-md px-2 py-1 mx-2 rounded-full hover:bg-surface-variant transition-colors flex items-center gap-4 group' }}">
-                <span class="material-symbols-outlined {{ request()->routeIs('admin.dashboard') ? 'icon-fill' : 'group-hover:text-primary transition-colors' }}">dashboard</span>
-                Dasbor
-                @if(request()->routeIs('admin.dashboard'))
-                    <div class="absolute right-4 w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
-                @endif
+        <!-- Footer Nav -->
+        <div class="flex flex-col gap-1 border-t border-outline-variant pt-4 mt-4">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors duration-200 font-label-md text-label-md">
+                <span class="material-symbols-outlined">account_circle</span>
+                <span>Profil Saya</span>
             </a>
-            
-            <a href="{{ route('incoming-letters.index') }}" class="{{ request()->routeIs('incoming-letters.*') ? 'bg-secondary-container text-on-secondary-container rounded-full px-2 py-1 mx-2 flex items-center gap-4 transition-transform scale-95 active:scale-90 group relative font-label-md text-label-md' : 'text-on-surface-variant font-label-md text-label-md px-2 py-1 mx-2 rounded-full hover:bg-surface-variant transition-colors flex items-center gap-4 group' }}">
-                <span class="material-symbols-outlined {{ request()->routeIs('incoming-letters.*') ? 'icon-fill' : 'group-hover:text-primary transition-colors' }}">inbox</span>
-                Surat Masuk
-                @if(request()->routeIs('incoming-letters.*'))
-                    <div class="absolute right-4 w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
-                @endif
-            </a>
-            
-            <a href="{{ route('outgoing-letters.index') }}" class="{{ request()->routeIs('outgoing-letters.*') ? 'bg-secondary-container text-on-secondary-container rounded-full px-2 py-1 mx-2 flex items-center gap-4 transition-transform scale-95 active:scale-90 group relative font-label-md text-label-md' : 'text-on-surface-variant font-label-md text-label-md px-2 py-1 mx-2 rounded-full hover:bg-surface-variant transition-colors flex items-center gap-4 group' }}">
-                <span class="material-symbols-outlined {{ request()->routeIs('outgoing-letters.*') ? 'icon-fill' : 'group-hover:text-primary transition-colors' }}">send</span>
-                Surat Keluar
-                @if(request()->routeIs('outgoing-letters.*'))
-                    <div class="absolute right-4 w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
-                @endif
-            </a>
-            
-            <a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'bg-secondary-container text-on-secondary-container rounded-full px-2 py-1 mx-2 flex items-center gap-4 transition-transform scale-95 active:scale-90 group relative font-label-md text-label-md' : 'text-on-surface-variant font-label-md text-label-md px-2 py-1 mx-2 rounded-full hover:bg-surface-variant transition-colors flex items-center gap-4 group' }}">
-                <span class="material-symbols-outlined {{ request()->routeIs('employees.*') ? 'icon-fill' : 'group-hover:text-primary transition-colors' }}">badge</span>
-                Karyawan
-                @if(request()->routeIs('employees.*'))
-                    <div class="absolute right-4 w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
-                @endif
-            </a>
-            
-            <a href="{{ route('letter-types.index') }}" class="{{ request()->routeIs('letter-types.*') ? 'bg-secondary-container text-on-secondary-container rounded-full px-2 py-1 mx-2 flex items-center gap-4 transition-transform scale-95 active:scale-90 group relative font-label-md text-label-md' : 'text-on-surface-variant font-label-md text-label-md px-2 py-1 mx-2 rounded-full hover:bg-surface-variant transition-colors flex items-center gap-4 group' }}">
-                <span class="material-symbols-outlined {{ request()->routeIs('letter-types.*') ? 'icon-fill' : 'group-hover:text-primary transition-colors' }}">description</span>
-                Jenis Surat
-                @if(request()->routeIs('letter-types.*'))
-                    <div class="absolute right-4 w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
-                @endif
-            </a>
-        </div>
-        
-        <!-- CTA & Footer -->
-        <div class="px-2 mt-4 flex flex-col gap-4">
-            <a href="{{ route('incoming-letters.create') }}" class="w-full bg-primary text-on-primary font-label-md text-label-md py-3 rounded-full hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">add</span>
-                Entri Surat
-            </a>
-            <div class="h-px bg-border-muted w-full my-2"></div>
-            
             <form action="{{ route('logout') }}" method="POST" style="width: 100%;">
                 @csrf
-                <button type="submit" class="w-full text-on-surface-variant font-label-md text-label-md px-4 py-2.5 rounded-full hover:bg-error-container hover:text-error transition-colors flex items-center gap-3">
-                    <span class="material-symbols-outlined text-[18px]">logout</span>
-                    Keluar
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-surface-container transition-colors duration-200 font-label-md text-label-md">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span>Keluar</span>
                 </button>
             </form>
         </div>
     </nav>
     
-    <!-- Main Content Canvas -->
-    <main class="flex-1 pl-64 flex flex-col min-h-screen">
-        <!-- TopAppBar -->
-        <header class="docked full-width top-0 sticky z-40 bg-background/80 backdrop-blur-md flex justify-between items-center px-margin-desktop py-unit border-b border-transparent transition-all duration-300 mt-2">
-            <!-- Left: Page Context -->
-            <div class="flex flex-col">
-                <h2 class="font-headline-lg text-headline-lg font-bold text-on-background tracking-tight">@yield('page-title')</h2>
-                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">@yield('page-subtitle')</p>
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col md:ml-sidebar_width min-w-0">
+        <!-- TopAppBar (sesuai Stitch) -->
+        <header class="sticky top-0 z-40 w-full bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-margin_mobile md:px-margin_desktop h-16">
+            <div class="flex items-center">
+                <h1 class="font-h2 text-h2 md:font-h1 md:text-h1 text-on-surface">@yield('page-title')</h1>
             </div>
-            <!-- Right: Actions & Profile -->
             <div class="flex items-center gap-4">
-                <!-- Data Pills -->
-                <div class="hidden lg:flex items-center gap-4">
-                    <button class="bg-surface-container-lowest border border-border-muted px-2 py-1 rounded-full font-label-sm text-label-sm text-on-surface hover:bg-surface-variant/50 transition-all flex items-center gap-4">
-                        <span class="material-symbols-outlined text-[14px]">calendar_month</span>
-                        {{ \Carbon\Carbon::now()->translatedFormat('d M Y') }}
-                    </button>
-                    <div class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-4 font-bold">
-                        {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
-                    </div>
+                <div class="hidden sm:flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm bg-surface-container px-3 py-1.5 rounded-full">
+                    <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                    <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}</span>
                 </div>
-                <div class="w-px h-8 bg-border-muted hidden md:block"></div>
-                <!-- Profile -->
-                <button class="focus-within:ring-2 focus-within:ring-primary/20 rounded-full transition-all flex items-center gap-4">
-                    <div class="text-right hidden md:block">
-                        <div class="font-label-md text-label-md text-on-background">{{ Auth::user()->name }}</div>
-                        <div class="font-label-sm text-label-sm text-on-surface-variant uppercase">{{ Auth::user()->role }}</div>
-                    </div>
-                    @if(Auth::user()->photo)
-                        <img alt="User profile" class="w-7 h-7 rounded-full object-cover border-2 border-surface-container-lowest shadow-sm" src="{{ asset('storage/' . Auth::user()->photo) }}">
-                    @else
-                        <div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm border-2 border-surface-container-lowest shadow-sm">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
-                        </div>
-                    @endif
+                <button class="p-2 text-on-surface-variant hover:bg-surface-container-high/50 rounded-full transition-all focus:ring-2 focus:ring-primary/20">
+                    <span class="material-symbols-outlined">notifications</span>
                 </button>
+                @if(Auth::user()->photo)
+                    <img alt="Profil Pengguna" class="w-8 h-8 rounded-full border border-outline-variant object-cover cursor-pointer" src="{{ asset('storage/' . Auth::user()->photo) }}">
+                @else
+                    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm border border-outline-variant cursor-pointer">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                    </div>
+                @endif
             </div>
         </header>
         
-        <!-- Page Content -->
-        <div class="p-margin-desktop pt-4 max-w-container-max w-full flex flex-col gap-macro-padding">
+        <!-- Canvas -->
+        <div class="flex-1 p-margin_mobile md:p-margin_desktop overflow-auto w-full">
             @if(session('success'))
-            <div class="bg-status-mint text-secondary border border-secondary-fixed px-2 py-1 rounded-3xl font-label-md text-label-md mb-4 flex items-center gap-4">
+            <div class="bg-status-mint text-secondary border border-secondary-fixed px-4 py-3 rounded-xl font-label-md text-label-md mb-6 flex items-center gap-3">
                 <span class="material-symbols-outlined icon-fill">check_circle</span>
                 {{ session('success') }}
             </div>
@@ -256,10 +230,3 @@
     @yield('scripts')
 </body>
 </html>
-
-
-
-
-
-
-
