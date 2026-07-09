@@ -85,7 +85,6 @@
                 Edit Surat
             </a>
             @endif
-            @if($outgoingLetter->status == 'acc')
             <a href="{{ route('outgoing-letters.export-word', $outgoingLetter->id) }}" class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-colors shadow-sm flex items-center gap-2">
                 <span class="material-symbols-outlined text-[18px]">description</span>
                 Export Word
@@ -94,7 +93,6 @@
                 <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
                 Cetak PDF
             </a>
-            @endif
         </div>
     </div>
 

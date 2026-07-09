@@ -85,12 +85,12 @@
                             <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">cloud_upload</span>
                             <div class="flex text-body-sm text-on-surface-variant justify-center">
                                 <label class="relative cursor-pointer font-label-md text-primary hover:underline" for="file">
-                                    <span>Pilih berkas baru</span>
+                                    <span id="file_name_display">Pilih berkas baru</span>
                                     <input type="file" name="file" id="file" accept=".pdf" class="sr-only">
                                 </label>
-                                <p class="pl-1">atau tarik dan lepas</p>
+                                <p class="pl-1" id="file_drag_text">atau tarik dan lepas</p>
                             </div>
-                            <p class="text-xs text-on-surface-variant">Biarkan kosong jika tidak ingin mengubah</p>
+                            <p class="text-xs text-on-surface-variant" id="file_help_text">Biarkan kosong jika tidak ingin mengubah</p>
                         </div>
                     </div>
                 </div>
@@ -118,4 +118,26 @@
         </div>
     </form>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    const fileInput = document.getElementById('file');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                document.getElementById('file_name_display').textContent = fileName;
+                const dragText = document.getElementById('file_drag_text');
+                if(dragText) dragText.style.display = 'none';
+                
+                const icon = this.closest('.border-dashed').querySelector('.material-symbols-outlined');
+                if (icon) {
+                    icon.textContent = 'check_circle';
+                    icon.classList.add('text-primary');
+                }
+            }
+        });
+    }
+</script>
 @endsection

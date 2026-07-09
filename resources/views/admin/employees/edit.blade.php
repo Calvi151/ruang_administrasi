@@ -82,8 +82,8 @@
                     <label for="role" class="block font-label-md text-label-md text-on-surface mb-1">Hak Akses <span class="text-error">*</span></label>
                     <div class="relative">
                         <select name="role" id="role" class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-3 pr-10 font-body-sm text-body-sm appearance-none" required>
-                            <option value="karyawan" {{ old('role', $employee->user ? $employee->user->role : 'karyawan') == 'karyawan' ? 'selected' : '' }}>Karyawan (Standard)</option>
-                            <option value="ceo" {{ old('role', $employee->user ? $employee->user->role : 'karyawan') == 'ceo' ? 'selected' : '' }}>Admin / CEO (Full Access)</option>
+                            <option value="admin" {{ old('role', $employee->user ? $employee->user->role : 'admin') == 'admin' ? 'selected' : '' }}>Admin (Standard)</option>
+                            <option value="ceo" {{ old('role', $employee->user ? $employee->user->role : 'admin') == 'ceo' ? 'selected' : '' }}>Admin / CEO (Full Access)</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
                             <span class="material-symbols-outlined">expand_more</span>
@@ -104,11 +104,12 @@
                             <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">add_photo_alternate</span>
                             <div class="flex text-body-sm text-on-surface-variant justify-center">
                                 <label class="relative cursor-pointer font-label-md text-primary hover:underline" for="photo">
-                                    <span>Pilih foto baru</span>
+                                    <span id="file_name_display">Pilih foto baru</span>
                                     <input type="file" name="photo" id="photo" accept=".jpg,.jpeg,.png" class="sr-only">
                                 </label>
+                                <p class="pl-1" id="file_drag_text">atau tarik dan lepas</p>
                             </div>
-                            <p class="text-xs text-on-surface-variant">Biarkan kosong jika tidak diubah</p>
+                            <p class="text-xs text-on-surface-variant" id="file_help_text">Biarkan kosong jika tidak diubah</p>
                         </div>
                     </div>
                 </div>
@@ -124,4 +125,26 @@
         </div>
     </form>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    const fileInput = document.getElementById('photo');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                document.getElementById('file_name_display').textContent = fileName;
+                const dragText = document.getElementById('file_drag_text');
+                if(dragText) dragText.style.display = 'none';
+                
+                const icon = this.closest('.border-dashed').querySelector('.material-symbols-outlined');
+                if (icon) {
+                    icon.textContent = 'check_circle';
+                    icon.classList.add('text-primary');
+                }
+            }
+        });
+    }
+</script>
 @endsection
