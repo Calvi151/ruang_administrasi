@@ -2,158 +2,133 @@
 
 @section('title', 'Detail Surat Keluar - Ruang Administrasi')
 @section('page-title', 'Detail Surat Keluar')
-@section('page-subtitle', 'Informasi lengkap terkait surat keluar')
 
 @section('content')
-<!-- Back Button -->
-<div class="mb-4">
-    <a href="{{ route('outgoing-letters.index') }}" class="inline-flex items-center gap-4 text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md">
-        <span class="material-symbols-outlined text-[14px]">arrow_back</span>
+<div class="mb-6">
+    <a href="{{ route('outgoing-letters.index') }}" class="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Kembali ke Surat Keluar
     </a>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-    <!-- Info Card -->
-    <div class="lg:col-span-2 flex flex-col gap-4">
-        <div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-4 relative overflow-hidden">
-            <div class="absolute -right-6 -top-4 text-primary-fixed-dim/10">
-                <span class="material-symbols-outlined text-[150px] icon-fill">send</span>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter items-start">
+    <!-- Main Detail Card -->
+    <div class="lg:col-span-2 bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-lowest flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-primary-container/10 rounded-lg text-primary">
+                    <span class="material-symbols-outlined icon-fill">outbox</span>
+                </div>
+                <div>
+                    <h3 class="font-h3 text-h3 text-on-surface">{{ $outgoingLetter->letter_number }}</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+                        <span class="material-symbols-outlined text-[14px]">business</span>
+                        Tujuan: {{ $outgoingLetter->recipient }}
+                    </p>
+                </div>
             </div>
-            
-            <div class="relative z-10">
-                <div class="flex justify-between items-start mb-5 pb-6 border-b border-border-muted">
-                    <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 rounded-2xl bg-primary-fixed text-primary flex items-center justify-center shadow-inner">
-                            <span class="material-symbols-outlined text-[48px] icon-fill">outbox</span>
-                        </div>
-                        <div>
-                            <h3 class="font-headline-md text-headline-md text-on-background font-bold tracking-tight">{{ $outgoingLetter->letter_number }}</h3>
-                            <p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-4 mt-1">
-                                <span class="material-symbols-outlined text-[14px]">business</span>
-                                Tujuan: {{ $outgoingLetter->recipient }}
-                            </p>
-                        </div>
-                    </div>
+            @if($outgoingLetter->status == 'pending')
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> PENDING
+                </span>
+            @elseif($outgoingLetter->status == 'acc')
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> DISETUJUI
+                </span>
+            @else
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container/40 text-error font-label-sm text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-error"></span> DITOLAK
+                </span>
+            @endif
+        </div>
 
-                    <!-- Status Badge -->
-                    @if($outgoingLetter->status == 'pending')
-                        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-status-peach text-tertiary-container font-label-md text-label-md border border-tertiary-fixed shadow-sm">
-                            <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-                            Menunggu Persetujuan
-                        </span>
-                    @elseif($outgoingLetter->status == 'acc')
-                        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-status-mint text-secondary font-label-md text-label-md border border-secondary-fixed shadow-sm">
-                            <span class="w-2 h-2 rounded-full bg-secondary"></span>
-                            Disetujui
-                        </span>
-                    @else
-                        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-error-container text-on-error-container font-label-md text-label-md border border-error-container/50 shadow-sm">
-                            <span class="w-2 h-2 rounded-full bg-error"></span>
-                            Ditolak
-                        </span>
-                    @endif
-                </div>
-
-                <div class="space-y-6">
-                    <div class="flex gap-12">
-                        <div>
-                            <h4 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2">Tanggal Surat</h4>
-                            <div class="flex items-center gap-4 font-body-lg text-body-lg text-on-background bg-surface-container-low px-2 py-1 rounded-3xl inline-flex border border-border-muted/50">
-                                <span class="material-symbols-outlined text-primary">calendar_month</span>
-                                {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2">Jenis Surat</h4>
-                            <div class="flex items-center gap-4 font-body-lg text-body-lg text-on-background bg-surface-container-low px-2 py-1 rounded-3xl inline-flex border border-border-muted/50">
-                                <span class="material-symbols-outlined text-primary">category</span>
-                                {{ $outgoingLetter->letterType->type_name ?? '-' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2">Perihal</h4>
-                        <div class="bg-surface-bright border border-border-muted rounded-2xl p-4">
-                            <p class="font-body-lg text-body-lg text-on-background leading-relaxed font-bold">
-                                {{ $outgoingLetter->subject }}
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h4 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2">Isi Surat / Keterangan</h4>
-                        <div class="bg-surface-bright border border-border-muted rounded-2xl p-4">
-                            <p class="font-body-md text-body-md text-on-background leading-relaxed whitespace-pre-wrap">{{ $outgoingLetter->content }}</p>
-                        </div>
+        <!-- Body -->
+        <div class="p-6 space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1.5">Tanggal Surat</h4>
+                    <div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface bg-surface-container-low px-3 py-2 rounded-lg border border-outline-variant/30 inline-flex">
+                        <span class="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
+                        {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}
                     </div>
                 </div>
-                
-                <div class="mt-6 flex gap-4 border-t border-border-muted pt-6">
-                    <a href="{{ route('outgoing-letters.edit', $outgoingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md hover:bg-primary-fixed-dim transition-all flex items-center gap-2 ml-auto">
-                        <span class="material-symbols-outlined text-[18px]">edit</span>
-                        Edit Surat
-                    </a>
+                <div>
+                    <h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1.5">Jenis Surat</h4>
+                    <div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface bg-surface-container-low px-3 py-2 rounded-lg border border-outline-variant/30 inline-flex">
+                        <span class="material-symbols-outlined text-primary text-[18px]">category</span>
+                        {{ $outgoingLetter->letterType->type_name ?? '-' }}
+                    </div>
                 </div>
-                
-
-                <!-- Print/Export Actions -->
-                @if($outgoingLetter->status == 'acc')
-                <div class="mt-6 flex gap-4 border-t border-border-muted pt-6">
-                    <a href="{{ route('outgoing-letters.export-word', $outgoingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px]">description</span>
-                        Export Word Document
-                    </a>
-                    <a href="{{ route('outgoing-letters.export-pdf', $outgoingLetter->id) }}" target="_blank" class="px-5 py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary-fixed transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
-                        Cetak PDF
-                    </a>
-                </div>
-                @endif
             </div>
+
+            <div>
+                <h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1.5">Perihal</h4>
+                <div class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-4">
+                    <p class="font-body-sm text-body-sm text-on-surface font-medium">{{ $outgoingLetter->subject }}</p>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1.5">Isi Surat / Keterangan</h4>
+                <div class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-4">
+                    <div class="font-body-sm text-body-sm text-on-surface leading-relaxed whitespace-pre-wrap">{!! $outgoingLetter->content !!}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant/30 flex flex-wrap gap-3 justify-end">
+            @if($outgoingLetter->status == 'pending')
+            <a href="{{ route('outgoing-letters.edit', $outgoingLetter->id) }}" class="px-4 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface-variant rounded-lg font-label-md text-label-md hover:bg-surface transition-colors shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+                Edit Surat
+            </a>
+            @endif
+            @if($outgoingLetter->status == 'acc')
+            <a href="{{ route('outgoing-letters.export-word', $outgoingLetter->id) }}" class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-colors shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">description</span>
+                Export Word
+            </a>
+            <a href="{{ route('outgoing-letters.export-pdf', $outgoingLetter->id) }}" target="_blank" class="px-4 py-2 bg-surface-container-lowest border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-primary-fixed transition-colors shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                Cetak PDF
+            </a>
+            @endif
         </div>
     </div>
 
-    <!-- Attachment Card -->
-    <div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-4">
-        <h3 class="font-headline-md text-headline-md text-on-background font-bold mb-4 flex items-center gap-4 border-b border-border-muted pb-4">
-            <span class="material-symbols-outlined text-primary">attachment</span>
-            Lampiran Surat
-        </h3>
-        
-        @if($outgoingLetter->file_path)
-            <div class="bg-primary-fixed/20 border border-primary-fixed-dim/30 rounded-2xl p-4 flex flex-col items-center text-center gap-4 transition-all hover:bg-primary-fixed/40 hover:border-primary/20 group">
-                <div class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <span class="material-symbols-outlined text-[48px]">picture_as_pdf</span>
+    <!-- Attachment Sidebar -->
+    <div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+        <div class="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-lowest">
+            <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">attachment</span>
+                Lampiran
+            </h3>
+        </div>
+        <div class="p-6">
+            @if($outgoingLetter->file_path)
+            <div class="bg-primary-fixed/20 border border-primary-fixed-dim/30 rounded-lg p-4 flex flex-col items-center text-center gap-3 hover:bg-primary-fixed/30 transition-colors">
+                <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[28px]">picture_as_pdf</span>
                 </div>
                 <div>
-                    <h4 class="font-label-md text-label-md text-on-background font-bold truncate max-w-[200px]" title="{{ basename($outgoingLetter->file_path) }}">File Dokumen</h4>
-                    <p class="font-label-sm text-label-sm text-outline mt-1">Format PDF</p>
+                    <h4 class="font-label-md text-label-md text-on-surface">File Dokumen</h4>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Format PDF</p>
                 </div>
-                <a href="{{ asset('storage/' . $outgoingLetter->file_path) }}" target="_blank" class="mt-2 w-full px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-2">
+                <a href="{{ asset('storage/' . $outgoingLetter->file_path) }}" target="_blank" class="w-full px-4 py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-colors flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-[18px]">open_in_new</span>
                     Buka Dokumen
                 </a>
             </div>
-        @else
-            <div class="bg-surface-container-low border border-dashed border-border-muted rounded-2xl p-4 flex flex-col items-center text-center gap-4">
-                <div class="w-16 h-16 rounded-full bg-surface-variant text-outline flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[48px]">description</span>
-                </div>
-                <div>
-                    <h4 class="font-label-md text-label-md text-on-background">Tidak ada lampiran</h4>
-                    <p class="font-label-sm text-label-sm text-outline mt-1">Surat ini tidak memiliki file lampiran tambahan.</p>
-                </div>
+            @else
+            <div class="border-2 border-dashed border-outline-variant rounded-lg p-6 flex flex-col items-center text-center gap-2">
+                <span class="material-symbols-outlined text-[40px] text-outline/30">description</span>
+                <p class="font-label-md text-label-md text-on-surface-variant">Tidak ada lampiran</p>
+                <p class="font-label-sm text-label-sm text-outline">Surat ini tidak memiliki file lampiran.</p>
             </div>
-        @endif
+            @endif
+        </div>
     </div>
 </div>
 @endsection
-
-
-
-
-
-
-
