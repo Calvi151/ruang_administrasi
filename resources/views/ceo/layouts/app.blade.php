@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" id="html-root">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,6 +7,17 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Dark Mode: apply class before render to prevent flash -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('ruang-admin-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     
     <!-- Google Fonts & Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -34,6 +45,98 @@
         .icon-fill {
             font-variation-settings: 'FILL' 1;
         }
+        /* Dark mode smooth transition */
+        html.dark *, html:not(.dark) * {
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
+        }
+        /* Custom scrollbar for dark mode */
+        html.dark ::-webkit-scrollbar-track { background: #12131e; }
+        html.dark ::-webkit-scrollbar-thumb { background: #3a3d54; border-radius: 4px; }
+        html.dark ::-webkit-scrollbar { width: 6px; }
+
+        /* ============================================================
+           DARK MODE — Override semua Tailwind surface & text tokens
+           Mencakup seluruh halaman tanpa perlu ubah file view
+        ============================================================ */
+
+        /* ----- BACKGROUNDS ----- */
+        html.dark .bg-background,
+        html.dark .bg-surface,
+        html.dark .bg-surface-bright            { background-color: #1e2030 !important; }
+
+        html.dark .bg-surface-container-lowest  { background-color: #1a1c2e !important; }
+        html.dark .bg-surface-container-low     { background-color: #1e2035 !important; }
+        html.dark .bg-surface-container         { background-color: #252840 !important; }
+        html.dark .bg-surface-container-high    { background-color: #2d3050 !important; }
+        html.dark .bg-surface-container-highest { background-color: #333560 !important; }
+        html.dark .bg-surface-dim               { background-color: #13141e !important; }
+        html.dark .bg-surface-variant           { background-color: #252840 !important; }
+
+        /* Primary container (icon background) — lebih gelap agar tidak menyilaukan */
+        html.dark .bg-primary-fixed             { background-color: #1e2f5a !important; }
+        html.dark .bg-primary-container         { background-color: #1a2d6e !important; }
+        html.dark .bg-tertiary-fixed            { background-color: #3b1215 !important; }
+        html.dark .bg-tertiary-container        { background-color: #6b1215 !important; }
+
+        /* Secondary container badge */
+        html.dark .bg-secondary-container       { background-color: #0a3b28 !important; }
+
+        /* ----- TEXT ----- */
+        html.dark .text-on-surface              { color: #e2e4f0 !important; }
+        html.dark .text-on-surface-variant      { color: #9ca3bf !important; }
+        html.dark .text-on-background           { color: #e2e4f0 !important; }
+        html.dark .text-on-secondary-container  { color: #6ee7b7 !important; }
+        html.dark .text-outline                 { color: #636885 !important; }
+        html.dark .text-primary                 { color: #b4c5ff !important; }
+        html.dark .text-secondary               { color: #68dba9 !important; }
+        html.dark .text-tertiary                { color: #ff8a80 !important; }
+
+        /* Teks umum di dalam tabel / konten */
+        html.dark p, html.dark span,
+        html.dark td, html.dark th,
+        html.dark li, html.dark label          { color: inherit; }
+
+        /* ----- BORDERS ----- */
+        html.dark .border-outline-variant       { border-color: #33374f !important; }
+        html.dark .border-outline               { border-color: #4a4e6a !important; }
+        html.dark .border-secondary-fixed       { border-color: #1a6b4a !important; }
+
+        /* ----- HOVER STATES ----- */
+        html.dark .hover\:bg-surface-container-high:hover { background-color: #2d3050 !important; }
+        html.dark .hover\:bg-surface-container-lowest:hover { background-color: #252840 !important; }
+
+        /* ----- INPUT & FORM ----- */
+        html.dark input, html.dark select, html.dark textarea {
+            background-color: #252840 !important;
+            border-color: #33374f !important;
+            color: #e2e4f0 !important;
+        }
+        html.dark input::placeholder,
+        html.dark textarea::placeholder         { color: #5a5e7a !important; }
+        html.dark input:focus, html.dark select:focus,
+        html.dark textarea:focus                { border-color: #b4c5ff !important; }
+
+        /* ----- MODALS & DROPDOWNS ----- */
+        html.dark [class*="modal"],
+        html.dark [class*="dropdown-menu"]      { background-color: #1a1c2e !important; border-color: #33374f !important; }
+
+        /* ----- BADGES ----- */
+        /* Success badge */
+        html.dark .bg-secondary-container\/30  { background-color: rgba(10, 59, 40, 0.5) !important; }
+        /* Error/red badge */
+        html.dark .bg-error-container           { background-color: #3b0d0d !important; }
+        html.dark .text-error                   { color: #ff7070 !important; }
+        html.dark .bg-error-container\/30       { background-color: rgba(59, 13, 13, 0.5) !important; }
+
+        /* Amber / warning */
+        html.dark .bg-amber-100                 { background-color: #3b2a05 !important; }
+        html.dark .text-amber-800               { color: #fbbf24 !important; }
+        html.dark .bg-amber-500\/10             { background-color: rgba(59, 42, 5, 0.5) !important; }
+        html.dark .text-amber-600               { color: #fbbf24 !important; }
+
+        /* ----- MISC UTILITY ----- */
+        html.dark .shadow-sm                    { box-shadow: 0 1px 2px rgba(0,0,0,0.6) !important; }
+        html.dark .shadow-md                    { box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; }
     </style>
     
     <script id="tailwind-config">
@@ -88,7 +191,16 @@
                         "secondary-container": "#82f5c1",
                         "tertiary-container": "#d52022",
                         "on-tertiary-fixed-variant": "#93000b",
-                        "tertiary": "#ae0010"
+                        "tertiary": "#ae0010",
+                        /* Dark mode surface tokens */
+                        "dark-surface": "#1e2030",
+                        "dark-surface-container": "#252840",
+                        "dark-surface-container-high": "#2d3050",
+                        "dark-surface-container-low": "#191b2e",
+                        "dark-on-surface": "#e2e4f0",
+                        "dark-on-surface-variant": "#a0a4bb",
+                        "dark-outline-variant": "#3a3d54",
+                        "dark-primary": "#b4c5ff"
                     },
                     "borderRadius": {
                         "DEFAULT": "0.25rem",
@@ -120,9 +232,9 @@
         }
     </script>
 </head>
-<body class="bg-background text-on-background font-body-base antialiased flex min-h-screen">
+<body class="bg-background dark:bg-dark-surface text-on-background dark:text-dark-on-surface font-body-base antialiased flex min-h-screen">
     <!-- SideNavBar -->
-    <aside class="w-sidebar-width h-screen sticky top-0 left-0 bg-surface-container-lowest shadow-sm flex flex-col py-6 px-4 gap-stack-gap z-50">
+    <aside class="w-sidebar-width h-screen sticky top-0 left-0 bg-surface-container-lowest dark:bg-dark-surface-container shadow-sm flex flex-col py-6 px-4 gap-stack-gap z-50">
         <!-- Brand -->
         <div class="flex items-center gap-3 mb-4 px-2">
             <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary font-display font-bold">RA</div>
@@ -158,7 +270,7 @@
         </nav>
         
         <!-- Footer / Profile -->
-        <div class="mt-auto flex flex-col gap-2 pt-4 border-t border-outline-variant">
+        <div class="mt-auto flex flex-col gap-2 pt-4 border-t border-outline-variant dark:border-dark-outline-variant">
             <div class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors cursor-pointer">
                 <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs uppercase">
                     {{ substr(auth()->user()->nip ?? 'CEO', 0, 2) }}
@@ -181,17 +293,24 @@
     <!-- Main Content Wrapper -->
     <div class="flex-1 flex flex-col min-w-0">
         <!-- TopNavBar -->
-        <header class="sticky top-0 w-full h-topbar-height z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-container-padding">
+        <header class="sticky top-0 w-full h-topbar-height z-40 bg-surface/80 dark:bg-dark-surface-container/80 backdrop-blur-md border-b border-outline-variant dark:border-dark-outline-variant flex justify-between items-center px-container-padding">
             <div class="flex items-center">
                 <div class="relative w-64 hidden md:block">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
                     <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-sm text-body-sm focus:border-primary focus:ring-4 focus:ring-primary-fixed-dim focus:outline-none transition-all placeholder:text-outline" placeholder="Cari surat atau dokumen..." type="text"/>
                 </div>
             </div>
-            <div class="flex items-center gap-4 text-on-surface-variant">
-                <button class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:opacity-80 hover:text-primary relative">
+            <div class="flex items-center gap-4 text-on-surface-variant dark:text-dark-on-surface-variant">
+                <button class="p-2 hover:bg-surface-container-high dark:hover:bg-dark-surface-container-high rounded-full transition-colors active:opacity-80 hover:text-primary relative">
                     <span class="material-symbols-outlined">notifications</span>
                     <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full"></span>
+                </button>
+                <!-- Dark Mode Toggle -->
+                <button id="dark-mode-toggle" onclick="toggleDarkMode()"
+                    class="p-2 hover:bg-surface-container-high dark:hover:bg-dark-surface-container-high rounded-full transition-colors active:opacity-80"
+                    title="Toggle Dark Mode">
+                    <span id="dark-icon" class="material-symbols-outlined hidden">light_mode</span>
+                    <span id="light-icon" class="material-symbols-outlined">dark_mode</span>
                 </button>
                 <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold uppercase ml-2 block md:hidden">
                     {{ substr(auth()->user()->nip ?? 'C', 0, 1) }}
@@ -224,6 +343,34 @@
     
     <!-- Alpine.js (if used) -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Dark Mode Script -->
+    <script>
+        function toggleDarkMode() {
+            const html = document.getElementById('html-root');
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('ruang-admin-theme', isDark ? 'dark' : 'light');
+            updateDarkModeIcons(isDark);
+        }
+
+        function updateDarkModeIcons(isDark) {
+            const darkIcon = document.getElementById('dark-icon');
+            const lightIcon = document.getElementById('light-icon');
+            if (isDark) {
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+            } else {
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            }
+        }
+
+        // Init icons on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDark = document.getElementById('html-root').classList.contains('dark');
+            updateDarkModeIcons(isDark);
+        });
+    </script>
 </body>
 </html>
 

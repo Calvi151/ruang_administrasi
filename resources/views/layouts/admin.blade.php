@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Ruang Administrasi - Admin Panel</title>
+    
+    <!-- Dark Mode: apply class before render to prevent flash -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('ruang-admin-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -125,6 +136,214 @@
             vertical-align: middle;
             color: #334155;
         }
+
+        /* ===== DARK MODE ===== */
+        html.dark body {
+            background-color: #12131e;
+            color: #e2e4f0;
+        }
+        html.dark #content {
+            background-color: #12131e;
+        }
+        html.dark #sidebar {
+            background-color: #0e0f1a;
+        }
+        html.dark #sidebar .sidebar-header {
+            background-color: #080910;
+        }
+        html.dark #sidebar ul li a {
+            color: #9ca3bf;
+        }
+        html.dark #sidebar ul li a:hover {
+            color: #e2e4f0;
+            background: #1e2035;
+            border-left-color: #b4c5ff;
+        }
+        html.dark #sidebar ul li.active a {
+            color: #e2e4f0;
+            background: #1e2035;
+            border-left-color: #b4c5ff;
+        }
+        html.dark .navbar {
+            background: #161726 !important;
+            border-bottom-color: #2d3050;
+        }
+        /* Card & card-body */
+        html.dark .card {
+            background-color: #1a1c2e;
+            border-color: #2d3050;
+            color: #e2e4f0;
+        }
+        html.dark .card-body {
+            background-color: #1a1c2e;
+        }
+        html.dark .card-header {
+            background-color: #161726;
+            border-bottom-color: #2d3050;
+            color: #e2e4f0;
+        }
+        html.dark .card-footer {
+            background-color: #161726;
+            border-top-color: #2d3050;
+        }
+        /* Tables */
+        html.dark .table {
+            color: #c5c8df;
+            border-color: #2d3050;
+        }
+        html.dark .table th {
+            color: #9ca3bf;
+            background-color: #161726;
+            border-bottom-color: #2d3050;
+        }
+        html.dark .table td {
+            color: #c5c8df;
+            border-color: #252840;
+        }
+        html.dark .table thead th {
+            border-bottom-color: #2d3050;
+        }
+        html.dark .table-bordered td,
+        html.dark .table-bordered th {
+            border-color: #2d3050;
+        }
+        html.dark .table-striped > tbody > tr:nth-of-type(odd) > * {
+            background-color: #1e2035;
+            color: #c5c8df;
+        }
+        html.dark .table-hover > tbody > tr:hover > * {
+            background-color: #252840;
+            color: #e2e4f0;
+        }
+        /* Forms */
+        html.dark .form-control,
+        html.dark .form-select {
+            background-color: #1e2035;
+            border-color: #2d3050;
+            color: #e2e4f0;
+        }
+        html.dark .form-control:focus,
+        html.dark .form-select:focus {
+            background-color: #252840;
+            border-color: #b4c5ff;
+            color: #e2e4f0;
+            box-shadow: 0 0 0 0.2rem rgba(180, 197, 255, 0.15);
+        }
+        html.dark .form-control::placeholder { color: #5a5e7a; }
+        html.dark .form-label { color: #9ca3bf; }
+        html.dark .input-group-text {
+            background-color: #1e2035;
+            border-color: #2d3050;
+            color: #9ca3bf;
+        }
+        /* Modals */
+        html.dark .modal-content {
+            background-color: #1a1c2e;
+            border-color: #2d3050;
+        }
+        html.dark .modal-header,
+        html.dark .modal-footer { border-color: #2d3050; }
+        html.dark .modal-title  { color: #e2e4f0; }
+        html.dark .modal-body   { color: #c5c8df; }
+        html.dark .btn-close    { filter: invert(1) grayscale(1) opacity(0.6); }
+        /* Alerts */
+        html.dark .alert-success {
+            background-color: #0a3b28;
+            border-color: #1a6b4a;
+            color: #6ee7b7;
+        }
+        html.dark .alert-danger {
+            background-color: #3b0d0d;
+            border-color: #6b1a1a;
+            color: #fca5a5;
+        }
+        html.dark .alert-warning {
+            background-color: #3b2a05;
+            border-color: #856404;
+            color: #fbbf24;
+        }
+        html.dark .alert-info {
+            background-color: #0c2340;
+            border-color: #1a4580;
+            color: #93c5fd;
+        }
+        /* Badges */
+        html.dark .badge.bg-success   { background-color: #0a3b28 !important; color: #6ee7b7 !important; }
+        html.dark .badge.bg-danger    { background-color: #3b0d0d !important; color: #fca5a5 !important; }
+        html.dark .badge.bg-warning   { background-color: #3b2a05 !important; color: #fbbf24 !important; }
+        html.dark .badge.bg-primary   { background-color: #1e2f5a !important; color: #b4c5ff !important; }
+        html.dark .badge.bg-secondary { background-color: #1e2035 !important; color: #9ca3bf !important; }
+        /* Pagination */
+        html.dark .page-link {
+            background-color: #1a1c2e;
+            border-color: #2d3050;
+            color: #9ca3bf;
+        }
+        html.dark .page-link:hover {
+            background-color: #252840;
+            color: #e2e4f0;
+        }
+        html.dark .page-item.active .page-link {
+            background-color: #1e2f5a;
+            border-color: #b4c5ff;
+            color: #b4c5ff;
+        }
+        html.dark .page-item.disabled .page-link {
+            background-color: #161726;
+            color: #5a5e7a;
+        }
+        /* Text utilities */
+        html.dark .text-muted    { color: #9ca3bf !important; }
+        html.dark .text-dark     { color: #c5c8df !important; }
+        html.dark .text-secondary{ color: #9ca3bf !important; }
+        /* Border utilities */
+        html.dark .border        { border-color: #2d3050 !important; }
+        html.dark .border-top    { border-top-color: #2d3050 !important; }
+        html.dark .border-bottom { border-bottom-color: #2d3050 !important; }
+        /* Dropdown */
+        html.dark .dropdown-menu {
+            background-color: #1a1c2e;
+            border-color: #2d3050;
+        }
+        html.dark .dropdown-item { color: #9ca3bf; }
+        html.dark .dropdown-item:hover { background-color: #252840; color: #e2e4f0; }
+        html.dark .dropdown-divider { border-color: #2d3050; }
+        /* List groups */
+        html.dark .list-group-item {
+            background-color: #1a1c2e;
+            border-color: #2d3050;
+            color: #c5c8df;
+        }
+        html.dark .list-group-item:hover { background-color: #252840; }
+        /* Smooth transitions */
+        body, #sidebar, .navbar, .card, .card-header, .table, .form-control, .form-select, .modal-content {
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
+        }
+        /* Dark mode toggle button */
+        #dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+            padding: 6px 8px;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+            font-size: 1.1rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+        }
+        #dark-mode-toggle:hover {
+            background: #f1f5f9;
+            color: #3b82f6;
+        }
+        html.dark #dark-mode-toggle {
+            color: #a0a4bb;
+        }
+        html.dark #dark-mode-toggle:hover {
+            background: #2d3050;
+            color: #b4c5ff;
+        }
     </style>
 </head>
 <body>
@@ -171,6 +390,11 @@
                     <span class="navbar-brand mb-0 h1 text-muted" style="font-size: 1rem;">
                         Selamat Datang, <strong>{{ auth()->user()->nip }}</strong> (Admin)
                     </span>
+                    <!-- Dark Mode Toggle -->
+                    <button id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                        <span id="dark-icon" style="display:none;">&#9728;</span>
+                        <span id="light-icon">&#9790;</span>
+                    </button>
                 </div>
             </nav>
 
@@ -196,6 +420,33 @@
 
     <!-- Bootstrap JS Bundle via Vite -->
     @vite('resources/js/bootstrap-bundle.js')
+
+    <!-- Dark Mode Script -->
+    <script>
+        function toggleDarkMode() {
+            const html = document.getElementById('html-root');
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('ruang-admin-theme', isDark ? 'dark' : 'light');
+            updateDarkModeIcons(isDark);
+        }
+
+        function updateDarkModeIcons(isDark) {
+            const darkIcon = document.getElementById('dark-icon');
+            const lightIcon = document.getElementById('light-icon');
+            if (isDark) {
+                darkIcon.style.display = 'inline';
+                lightIcon.style.display = 'none';
+            } else {
+                darkIcon.style.display = 'none';
+                lightIcon.style.display = 'inline';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDark = document.getElementById('html-root').classList.contains('dark');
+            updateDarkModeIcons(isDark);
+        });
+    </script>
 </body>
 </html>
 

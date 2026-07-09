@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" id="html-root">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -13,6 +13,16 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <!-- Tailwind Config (sesuai Stitch design system) -->
+    <!-- Dark Mode: apply class before render to prevent flash -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('ruang-admin-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -70,7 +80,16 @@
                     "status-peach": "#fff7ed",
                     "status-lilac": "#f5f3ff",
                     "heading-slate": "#0f172a",
-                    "border-muted": "#f1f5f9"
+                    "border-muted": "#f1f5f9",
+                    /* Dark mode surface tokens */
+                    "dark-surface": "#1e2030",
+                    "dark-surface-container": "#252840",
+                    "dark-surface-container-high": "#2d3050",
+                    "dark-surface-container-low": "#191b2e",
+                    "dark-on-surface": "#e2e4f0",
+                    "dark-on-surface-variant": "#a0a4bb",
+                    "dark-outline-variant": "#3a3d54",
+                    "dark-primary": "#b4c5ff"
             },
             "borderRadius": {
                     "DEFAULT": "0.25rem",
@@ -123,23 +142,120 @@
         .icon-fill {
             font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+        /* Dark mode smooth transition */
+        html.dark *, html:not(.dark) * {
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
+        }
+        /* Custom scrollbar for dark mode */
+        html.dark ::-webkit-scrollbar-track { background: #12131e; }
+        html.dark ::-webkit-scrollbar-thumb { background: #3a3d54; border-radius: 4px; }
+        html.dark ::-webkit-scrollbar { width: 6px; }
+
+        /* ============================================================
+           DARK MODE — Override semua Tailwind surface & text tokens
+           Mencakup seluruh halaman tanpa perlu ubah file view
+        ============================================================ */
+
+        /* ----- BACKGROUNDS ----- */
+        html.dark .bg-background,
+        html.dark .bg-surface,
+        html.dark .bg-surface-bright            { background-color: #1e2030 !important; }
+
+        html.dark .bg-surface-container-lowest  { background-color: #1a1c2e !important; }
+        html.dark .bg-surface-container-low     { background-color: #1e2035 !important; }
+        html.dark .bg-surface-container         { background-color: #252840 !important; }
+        html.dark .bg-surface-container-high    { background-color: #2d3050 !important; }
+        html.dark .bg-surface-container-highest { background-color: #333560 !important; }
+        html.dark .bg-surface-dim               { background-color: #13141e !important; }
+        html.dark .bg-surface-variant           { background-color: #252840 !important; }
+
+        /* Primary container (icon background) — lebih gelap agar tidak menyilaukan */
+        html.dark .bg-primary-fixed             { background-color: #1e2f5a !important; }
+        html.dark .bg-primary-container         { background-color: #1a2d6e !important; }
+        html.dark .bg-tertiary-fixed            { background-color: #3b1215 !important; }
+        html.dark .bg-tertiary-container        { background-color: #6b1215 !important; }
+
+        /* Secondary container badge */
+        html.dark .bg-secondary-container       { background-color: #0a3b28 !important; }
+
+        /* ----- TEXT ----- */
+        html.dark .text-on-surface              { color: #e2e4f0 !important; }
+        html.dark .text-on-surface-variant      { color: #9ca3bf !important; }
+        html.dark .text-on-background           { color: #e2e4f0 !important; }
+        html.dark .text-on-secondary-container  { color: #6ee7b7 !important; }
+        html.dark .text-outline                 { color: #636885 !important; }
+        html.dark .text-primary                 { color: #b4c5ff !important; }
+        html.dark .text-secondary               { color: #68dba9 !important; }
+        html.dark .text-tertiary                { color: #ff8a80 !important; }
+        html.dark .text-heading-slate           { color: #c5c8df !important; }
+
+        /* Teks umum di dalam tabel / konten */
+        html.dark p, html.dark span,
+        html.dark td, html.dark th,
+        html.dark li, html.dark label          { color: inherit; }
+
+        /* ----- BORDERS ----- */
+        html.dark .border-outline-variant       { border-color: #33374f !important; }
+        html.dark .border-outline               { border-color: #4a4e6a !important; }
+        html.dark .border-secondary-fixed       { border-color: #1a6b4a !important; }
+        html.dark .border-border-muted          { border-color: #33374f !important; }
+
+        /* ----- HOVER STATES ----- */
+        html.dark .hover\:bg-surface-container:hover          { background-color: #252840 !important; }
+        html.dark .hover\:bg-surface-container-high:hover     { background-color: #2d3050 !important; }
+        html.dark .hover\:bg-surface-container-lowest:hover   { background-color: #252840 !important; }
+        html.dark .hover\:bg-surface-container-high\/50:hover { background-color: rgba(45,48,80,0.5) !important; }
+
+        /* ----- INPUT & FORM ----- */
+        html.dark input, html.dark select, html.dark textarea {
+            background-color: #252840 !important;
+            border-color: #33374f !important;
+            color: #e2e4f0 !important;
+        }
+        html.dark input::placeholder,
+        html.dark textarea::placeholder         { color: #5a5e7a !important; }
+        html.dark input:focus, html.dark select:focus,
+        html.dark textarea:focus                { border-color: #b4c5ff !important; box-shadow: 0 0 0 3px rgba(180,197,255,0.15) !important; }
+
+        /* ----- MODALS & DROPDOWNS (Bootstrap) ----- */
+        html.dark .modal-content                { background-color: #1a1c2e !important; border-color: #33374f !important; }
+        html.dark .modal-header, html.dark .modal-footer { border-color: #33374f !important; }
+        html.dark .modal-title, html.dark .modal-body    { color: #e2e4f0 !important; }
+        html.dark .dropdown-menu                { background-color: #1a1c2e !important; border-color: #33374f !important; }
+        html.dark .dropdown-item                { color: #9ca3bf !important; }
+        html.dark .dropdown-item:hover          { background-color: #252840 !important; color: #e2e4f0 !important; }
+
+        /* ----- BADGES ----- */
+        html.dark .bg-secondary-container\/30   { background-color: rgba(10, 59, 40, 0.5) !important; }
+        html.dark .bg-error-container           { background-color: #3b0d0d !important; }
+        html.dark .text-error                   { color: #ff7070 !important; }
+        html.dark .bg-error-container\/30       { background-color: rgba(59, 13, 13, 0.5) !important; }
+        html.dark .bg-status-mint               { background-color: #0a3b28 !important; }
+
+        /* Amber / warning */
+        html.dark .bg-amber-100                 { background-color: #3b2a05 !important; }
+        html.dark .text-amber-800               { color: #fbbf24 !important; }
+        html.dark .bg-amber-500\/10             { background-color: rgba(59, 42, 5, 0.4) !important; }
+        html.dark .text-amber-600               { color: #fbbf24 !important; }
+
+        /* ----- MISC UTILITY ----- */
+        html.dark .shadow-sm                    { box-shadow: 0 1px 2px rgba(0,0,0,0.6) !important; }
+        html.dark .shadow-md                    { box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; }
     </style>
     @yield('styles')
 </head>
-<body class="bg-surface-variant/20 text-on-surface antialiased min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
+<body class="bg-surface-variant/20 dark:bg-dark-surface text-on-surface dark:text-dark-on-surface antialiased min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
     
     <!-- SideNavBar (sesuai Stitch: bg-surface, border-l-4 active, rounded-lg) -->
-    <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col border-r border-outline-variant shadow-sm bg-surface justify-between py-6 px-4 z-50">
+    <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col border-r border-outline-variant dark:border-dark-outline-variant shadow-sm bg-surface dark:bg-dark-surface-container justify-between py-6 px-4 z-50">
         <div>
             <!-- Brand Header -->
-            <div class="px-4 mb-8">
+            <div class="px-2 mb-8">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shadow-lg shadow-primary/20">
-                        <span class="material-symbols-outlined text-on-primary icon-fill text-[18px]">dashboard_customize</span>
-                    </div>
+                    <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary font-display font-bold text-sm flex-shrink-0">RA</div>
                     <div>
-                        <h1 class="font-display text-h3 text-primary truncate">Ruang Administrasi</h1>
-                        <p class="font-label-sm text-label-sm text-on-surface-variant truncate">Tertib Administrasi</p>
+                        <h1 class="font-display text-label-md font-bold text-primary dark:text-dark-primary truncate">Ruang Administrasi</h1>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-dark-on-surface-variant truncate">Panel Admin</p>
                     </div>
                 </div>
             </div>
@@ -192,22 +308,29 @@
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col md:ml-sidebar_width min-w-0">
         <!-- TopAppBar (sesuai Stitch) -->
-        <header class="sticky top-0 z-40 w-full bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-margin_mobile md:px-margin_desktop h-16">
+        <header class="sticky top-0 z-40 w-full bg-surface/80 dark:bg-dark-surface-container/80 backdrop-blur-md border-b border-outline-variant/30 dark:border-dark-outline-variant shadow-sm flex justify-between items-center px-margin_mobile md:px-margin_desktop h-16">
             <div class="flex items-center">
                 <h1 class="font-h2 text-h2 md:font-h1 md:text-h1 text-on-surface">@yield('page-title')</h1>
             </div>
             <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm bg-surface-container px-3 py-1.5 rounded-full">
+                <div class="hidden sm:flex items-center gap-2 text-on-surface-variant dark:text-dark-on-surface-variant font-body-sm text-body-sm bg-surface-container dark:bg-dark-surface-container px-3 py-1.5 rounded-full">
                     <span class="material-symbols-outlined text-[18px]">calendar_today</span>
                     <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}</span>
                 </div>
-                <button class="p-2 text-on-surface-variant hover:bg-surface-container-high/50 rounded-full transition-all focus:ring-2 focus:ring-primary/20">
+                <!-- Dark Mode Toggle -->
+                <button id="dark-mode-toggle" onclick="toggleDarkMode()"
+                    class="p-2 text-on-surface-variant dark:text-dark-on-surface-variant hover:bg-surface-container-high/50 dark:hover:bg-dark-surface-container-high/50 rounded-full transition-all focus:ring-2 focus:ring-primary/20"
+                    title="Toggle Dark Mode">
+                    <span id="dark-icon" class="material-symbols-outlined hidden">light_mode</span>
+                    <span id="light-icon" class="material-symbols-outlined">dark_mode</span>
+                </button>
+                <button class="p-2 text-on-surface-variant dark:text-dark-on-surface-variant hover:bg-surface-container-high/50 dark:hover:bg-dark-surface-container-high/50 rounded-full transition-all focus:ring-2 focus:ring-primary/20">
                     <span class="material-symbols-outlined">notifications</span>
                 </button>
                 @if(Auth::user()->photo)
-                    <img alt="Profil Pengguna" class="w-8 h-8 rounded-full border border-outline-variant object-cover cursor-pointer" src="{{ asset('storage/' . Auth::user()->photo) }}">
+                    <img alt="Profil Pengguna" class="w-8 h-8 rounded-full border border-outline-variant dark:border-dark-outline-variant object-cover cursor-pointer" src="{{ asset('storage/' . Auth::user()->photo) }}">
                 @else
-                    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm border border-outline-variant cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm border border-outline-variant dark:border-dark-outline-variant cursor-pointer">
                         {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                     </div>
                 @endif
@@ -217,7 +340,7 @@
         <!-- Canvas -->
         <div class="flex-1 p-margin_mobile md:p-margin_desktop overflow-auto w-full">
             @if(session('success'))
-            <div class="bg-status-mint text-secondary border border-secondary-fixed px-4 py-3 rounded-xl font-label-md text-label-md mb-6 flex items-center gap-3">
+            <div class="bg-status-mint dark:bg-green-900/30 text-secondary dark:text-green-300 border border-secondary-fixed dark:border-green-700/40 px-4 py-3 rounded-xl font-label-md text-label-md mb-6 flex items-center gap-3">
                 <span class="material-symbols-outlined icon-fill">check_circle</span>
                 {{ session('success') }}
             </div>
@@ -228,5 +351,33 @@
     </main>
     
     @yield('scripts')
+
+    <!-- Dark Mode Script -->
+    <script>
+        function toggleDarkMode() {
+            const html = document.getElementById('html-root');
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('ruang-admin-theme', isDark ? 'dark' : 'light');
+            updateDarkModeIcons(isDark);
+        }
+
+        function updateDarkModeIcons(isDark) {
+            const darkIcon = document.getElementById('dark-icon');
+            const lightIcon = document.getElementById('light-icon');
+            if (isDark) {
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+            } else {
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            }
+        }
+
+        // Init icons on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDark = document.getElementById('html-root').classList.contains('dark');
+            updateDarkModeIcons(isDark);
+        });
+    </script>
 </body>
 </html>
