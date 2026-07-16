@@ -55,7 +55,12 @@
                         @endif
                     </td>
                     <td class="px-6 py-3 text-right">
-                        <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex items-center justify-end gap-2">
+                            @if($letter->file_path)
+                            <a href="{{ asset('storage/' . $letter->file_path) }}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-lg text-primary hover:bg-primary-fixed transition-colors" title="Lihat Lampiran">
+                                <span class="material-symbols-outlined text-[18px]">mail</span>
+                            </a>
+                            @endif
                             <a href="{{ route('outgoing-letters.show', $letter->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-primary hover:bg-primary-fixed transition-colors" title="Detail">
                                 <span class="material-symbols-outlined text-[18px]">visibility</span>
                             </a>

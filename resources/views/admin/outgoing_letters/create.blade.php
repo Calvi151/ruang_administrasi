@@ -34,9 +34,15 @@
         </div>
         @endif
 
-        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Left Column -->
-            <div class="space-y-5">
+        <!-- STEP 1: Basic Info -->
+        <div id="step-1" class="p-6 space-y-6">
+            <h4 class="font-title-md text-title-md text-primary flex items-center gap-2 border-b border-outline-variant/30 pb-2">
+                <span class="material-symbols-outlined">looks_one</span>
+                Langkah 1: Informasi Dasar
+            </h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Tujuan -->
                 <div>
                     <label for="recipient" class="block font-label-md text-label-md text-on-surface mb-1">Tujuan (Penerima) <span class="text-error">*</span></label>
                     <div class="relative">
@@ -47,6 +53,36 @@
                     </div>
                 </div>
 
+                <!-- Tanggal -->
+                <div>
+                    <label for="date_sent" class="block font-label-md text-label-md text-on-surface mb-1">Tanggal Surat <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">calendar_today</span>
+                        <input type="date" name="date_sent" id="date_sent"
+                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
+                            value="{{ old('date_sent', date('Y-m-d')) }}" required>
+                    </div>
+                </div>
+
+                <!-- Jenis Surat -->
+                <div>
+                    <label for="letter_type_id" class="block font-label-md text-label-md text-on-surface mb-1">Jenis Surat <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">category</span>
+                        <select name="letter_type_id" id="letter_type_id"
+                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm appearance-none" required>
+                            <option value="">-- Pilih Jenis Surat --</option>
+                            @foreach($letterTypes as $type)
+                                <option value="{{ $type->id }}" data-code="{{ $type->letter_code }}" {{ old('letter_type_id') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->type_name }} ({{ $type->letter_code }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">expand_more</span>
+                    </div>
+                </div>
+
+                <!-- Lampiran -->
                 <div>
                     <label class="block font-label-md text-label-md text-on-surface mb-1">Lampiran Dokumen (Opsional)</label>
                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-outline-variant border-dashed rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group relative">
@@ -63,48 +99,63 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Info Box -->
-                <div class="bg-surface-container-low border border-outline-variant/50 p-4 rounded-lg font-body-sm text-body-sm text-on-surface-variant flex gap-3">
-                    <span class="material-symbols-outlined text-primary text-[20px] shrink-0">info</span>
-                    <div>
-                        <strong>Otomatisasi Sistem:</strong><br>
-                        Jenis surat, nomor urut, kode surat, bulan, dan tahun akan diisi otomatis oleh sistem saat disimpan.
-                    </div>
+            <div class="bg-surface-container-low border border-outline-variant/50 p-4 rounded-lg font-body-sm text-body-sm text-on-surface-variant flex gap-3">
+                <span class="material-symbols-outlined text-primary text-[20px] shrink-0">info</span>
+                <div>
+                    <strong>Otomatisasi Sistem:</strong><br>
+                    Nomor urut, kode surat, bulan, dan tahun akan diisi otomatis oleh sistem saat disimpan.
                 </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="space-y-5">
-                <div>
-                    <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">Perihal <span class="text-error">*</span></label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">title</span>
-                        <input type="text" name="subject" id="subject"
-                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
-                            placeholder="Masukkan perihal surat" value="{{ old('subject') }}" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="content" class="block font-label-md text-label-md text-on-surface mb-1">Isi Surat / Keterangan <span class="text-error">*</span></label>
-                    <textarea name="content" id="content" rows="10"
-                        class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y"
-                        placeholder="Ketik isi atau keterangan surat di sini..." required>{{ old('content') }}</textarea>
-                </div>
+            <div class="flex justify-end gap-3 pt-4 border-t border-outline-variant/30">
+                <a href="{{ route('outgoing-letters.index') }}" class="px-4 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface-variant rounded-lg font-label-md text-label-md hover:bg-surface transition-colors shadow-sm">
+                    Batal
+                </a>
+                <button type="button" id="btn-next" class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-colors shadow-sm flex items-center gap-2">
+                    Lanjut Isi Surat
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
             </div>
         </div>
 
-        <div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant/30 flex justify-end gap-3">
-            <a href="{{ route('outgoing-letters.index') }}"
-                class="px-4 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface-variant rounded-lg font-label-md text-label-md hover:bg-surface transition-colors shadow-sm">
-                Batal
-            </a>
-            <button type="submit"
-                class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-colors shadow-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">save</span>
-                Simpan & Ajukan
-            </button>
+        <!-- STEP 2: Content (TinyMCE) -->
+        <div id="step-2" class="p-6 space-y-6 hidden">
+            <h4 class="font-title-md text-title-md text-primary flex items-center gap-2 border-b border-outline-variant/30 pb-2">
+                <span class="material-symbols-outlined">looks_two</span>
+                Langkah 2: Perihal dan Isi Surat
+            </h4>
+
+            <!-- Perihal -->
+            <div>
+                <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">Perihal <span class="text-error">*</span></label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">title</span>
+                    <input type="text" name="subject" id="subject"
+                        class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
+                        placeholder="Masukkan perihal surat" value="{{ old('subject') }}">
+                </div>
+            </div>
+
+            <!-- Isi Surat (TinyMCE) -->
+            <div>
+                <label for="content" class="block font-label-md text-label-md text-on-surface mb-1">Isi Surat / Keterangan <span class="text-error">*</span></label>
+                <textarea name="content" id="content" rows="15"
+                    class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y"
+                    placeholder="Ketik isi atau keterangan surat di sini...">{{ old('content') }}</textarea>
+            </div>
+
+            <div class="flex justify-between gap-3 pt-4 border-t border-outline-variant/30">
+                <button type="button" id="btn-back" class="px-4 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface-variant rounded-lg font-label-md text-label-md hover:bg-surface transition-colors shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Kembali
+                </button>
+                <button type="submit" class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-colors shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    Simpan & Ajukan
+                </button>
+            </div>
         </div>
     </form>
 </div>
@@ -135,12 +186,81 @@
 <script>
     tinymce.init({
         selector: '#content',
-        height: 300,
+        height: 500,
         menubar: false,
         plugins: 'lists link table',
         toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | table',
         content_style: 'body { font-family: "Inter", sans-serif; font-size: 14px; }',
-        setup: function(editor) { editor.on('change', function() { editor.save(); }); }
+        setup: function(editor) { 
+            editor.on('change', function() { editor.save(); }); 
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const letterTypeSelect = document.getElementById('letter_type_id');
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        
+        const letterTemplates = @json($letterTypes->pluck('template', 'id'));
+        
+        // Multi-step form logic
+        if (btnNext && btnBack && step1 && step2) {
+            btnNext.addEventListener('click', function() {
+                // Basic HTML5 validation check for Step 1
+                const recipient = document.getElementById('recipient');
+                const letterType = document.getElementById('letter_type_id');
+                const dateSent = document.getElementById('date_sent');
+                
+                if (!recipient.value || !letterType.value || !dateSent.value) {
+                    alert('Harap lengkapi Tujuan, Tanggal, dan Jenis Surat terlebih dahulu.');
+                    return;
+                }
+                
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+            });
+            
+            btnBack.addEventListener('click', function() {
+                step2.classList.add('hidden');
+                step1.classList.remove('hidden');
+            });
+        }
+        
+        // Template insertion logic
+        if (letterTypeSelect) {
+            letterTypeSelect.addEventListener('change', function() {
+                if (this.value) {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const typeName = selectedOption.text.split(' (')[0].trim();
+                    const typeCode = selectedOption.getAttribute('data-code');
+                    
+                    let template = letterTemplates[this.value];
+                    if (!template) {
+                        template = `
+<p><strong>Kode Surat:</strong> ${typeCode}</p>
+<p><strong>Perihal:</strong> </p>
+<p><strong>Lampiran:</strong> - </p>
+<br>
+<p>Dengan hormat,</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Demikian ${typeName} ini dibuat. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.</p>
+                        `;
+                    }
+                    
+                    if (tinymce.get('content')) {
+                        const currentContent = tinymce.get('content').getContent({format: 'text'}).trim();
+                        if (currentContent === '' || confirm('Mengganti jenis surat akan menimpa isi keterangan saat ini dengan template baru. Lanjutkan?')) {
+                            tinymce.get('content').setContent(template);
+                        }
+                    } else {
+                        document.getElementById('content').value = template;
+                    }
+                }
+            });
+        }
     });
 </script>
 @endsection

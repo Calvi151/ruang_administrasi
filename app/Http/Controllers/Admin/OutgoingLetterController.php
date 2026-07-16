@@ -44,20 +44,14 @@ class OutgoingLetterController extends Controller
     {
         $validated = $request->validate([
             'recipient' => 'required|string',
+            'date_sent' => 'required|date',
+            'letter_type_id' => 'required|exists:letter_types,id',
             'subject' => 'required|string',
             'content' => 'required|string',
             'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        // Otomatis set tanggal (hari ini)
-        $validated['date_sent'] = Carbon::now()->format('Y-m-d');
-        
-        // Otomatis ambil Jenis Surat default (karena hanya 1 jenis/otomatis)
-        $defaultLetterType = LetterType::first();
-        if (!$defaultLetterType) {
-            return back()->with('error', 'Harap tambahkan Jenis Surat di master data terlebih dahulu.');
-        }
-        $validated['letter_type_id'] = $defaultLetterType->id;
+
 
         // Generate Nomor Surat Otomatis
         // Format: {No urut}/{kodesurat}/TAP/{bulan_romawi}/{Tahun}
@@ -126,14 +120,12 @@ class OutgoingLetterController extends Controller
 
         $validated = $request->validate([
             'recipient' => 'required|string',
+            'date_sent' => 'required|date',
+            'letter_type_id' => 'required|exists:letter_types,id',
             'subject' => 'required|string',
             'content' => 'required|string',
             'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
-
-        // Pertahankan tanggal dan jenis surat yang sudah ada
-        $validated['date_sent'] = $outgoingLetter->date_sent;
-        $validated['letter_type_id'] = $outgoingLetter->letter_type_id;
 
         if ($request->hasFile('file_path')) {
             if ($outgoingLetter->file_path) {

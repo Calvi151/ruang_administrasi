@@ -41,7 +41,7 @@
                     </td>
                     <td class="px-6 py-3 text-on-surface font-medium">{{ $type->type_name }}</td>
                     <td class="px-6 py-3 text-right">
-                        <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex items-center justify-end gap-2">
                             <a href="{{ route('letter-types.edit', $type->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-primary hover:bg-primary-fixed transition-colors" title="Edit">
                                 <span class="material-symbols-outlined text-[18px]">edit</span>
                             </a>

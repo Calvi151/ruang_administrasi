@@ -24,6 +24,7 @@ class LetterTypeController extends Controller
         $validated = $request->validate([
             'letter_code' => 'required|string|unique:letter_type',
             'type_name' => 'required|string',
+            'template' => 'nullable|string',
         ]);
 
         LetterType::create($validated);
@@ -46,6 +47,7 @@ class LetterTypeController extends Controller
         $validated = $request->validate([
             'letter_code' => 'required|string|unique:letter_type,letter_code,' . $letterType->id,
             'type_name' => 'required|string',
+            'template' => 'nullable|string',
         ]);
 
         $letterType->update($validated);
