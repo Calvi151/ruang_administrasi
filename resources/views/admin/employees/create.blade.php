@@ -70,7 +70,7 @@
                 <div>
                     <label for="role" class="block font-label-md text-label-md text-on-surface mb-1">Hak Akses Sistem <span class="text-error">*</span></label>
                     <div class="relative">
-                        <select name="role" id="role" class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-3 pr-10 font-body-sm text-body-sm appearance-none" required>
+                        <select name="role" id="role" class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-3 pr-10 font-body-sm text-body-sm appearance-none bg-none" required>
                             <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin (Standard)</option>
                             <option value="ceo" {{ old('role') == 'ceo' ? 'selected' : '' }}>Admin / CEO (Full Access)</option>
                         </select>

@@ -291,7 +291,7 @@
         
         <!-- Footer Nav -->
         <div class="flex flex-col gap-1 border-t border-outline-variant pt-4 mt-4">
-            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors duration-200 font-label-md text-label-md">
+            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors duration-200 font-label-md text-label-md">
                 <span class="material-symbols-outlined">account_circle</span>
                 <span>Profil Saya</span>
             </a>
@@ -324,16 +324,69 @@
                     <span id="dark-icon" class="material-symbols-outlined hidden">light_mode</span>
                     <span id="light-icon" class="material-symbols-outlined">dark_mode</span>
                 </button>
-                <button class="p-2 text-on-surface-variant dark:text-dark-on-surface-variant hover:bg-surface-container-high/50 dark:hover:bg-dark-surface-container-high/50 rounded-full transition-all focus:ring-2 focus:ring-primary/20">
-                    <span class="material-symbols-outlined">notifications</span>
-                </button>
-                @if(Auth::user()->photo)
-                    <img alt="Profil Pengguna" class="w-8 h-8 rounded-full border border-outline-variant dark:border-dark-outline-variant object-cover cursor-pointer" src="{{ asset('storage/' . Auth::user()->photo) }}">
-                @else
-                    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm border border-outline-variant dark:border-dark-outline-variant cursor-pointer">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                <div class="relative">
+                    @php
+                        $notifications = \App\Models\OutgoingLetter::whereIn('status', ['acc', 'ditolak'])
+                            ->orderBy('updated_at', 'desc')
+                            ->take(5)
+                            ->get();
+                        $hasNotif = $notifications->count() > 0;
+                    @endphp
+                    <button id="notification-btn" class="relative p-2 text-on-surface-variant dark:text-dark-on-surface-variant hover:bg-surface-container-high/50 dark:hover:bg-dark-surface-container-high/50 rounded-full transition-all focus:ring-2 focus:ring-primary/20">
+                        <span class="material-symbols-outlined">notifications</span>
+                        @if($hasNotif)
+                            <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface dark:border-dark-surface-container"></span>
+                        @endif
+                    </button>
+                    <!-- Notification Dropdown -->
+                    <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-surface dark:bg-dark-surface border border-outline-variant/30 rounded-xl shadow-md py-2 z-50">
+                        <div class="px-4 py-3 border-b border-outline-variant/30">
+                            <h3 class="font-label-md text-label-md text-on-surface dark:text-dark-on-surface font-bold">Notifikasi Terakhir</h3>
+                        </div>
+                        <div class="max-h-80 overflow-y-auto">
+                            @if($hasNotif)
+                                @foreach($notifications as $notif)
+                                    <a href="{{ route('outgoing-letters.show', $notif->id) }}" class="block px-4 py-3 hover:bg-surface-container-lowest dark:hover:bg-dark-surface-container-lowest border-b border-outline-variant/10 transition-colors">
+                                        <div class="flex items-start gap-3">
+                                            @if($notif->status == 'acc')
+                                                <div class="w-8 h-8 rounded-full bg-secondary-container/50 text-secondary-fixed flex items-center justify-center shrink-0">
+                                                    <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                                </div>
+                                            @else
+                                                <div class="w-8 h-8 rounded-full bg-error-container/50 text-error flex items-center justify-center shrink-0">
+                                                    <span class="material-symbols-outlined text-[18px]">cancel</span>
+                                                </div>
+                                            @endif
+                                            <div>
+                                                <p class="font-label-sm text-label-sm text-on-surface dark:text-dark-on-surface mb-0.5">Surat {{ $notif->status == 'acc' ? 'Disetujui' : 'Ditolak' }}</p>
+                                                <p class="font-body-xs text-[11px] text-on-surface-variant dark:text-dark-on-surface-variant line-clamp-2">
+                                                    Surat "{{ $notif->subject }}" telah {{ $notif->status == 'acc' ? 'disetujui oleh CEO' : 'ditolak' }}.
+                                                </p>
+                                                <span class="font-body-xs text-[10px] text-outline mt-1 block">{{ $notif->updated_at->diffForHumans() }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                                <a href="{{ route('outgoing-letters.index') }}" class="block px-4 py-2 text-center font-label-sm text-label-sm text-primary hover:underline mt-1">Lihat Semua Surat</a>
+                            @else
+                                <div class="px-4 py-8 text-center text-on-surface-variant dark:text-dark-on-surface-variant font-body-sm">
+                                    <span class="material-symbols-outlined text-[32px] opacity-50 mb-2">notifications_off</span>
+                                    <p>Belum ada notifikasi baru.</p>
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                @endif
+                </div>
+                
+                <a href="{{ route('profile.edit') }}" title="Profil Saya">
+                    @if(Auth::user()->employee && Auth::user()->employee->photo)
+                        <img alt="Profil Pengguna" class="w-8 h-8 rounded-full border border-outline-variant dark:border-dark-outline-variant object-cover cursor-pointer hover:opacity-90 transition-opacity" src="{{ asset('storage/' . Auth::user()->employee->photo) }}">
+                    @else
+                        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm border border-outline-variant dark:border-dark-outline-variant cursor-pointer hover:opacity-90 transition-opacity">
+                            {{ strtoupper(substr(Auth::user()->employee->name ?? 'Admin', 0, 2)) }}
+                        </div>
+                    @endif
+                </a>
             </div>
         </header>
         
@@ -377,6 +430,23 @@
         document.addEventListener('DOMContentLoaded', function() {
             const isDark = document.getElementById('html-root').classList.contains('dark');
             updateDarkModeIcons(isDark);
+            
+            // Notification toggle
+            const notifBtn = document.getElementById('notification-btn');
+            const notifDropdown = document.getElementById('notification-dropdown');
+            
+            if (notifBtn && notifDropdown) {
+                notifBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notifDropdown.classList.toggle('hidden');
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!notifDropdown.contains(e.target)) {
+                        notifDropdown.classList.add('hidden');
+                    }
+                });
+            }
         });
     </script>
 </body>

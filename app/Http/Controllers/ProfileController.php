@@ -21,18 +21,48 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $employee = $user->employee;
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if (!$employee) {
+            return Redirect::route('profile.edit')->with('error', 'Profil karyawan tidak ditemukan.');
         }
 
-        $request->user()->save();
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                \Illuminate\Validation\Rule::unique('employee')->ignore($employee->id),
+            ],
+            'number' => ['nullable', 'string', 'max:20'],
+            'photo' => ['nullable', 'image', 'max:2048'],
+            'password' => ['nullable', 'string', 'min:8'],
+        ]);
+
+        if ($request->hasFile('photo')) {
+            if ($employee->photo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($employee->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('employees', 'public');
+        } else {
+            // Biarkan foto yang lama jika tidak ada upload baru
+            unset($validated['photo']);
+        }
+
+        if (!empty($validated['password'])) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+            $user->save();
+        }
+        unset($validated['password']);
+
+        $employee->fill($validated);
+        $employee->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -47,9 +77,17 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+        $employee = $user->employee;
 
         Auth::logout();
 
+        if ($employee) {
+            if ($employee->photo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($employee->photo);
+            }
+            $employee->delete();
+        }
+        
         $user->delete();
 
         $request->session()->invalidate();

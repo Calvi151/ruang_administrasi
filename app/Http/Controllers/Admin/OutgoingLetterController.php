@@ -45,7 +45,7 @@ class OutgoingLetterController extends Controller
         $validated = $request->validate([
             'recipient' => 'required|string',
             'date_sent' => 'required|date',
-            'letter_type_id' => 'required|exists:letter_types,id',
+            'letter_type_id' => 'required|exists:letter_type,id',
             'subject' => 'required|string',
             'content' => 'required|string',
             'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
@@ -121,7 +121,7 @@ class OutgoingLetterController extends Controller
         $validated = $request->validate([
             'recipient' => 'required|string',
             'date_sent' => 'required|date',
-            'letter_type_id' => 'required|exists:letter_types,id',
+            'letter_type_id' => 'required|exists:letter_type,id',
             'subject' => 'required|string',
             'content' => 'required|string',
             'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',

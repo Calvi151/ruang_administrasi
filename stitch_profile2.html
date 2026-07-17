@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profil Saya - Ruang Administrasi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e1e2ed",
+                        "primary-fixed": "#dbe1ff",
+                        "outline-variant": "#c3c6d7",
+                        "on-tertiary-fixed": "#0f0069",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#eeefff",
+                        "on-tertiary-fixed-variant": "#3323cc",
+                        "surface-container-high": "#e7e7f3",
+                        "secondary-fixed-dim": "#68dba9",
+                        "background": "#faf8ff",
+                        "surface-variant": "#e1e2ed",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#434655",
+                        "on-secondary-container": "#00714e",
+                        "tertiary": "#4338d9",
+                        "primary": "#004ac6",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-dim": "#d9d9e5",
+                        "on-secondary-fixed-variant": "#005137",
+                        "surface-tint": "#0053db",
+                        "inverse-surface": "#2e3039",
+                        "surface": "#faf8ff",
+                        "secondary": "#006c4a",
+                        "on-error": "#ffffff",
+                        "primary-container": "#2563eb",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-on-surface": "#f0f0fb",
+                        "tertiary-fixed": "#e2dfff",
+                        "outline": "#737686",
+                        "on-surface": "#191b23",
+                        "surface-container": "#ededf9",
+                        "secondary-fixed": "#85f8c4",
+                        "on-background": "#191b23",
+                        "surface-bright": "#faf8ff",
+                        "on-secondary-fixed": "#002114",
+                        "secondary-container": "#82f5c1",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#5d55f3",
+                        "tertiary-fixed-dim": "#c3c0ff",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f3f3fe",
+                        "on-tertiary-container": "#f2eeff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin_mobile": "1rem",
+                        "container_max_width": "1280px",
+                        "sidebar_width": "256px",
+                        "margin_desktop": "2rem",
+                        "gutter": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1-mobile": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "h3": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "h1": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h2": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "h1-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-on-surface font-body-md antialiased min-h-screen">
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-on-background w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col border-r border-outline-variant dark:border-outline shadow-sm z-50">
+<div class="flex flex-col justify-between py-6 px-4 h-full">
+<div>
+<div class="mb-8 px-4">
+<h1 class="font-display text-h3 text-primary dark:text-primary-fixed-dim">Ruang Administrasi</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Tertib Administrasi</p>
+</div>
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors duration-200 active:scale-95 transition-transform font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                            Dashboard
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors duration-200 active:scale-95 transition-transform font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">inbox</span>
+                            Surat Masuk
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors duration-200 active:scale-95 transition-transform font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">send</span>
+                            Surat Keluar
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors duration-200 active:scale-95 transition-transform font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">description</span>
+                            Jenis Surat
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors duration-200 active:scale-95 transition-transform font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">badge</span>
+                            Karyawan
+                        </a>
+</li>
+</ul>
+</div>
+<div>
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary-container text-on-secondary-container dark:bg-secondary dark:text-on-secondary border-l-4 border-primary hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors duration-200 active:scale-95 transition-transform font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined fill">account_circle</span>
+                            Profil Saya
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors duration-200 active:scale-95 transition-transform font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">logout</span>
+                            Keluar
+                        </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="md:ml-sidebar_width flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-on-background/80 backdrop-blur-md sticky top-0 z-40 w-full border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-margin_mobile md:px-margin_desktop h-16">
+<div class="flex items-center">
+<button class="md:hidden mr-4 text-on-surface hover:bg-surface-container-high/50 transition-all p-2 rounded-full focus:ring-2 focus:ring-primary/20">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-display text-h3 font-bold text-primary md:hidden">Ruang Administrasi</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface dark:text-on-primary-fixed">
+<button class="hover:bg-surface-container-high/50 transition-all p-2 rounded-full focus:ring-2 focus:ring-primary/20">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:bg-surface-container-high/50 transition-all p-2 rounded-full focus:ring-2 focus:ring-primary/20">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Profil Pengguna" class="object-cover w-full h-full" data-alt="A professional portrait photograph of a confident Indonesian female office administrator in her early 30s. She is wearing a neat corporate uniform or blazer. Soft, flattering natural lighting typical of a modern corporate environment. The background is slightly blurred but suggests a well-lit, contemporary office setting with subtle blue and gray tones matching the UI theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX9-jblX3bg-AsM-wX1SFGT5BAVk3Ypg6Nm25B2zi_RZ78n7FKwAxhKcQA2OdLst4RpnHRBXXyhCovvPlYkd5q3w0P8oxG8Nyvj9OwlcOpbDXDgaz38_2dtJ6K9A9XEMRPFOXVOaAMfxq_ed2x0jNYSLnVdFjtG8onBq9O211fpFjlC62Q1qydvYXekpJU15bRMU5eWRBJeaRzZOZGG4r9U9N5TdiqeObxL7Gw-Y-B4M0XIG1nAdT3yBWaS8NExFM2vcBR86SjGTQ"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-grow p-margin_mobile md:p-margin_desktop w-full max-w-container_max_width mx-auto">
+<!-- Breadcrumbs & Header -->
+<div class="mb-8">
+<nav aria-label="Breadcrumb" class="flex text-sm text-on-surface-variant mb-2">
+<ol class="inline-flex items-center space-x-1 md:space-x-2 font-body-sm text-body-sm">
+<li class="inline-flex items-center">
+<a class="hover:text-primary transition-colors" href="#">Beranda</a>
+</li>
+<li>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm mx-1">chevron_right</span>
+<span class="text-on-surface font-medium">Profil Saya</span>
+</div>
+</li>
+</ol>
+</nav>
+<h1 class="font-h1-mobile text-h1-mobile md:font-h1 md:text-h1 text-on-surface">Profil Saya</h1>
+</div>
+<div class="space-y-6">
+<!-- Profile Header Card -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row items-center md:items-start gap-6">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">
+<img alt="Profile Picture" class="object-cover w-full h-full" data-alt="A close-up professional headshot of an Indonesian female office worker. She has a warm, professional smile. The lighting is bright and even, casting soft shadows. She wears a formal dark blue blazer over a light shirt. The background is a clean, abstract soft-focus gradient of light slate and white. High resolution, clear details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIfyQp1XUoyHH3M8XE_8JpE51pcomLS0du9CNb7oio5ISe4X-l6ixcYGgZtHJ8HBbgeJp4sh2rapOkLtUFjbUxZdYVwXir7C6hfex3JR4YWW-qNqlMsUQp2eH6JaIQsD2e_rI5ivZo4bzwZhSILeMSpweKFVEL1Jd-Ax6sCSXzp7aO3hV6vf3ZDTHVSMyea1AkvA96OqVp9SkwD0Oqe7GHvFTslWqYaXTLS8k2trNeQxjVbAhERJXjWfsD_sl5JDOkGCPvYnXIORs"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary-fixed-variant transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="text-center md:text-left flex-grow">
+<div class="flex flex-col md:flex-row md:items-center gap-3 mb-2">
+<h2 class="font-h2 text-h2 text-on-surface">Siti Aminah, S.E.</h2>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container/30 text-secondary-fixed-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-2"></span>
+                                Admin
+                            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center justify-center md:justify-start gap-2">
+<span class="material-symbols-outlined text-lg">badge</span>
+                            NIP: 199011052015042001
+                        </p>
+<p class="font-body-sm text-body-sm text-outline mt-2 max-w-lg">
+                            Kelola informasi pribadi dan pengaturan keamanan akun Anda di sini. Pastikan data Anda selalu mutakhir.
+                        </p>
+</div>
+</div>
+<!-- Two-Column Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Personal Information Card -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">person</span>
+                                Informasi Pribadi
+                            </h3>
+</div>
+<form class="space-y-5">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="fullName">Nama Lengkap</label>
+<input class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" id="fullName" type="text" value="Siti Aminah, S.E."/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="nip">NIP (Nomor Induk Pegawai)</label>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface-variant cursor-not-allowed" id="nip" readonly="" type="text" value="199011052015042001"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="email">Email</label>
+<input class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" id="email" type="email" value="siti.aminah@ruangadmin.go.id"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="phone">Nomor HP</label>
+<input class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" id="phone" type="tel" value="+62 812 3456 7890"/>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="jabatan">Jabatan</label>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface-variant cursor-not-allowed" id="jabatan" readonly="" type="text" value="Staff Administrasi Utama"/>
+</div>
+</form>
+</div>
+<!-- Security Card -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">security</span>
+                                Keamanan
+                            </h3>
+</div>
+<div class="mb-6">
+<p class="font-label-md text-label-md text-on-surface mb-2">Ubah Kata Sandi</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Pastikan kata sandi baru Anda terdiri dari minimal 8 karakter, termasuk huruf dan angka.</p>
+<form class="space-y-4">
+<div class="relative">
+<label class="sr-only" for="currentPassword">Kata Sandi Saat Ini</label>
+<input class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" id="currentPassword" placeholder="Kata Sandi Saat Ini" type="password"/>
+<button class="absolute right-3 top-2.5 text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-xl">visibility_off</span>
+</button>
+</div>
+<div class="relative">
+<label class="sr-only" for="newPassword">Kata Sandi Baru</label>
+<input class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" id="newPassword" placeholder="Kata Sandi Baru" type="password"/>
+<button class="absolute right-3 top-2.5 text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-xl">visibility_off</span>
+</button>
+</div>
+<div class="relative">
+<label class="sr-only" for="confirmPassword">Konfirmasi Kata Sandi Baru</label>
+<input class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" id="confirmPassword" placeholder="Konfirmasi Kata Sandi Baru" type="password"/>
+<button class="absolute right-3 top-2.5 text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-xl">visibility_off</span>
+</button>
+</div>
+<button class="w-full bg-white border border-slate-200 text-slate-700 font-label-md text-label-md py-2 px-4 rounded-lg hover:bg-slate-50 transition-colors focus:ring-2 focus:ring-slate-200 focus:outline-none" type="button">
+                                    Perbarui Kata Sandi
+                                </button>
+</form>
+</div>
+<div class="pt-6 border-t border-slate-100">
+<div class="flex items-start gap-4">
+<div class="p-2 bg-surface-container rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined">devices</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Sesi Aktif</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Anda masuk pada 2 perangkat saat ini.</p>
+<a class="inline-block mt-2 font-label-md text-label-md text-primary hover:text-primary-container transition-colors" href="#">Kelola Perangkat</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="flex justify-end gap-4 pt-6 mt-8 border-t border-slate-200">
+<button class="bg-white border border-slate-200 text-slate-700 font-label-md text-label-md py-2.5 px-6 rounded-lg hover:bg-slate-50 transition-colors focus:ring-2 focus:ring-slate-200 focus:outline-none shadow-sm" type="button">
+                        Batal
+                    </button>
+<button class="bg-blue-600 text-white font-label-md text-label-md py-2.5 px-6 rounded-lg hover:bg-blue-700 transition-colors focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-none shadow-sm flex items-center gap-2" type="submit">
+<span class="material-symbols-outlined text-sm">save</span>
+                        Simpan Perubahan
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

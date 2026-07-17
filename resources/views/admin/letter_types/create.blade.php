@@ -44,8 +44,8 @@
             
             <div>
                 <label for="template" class="block font-label-md text-label-md text-on-surface mb-1">Template Surat</label>
-                <textarea name="template" id="template" rows="15" class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y" placeholder="Ketik template instruksi surat di sini...">{{ old('template') }}</textarea>
-                <p class="mt-2 font-body-sm text-xs text-on-surface-variant">Isi dengan template bawaan untuk jenis surat ini. Gunakan form ini untuk mendefinisikan bagian Perihal, Lampiran, dan isi standar.</p>
+                <textarea name="template" id="template" rows="15" class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y" placeholder="Ketik isi/deskripsi khusus untuk jenis surat ini...">{{ old('template') }}</textarea>
+                <p class="mt-2 font-body-sm text-xs text-on-surface-variant">Isi dengan isi/deskripsi khusus untuk jenis surat ini. (Header standar seperti Kode, Perihal, Lampiran, dan Footer standar akan otomatis ditambahkan oleh sistem saat surat keluar dibuat).</p>
             </div>
         </div>
 

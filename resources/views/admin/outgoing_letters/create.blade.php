@@ -70,7 +70,7 @@
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">category</span>
                         <select name="letter_type_id" id="letter_type_id"
-                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm appearance-none" required>
+                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-10 font-body-sm text-body-sm appearance-none bg-none" required>
                             <option value="">-- Pilih Jenis Surat --</option>
                             @foreach($letterTypes as $type)
                                 <option value="{{ $type->id }}" data-code="{{ $type->letter_code }}" {{ old('letter_type_id') == $type->id ? 'selected' : '' }}>
@@ -79,24 +79,6 @@
                             @endforeach
                         </select>
                         <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">expand_more</span>
-                    </div>
-                </div>
-
-                <!-- Lampiran -->
-                <div>
-                    <label class="block font-label-md text-label-md text-on-surface mb-1">Lampiran Dokumen (Opsional)</label>
-                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-outline-variant border-dashed rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group relative">
-                        <div class="space-y-1 text-center">
-                            <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">cloud_upload</span>
-                            <div class="flex text-body-sm text-on-surface-variant justify-center">
-                                <label class="relative cursor-pointer font-label-md text-primary hover:underline" for="file_path">
-                                    <span id="file_name_display">Pilih berkas</span>
-                                    <input type="file" name="file_path" id="file_path" accept=".pdf,.jpg,.jpeg,.png" class="sr-only">
-                                </label>
-                                <p class="pl-1" id="file_drag_text">atau tarik dan lepas</p>
-                            </div>
-                            <p class="text-xs text-on-surface-variant" id="file_help_text">PDF, DOC, DOCX hingga 10MB</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -236,30 +218,71 @@
                     const typeName = selectedOption.text.split(' (')[0].trim();
                     const typeCode = selectedOption.getAttribute('data-code');
                     
-                    let template = letterTemplates[this.value];
-                    if (!template) {
-                        template = `
+                    // Set default subject input
+                    const subjectInput = document.getElementById('subject');
+                    if (subjectInput) {
+                        subjectInput.value = typeName;
+                    }
+                    
+                    // Ambil isi template dari master Jenis Surat
+                    let customBody = letterTemplates[this.value] || '<p>[Isi surat]</p>';
+                    
+                    // Gabungkan header standar, isi custom di tengah, dan footer standar
+                    let template = `
 <p><strong>Kode Surat:</strong> ${typeCode}</p>
-<p><strong>Perihal:</strong> </p>
+<p><strong>Perihal:</strong> <span class="subject-placeholder">${typeName}</span></p>
 <p><strong>Lampiran:</strong> - </p>
 <br>
 <p>Dengan hormat,</p>
 <p>&nbsp;</p>
+${customBody}
 <p>&nbsp;</p>
 <p>Demikian ${typeName} ini dibuat. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.</p>
-                        `;
-                    }
+                    `;
                     
                     if (tinymce.get('content')) {
-                        const currentContent = tinymce.get('content').getContent({format: 'text'}).trim();
-                        if (currentContent === '' || confirm('Mengganti jenis surat akan menimpa isi keterangan saat ini dengan template baru. Lanjutkan?')) {
-                            tinymce.get('content').setContent(template);
-                        }
+                        // Selalu timpa (overwrite) isi editor dengan template yang sudah digabung
+                        tinymce.get('content').setContent(template);
                     } else {
-                        document.getElementById('content').value = template;
+                        const contentTextarea = document.getElementById('content');
+                        if (contentTextarea) {
+                            contentTextarea.value = template;
+                        }
+                    }
+
+                    // Trigger input event to sync with TinyMCE (if it's the default template or has Perihal)
+                    if (subjectInput) {
+                        subjectInput.dispatchEvent(new Event('input'));
                     }
                 }
             });
+
+            // Sync subject input with TinyMCE
+            const subjectInput = document.getElementById('subject');
+            if (subjectInput) {
+                subjectInput.addEventListener('input', function() {
+                    if (tinymce.get('content')) {
+                        let body = tinymce.get('content').getBody();
+                        let placeholder = body.querySelector('.subject-placeholder');
+                        
+                        if (placeholder) {
+                            placeholder.textContent = this.value;
+                        } else {
+                            // Regex fallback to find Perihal: and replace text after it until the end of the tag
+                            let html = tinymce.get('content').getContent();
+                            let newHtml = html.replace(/(<strong>Perihal:\s*<\/strong>\s*|<p>\s*Perihal:\s*)(.*?)(<\/p>|<br>)/ig, '$1' + this.value + '$3');
+                            
+                            // To avoid unnecessary resets that ruin cursor position, only setContent if it actually changed
+                            if(newHtml !== html) {
+                                // Save cursor position
+                                const bookmark = tinymce.get('content').selection.getBookmark(2, true);
+                                tinymce.get('content').setContent(newHtml);
+                                tinymce.get('content').selection.moveToBookmark(bookmark);
+                            }
+                        }
+                    }
+                });
+            }
         }
     });
 </script>

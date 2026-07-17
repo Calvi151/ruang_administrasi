@@ -271,15 +271,19 @@
         
         <!-- Footer / Profile -->
         <div class="mt-auto flex flex-col gap-2 pt-4 border-t border-outline-variant dark:border-dark-outline-variant">
-            <div class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors cursor-pointer">
-                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs uppercase">
-                    {{ substr(auth()->user()->nip ?? 'CEO', 0, 2) }}
-                </div>
+            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors cursor-pointer">
+                @if(Auth::user()->employee && Auth::user()->employee->photo)
+                    <img alt="Profil Pengguna" class="w-8 h-8 rounded-full border border-outline-variant dark:border-dark-outline-variant object-cover" src="{{ asset('storage/' . Auth::user()->employee->photo) }}">
+                @else
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs uppercase">
+                        {{ substr(auth()->user()->employee->name ?? 'CEO', 0, 2) }}
+                    </div>
+                @endif
                 <div class="flex flex-col">
-                    <span class="font-label-md text-label-md text-on-surface">{{ auth()->user()->nip ?? 'CEO' }}</span>
+                    <span class="font-label-md text-label-md text-on-surface">{{ auth()->user()->employee->name ?? auth()->user()->nip }}</span>
                     <span class="font-label-xs text-label-xs capitalize">{{ auth()->user()->role ?? 'Pimpinan' }}</span>
                 </div>
-            </div>
+            </a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="flex items-center gap-3 px-3 py-2 text-error hover:bg-error-container hover:text-on-error-container rounded-xl transition-colors text-left w-full">
@@ -301,10 +305,22 @@
                 </div>
             </div>
             <div class="flex items-center gap-4 text-on-surface-variant dark:text-dark-on-surface-variant">
-                <button class="p-2 hover:bg-surface-container-high dark:hover:bg-dark-surface-container-high rounded-full transition-colors active:opacity-80 hover:text-primary relative">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full"></span>
-                </button>
+                <div class="relative">
+                    <button id="notification-btn" class="p-2 hover:bg-surface-container-high dark:hover:bg-dark-surface-container-high rounded-full transition-colors active:opacity-80 hover:text-primary relative">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full"></span>
+                    </button>
+                    <!-- Notification Dropdown -->
+                    <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-surface dark:bg-dark-surface border border-outline-variant/30 rounded-xl shadow-md py-2 z-50">
+                        <div class="px-4 py-3 border-b border-outline-variant/30">
+                            <h3 class="font-label-md text-label-md text-on-surface font-bold">Notifikasi</h3>
+                        </div>
+                        <div class="px-4 py-8 text-center text-on-surface-variant font-body-sm">
+                            <span class="material-symbols-outlined text-[32px] opacity-50 mb-2">notifications_off</span>
+                            <p>Belum ada notifikasi baru.</p>
+                        </div>
+                    </div>
+                </div>
                 <!-- Dark Mode Toggle -->
                 <button id="dark-mode-toggle" onclick="toggleDarkMode()"
                     class="p-2 hover:bg-surface-container-high dark:hover:bg-dark-surface-container-high rounded-full transition-colors active:opacity-80"
@@ -312,9 +328,15 @@
                     <span id="dark-icon" class="material-symbols-outlined hidden">light_mode</span>
                     <span id="light-icon" class="material-symbols-outlined">dark_mode</span>
                 </button>
-                <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold uppercase ml-2 block md:hidden">
-                    {{ substr(auth()->user()->nip ?? 'C', 0, 1) }}
-                </div>
+                <a href="{{ route('profile.edit') }}" class="ml-2 hover:opacity-90 transition-opacity" title="Profil Saya">
+                    @if(Auth::user()->employee && Auth::user()->employee->photo)
+                        <img alt="Profil Pengguna" class="w-9 h-9 rounded-full border border-outline-variant dark:border-dark-outline-variant object-cover" src="{{ asset('storage/' . Auth::user()->employee->photo) }}">
+                    @else
+                        <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold uppercase">
+                            {{ substr(auth()->user()->employee->name ?? 'C', 0, 1) }}
+                        </div>
+                    @endif
+                </a>
             </div>
         </header>
         
@@ -369,6 +391,23 @@
         document.addEventListener('DOMContentLoaded', function() {
             const isDark = document.getElementById('html-root').classList.contains('dark');
             updateDarkModeIcons(isDark);
+            
+            // Notification toggle
+            const notifBtn = document.getElementById('notification-btn');
+            const notifDropdown = document.getElementById('notification-dropdown');
+            
+            if (notifBtn && notifDropdown) {
+                notifBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notifDropdown.classList.toggle('hidden');
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!notifDropdown.contains(e.target)) {
+                        notifDropdown.classList.add('hidden');
+                    }
+                });
+            }
         });
     </script>
 </body>
