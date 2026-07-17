@@ -17,8 +17,8 @@
     <!-- Info Card -->
     <div class="lg:col-span-2 flex flex-col gap-4">
         <div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-4 relative overflow-hidden">
-            <div class="absolute -right-6 -top-4 text-primary-fixed-dim/10">
-                <span class="material-symbols-outlined text-[150px] icon-fill">drafts</span>
+            <div class="absolute right-4 top-4 text-primary/10 dark:text-primary/5 pointer-events-none select-none">
+                <span class="material-symbols-outlined text-[80px] icon-fill">drafts</span>
             </div>
             
             <div class="relative z-10">

@@ -72,6 +72,7 @@
                                 <span class="material-symbols-outlined text-[18px]">edit</span>
                             </a>
                             @endif
+                            @if($letter->status !== 'acc')
                             <form action="{{ route('outgoing-letters.destroy', $letter->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                 @csrf
                                 @method('DELETE')
@@ -79,6 +80,7 @@
                                     <span class="material-symbols-outlined text-[18px]">delete</span>
                                 </button>
                             </form>
+                            @endif
                         </div>
                     </td>
                 </tr>

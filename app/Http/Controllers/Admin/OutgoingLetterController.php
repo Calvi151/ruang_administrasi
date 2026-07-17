@@ -55,18 +55,17 @@ class OutgoingLetterController extends Controller
 
         // Generate Nomor Surat Otomatis
         // Format: {No urut}/{kodesurat}/TAP/{bulan_romawi}/{Tahun}
-        // Contoh: 1/012/TAP/VI/2026
-        
-        $date = Carbon::parse($validated['date_sent']);
-        $year = $date->year;
-        $month = $date->month;
+        // Menggunakan tanggal hari ini (saat surat diregister/dibuat) untuk penomoran
+        $now = \Carbon\Carbon::now();
+        $year = $now->year;
+        $month = $now->month;
         $romanMonth = $this->getRomanMonth($month);
         
         $letterType = LetterType::find($validated['letter_type_id']);
         $kodeSurat = $letterType->letter_code;
 
-        // Cari nomor urut terakhir di tahun yang sama
-        $lastLetter = OutgoingLetter::whereYear('date_sent', $year)->orderBy('id', 'desc')->first();
+        // Cari nomor urut terakhir di tahun yang sama berdasarkan waktu pembuatan
+        $lastLetter = OutgoingLetter::whereYear('created_at', $year)->orderBy('id', 'desc')->first();
         $noUrut = 1;
         if ($lastLetter) {
             // Ambil angka pertama sebelum '/'
@@ -75,7 +74,7 @@ class OutgoingLetterController extends Controller
                 $noUrut = (int)$parts[0] + 1;
             } else {
                 // Fallback jika format lama tidak sesuai
-                $noUrut = OutgoingLetter::whereYear('date_sent', $year)->count() + 1;
+                $noUrut = OutgoingLetter::whereYear('created_at', $year)->count() + 1;
             }
         }
 
@@ -137,10 +136,9 @@ class OutgoingLetterController extends Controller
         }
 
         // Cek jika jenis surat atau tanggal berubah, kita mungkin perlu mereset nomor urut (opsional)
-        // Namun untuk kesederhanaan, nomor surat biasanya dipertahankan kecuali format total berubah.
-        // Mari kita perbarui kode surat dan bulan/tahun jika tanggal/jenis berubah, tetapi pertahankan nomor urutnya.
+        // Mari kita perbarui kode surat jika jenis berubah, tetapi pertahankan nomor urut dan bulan/tahun pembuatannya.
         
-        $date = Carbon::parse($validated['date_sent']);
+        $date = \Carbon\Carbon::parse($outgoingLetter->created_at);
         $year = $date->year;
         $month = $date->month;
         $romanMonth = $this->getRomanMonth($month);
@@ -161,8 +159,8 @@ class OutgoingLetterController extends Controller
 
     public function destroy(OutgoingLetter $outgoingLetter)
     {
-        if ($outgoingLetter->status !== 'pending') {
-            return redirect()->route('outgoing-letters.index')->with('error', 'Hanya surat berstatus pending yang dapat dihapus.');
+        if ($outgoingLetter->status === 'acc') {
+            return redirect()->route('outgoing-letters.index')->with('error', 'Surat yang sudah disetujui (ACC) tidak dapat dihapus.');
         }
 
         $outgoingLetter->delete();
