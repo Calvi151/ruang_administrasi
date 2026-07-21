@@ -87,7 +87,8 @@
                 <span class="material-symbols-outlined text-primary text-[20px] shrink-0">info</span>
                 <div>
                     <strong>Otomatisasi Sistem:</strong><br>
-                    Nomor urut, kode surat, bulan, dan tahun akan diisi otomatis oleh sistem saat disimpan.
+                    Format nomor surat: <code>No Urut/Kode Surat/Kode Perusahaan/Bulan/Tahun</code>.<br>
+                    Teks <strong>[NOMOR_SURAT]</strong> di dalam isi surat akan otomatis diganti dengan nomor surat asli saat disimpan.
                 </div>
             </div>
 
@@ -229,7 +230,7 @@
                     
                     // Gabungkan header standar, isi custom di tengah, dan footer standar
                     let template = `
-<p><strong>Kode Surat:</strong> ${typeCode}</p>
+<p><strong>Nomor Surat:</strong> [NOMOR_SURAT]</p>
 <p><strong>Perihal:</strong> <span class="subject-placeholder">${typeName}</span></p>
 <p><strong>Lampiran:</strong> - </p>
 <br>

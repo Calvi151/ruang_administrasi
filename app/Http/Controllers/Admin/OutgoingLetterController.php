@@ -64,23 +64,18 @@ class OutgoingLetterController extends Controller
         $letterType = LetterType::find($validated['letter_type_id']);
         $kodeSurat = $letterType->letter_code;
 
-        // Cari nomor urut terakhir di tahun yang sama berdasarkan waktu pembuatan
-        $lastLetter = OutgoingLetter::whereYear('created_at', $year)->orderBy('id', 'desc')->first();
-        $noUrut = 1;
-        if ($lastLetter) {
-            // Ambil angka pertama sebelum '/'
-            $parts = explode('/', $lastLetter->letter_number);
-            if (is_numeric($parts[0])) {
-                $noUrut = (int)$parts[0] + 1;
-            } else {
-                // Fallback jika format lama tidak sesuai
-                $noUrut = OutgoingLetter::whereYear('created_at', $year)->count() + 1;
-            }
-        }
+        // Cari nomor urut berdasarkan jenis surat
+        $count = OutgoingLetter::where('letter_type_id', $letterType->id)->count();
+        $noUrut = str_pad($count + 1, 2, '0', STR_PAD_LEFT);
 
-        $letterNumber = "{$noUrut}/{$kodeSurat}/TAP/{$romanMonth}/{$year}";
+        $companyCode = env('COMPANY_CODE', 'TAP');
+
+        $letterNumber = "{$noUrut}/{$kodeSurat}/{$companyCode}/{$romanMonth}/{$year}";
 
         $validated['letter_number'] = $letterNumber;
+        
+        // Ganti placeholder [NOMOR_SURAT] dengan nomor surat asli di konten
+        $validated['content'] = str_replace('[NOMOR_SURAT]', $letterNumber, $validated['content']);
         $validated['status'] = 'pending'; // Butuh ACC CEO
         $validated['creator_id'] = auth()->id() ?? 1;
 
@@ -147,10 +142,14 @@ class OutgoingLetterController extends Controller
         $kodeSurat = $letterType->letter_code;
 
         $parts = explode('/', $outgoingLetter->letter_number);
-        $noUrut = $parts[0] ?? $outgoingLetter->id; 
+        $noUrut = str_pad($parts[0] ?? $outgoingLetter->id, 2, '0', STR_PAD_LEFT); 
 
-        $newLetterNumber = "{$noUrut}/{$kodeSurat}/TAP/{$romanMonth}/{$year}";
+        $companyCode = env('COMPANY_CODE', 'TAP');
+        $newLetterNumber = "{$noUrut}/{$kodeSurat}/{$companyCode}/{$romanMonth}/{$year}";
         $validated['letter_number'] = $newLetterNumber;
+        
+        // Cek apakah user menambahkan [NOMOR_SURAT] yang perlu di-replace
+        $validated['content'] = str_replace('[NOMOR_SURAT]', $newLetterNumber, $validated['content']);
 
         $outgoingLetter->update($validated);
 
