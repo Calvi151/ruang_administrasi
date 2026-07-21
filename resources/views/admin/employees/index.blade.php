@@ -59,13 +59,13 @@
                     <td class="px-6 py-3 text-on-surface-variant">{{ $employee->number ?? '-' }}</td>
                     <td class="px-6 py-3 text-right">
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{{ route('employees.edit', $employee->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-primary hover:bg-primary-fixed transition-colors" title="Edit">
+                            <a href="{{ route('employees.edit', $employee->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-amber-400 hover:bg-amber-400/15 hover:text-amber-300 transition-colors" title="Edit">
                                 <span class="material-symbols-outlined text-[18px]">edit</span>
                             </a>
                             <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus karyawan ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg text-error hover:bg-error-container transition-colors" title="Hapus">
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg text-red-400 hover:bg-red-400/15 hover:text-red-300 transition-colors" title="Hapus">
                                     <span class="material-symbols-outlined text-[18px]">delete</span>
                                 </button>
                             </form>

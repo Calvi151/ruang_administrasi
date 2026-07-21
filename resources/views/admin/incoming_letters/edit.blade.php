@@ -35,73 +35,78 @@
         </div>
         @endif
 
-        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Left Column -->
-            <div class="space-y-5">
-                <div>
-                    <label for="letter_number" class="block font-label-md text-label-md text-on-surface mb-1">Nomor Surat <span class="text-error">*</span></label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">tag</span>
-                        <input type="text" name="letter_number" id="letter_number"
-                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
-                            value="{{ old('letter_number', $incomingLetter->letter_number) }}" required>
+        <div class="p-6 space-y-6">
+            <!-- File Attachment (Full Width, Big) -->
+            <div>
+                <label class="block font-label-md text-label-md text-on-surface mb-2">Ganti Lampiran File (PDF)</label>
+                
+                @if($incomingLetter->file_path)
+                <div class="mb-3 p-3 bg-primary-fixed/30 rounded-lg flex items-center justify-between border border-primary-fixed-dim/50">
+                    <div class="flex items-center gap-2 text-primary font-label-md text-label-md">
+                        <span class="material-symbols-outlined text-[18px]">attach_file</span>
+                        File tersimpan saat ini
                     </div>
+                    <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank"
+                        class="text-xs bg-primary text-on-primary px-3 py-1.5 rounded-lg hover:opacity-90 transition-colors">Lihat File</a>
                 </div>
-
-                <div>
-                    <label for="sender" class="block font-label-md text-label-md text-on-surface mb-1">Pengirim <span class="text-error">*</span></label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">domain</span>
-                        <input type="text" name="sender" id="sender"
-                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
-                            value="{{ old('sender', $incomingLetter->sender) }}" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="date_received" class="block font-label-md text-label-md text-on-surface mb-1">Tanggal Diterima <span class="text-error">*</span></label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">calendar_month</span>
-                        <input type="date" name="date_received" id="date_received"
-                            class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
-                            value="{{ old('date_received', $incomingLetter->date_received) }}" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-label-md text-label-md text-on-surface mb-1">Ganti Lampiran (PDF)</label>
-                    @if($incomingLetter->file_path)
-                    <div class="mb-3 p-3 bg-primary-fixed/30 rounded-lg flex items-center justify-between border border-primary-fixed-dim/50">
-                        <div class="flex items-center gap-2 text-primary font-label-md text-label-md">
-                            <span class="material-symbols-outlined text-[18px]">attach_file</span>
-                            File tersimpan saat ini
-                        </div>
-                        <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank"
-                            class="text-xs bg-primary text-on-primary px-3 py-1.5 rounded-lg hover:opacity-90 transition-colors">Lihat File</a>
-                    </div>
-                    @endif
-                    <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-outline-variant border-dashed rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group relative">
-                        <div class="space-y-1 text-center">
-                            <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">cloud_upload</span>
-                            <div class="flex text-body-sm text-on-surface-variant justify-center">
-                                <label class="relative cursor-pointer font-label-md text-primary hover:underline" for="file">
-                                    <span id="file_name_display">Pilih berkas baru</span>
-                                    <input type="file" name="file" id="file" accept=".pdf" class="sr-only">
-                                </label>
-                                <p class="pl-1" id="file_drag_text">atau tarik dan lepas</p>
-                            </div>
-                            <p class="text-xs text-on-surface-variant" id="file_help_text">Biarkan kosong jika tidak ingin mengubah</p>
+                @endif
+                
+                <label for="file" id="dropzone" class="flex flex-col items-center justify-center w-full h-64 border-2 border-outline-variant border-dashed rounded-xl bg-surface-container-low hover:bg-surface-container hover:border-primary/50 transition-all cursor-pointer group relative overflow-hidden">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6 space-y-3 pointer-events-none">
+                        <span id="upload_icon" class="material-symbols-outlined text-6xl text-on-surface-variant group-hover:text-primary transition-colors">cloud_upload</span>
+                        <div class="flex flex-col items-center text-body-lg text-on-surface-variant justify-center text-center">
+                            <span class="font-label-lg text-primary font-semibold mb-1" id="file_name_display">Klik di sini atau tarik berkas untuk mengganti</span>
+                            <p class="text-sm" id="file_drag_text">Biarkan kosong jika tidak ingin mengubah (PDF Maks 5MB)</p>
                         </div>
                     </div>
-                </div>
+                    <input type="file" name="file" id="file" accept=".pdf" class="hidden">
+                </label>
             </div>
 
-            <!-- Right Column -->
-            <div class="flex flex-col gap-1">
-                <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">Perihal / Ringkasan <span class="text-error">*</span></label>
-                <textarea name="subject" id="subject" rows="14"
-                    class="block w-full flex-1 rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y"
-                    required>{{ old('subject', $incomingLetter->subject) }}</textarea>
+            <hr class="border-outline-variant/30">
+
+            <!-- Other Fields Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left Column for smaller inputs -->
+                <div class="space-y-5">
+                    <div>
+                        <label for="letter_number" class="block font-label-md text-label-md text-on-surface mb-1">Nomor Surat <span class="text-error">*</span></label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">tag</span>
+                            <input type="text" name="letter_number" id="letter_number"
+                                class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
+                                value="{{ old('letter_number', $incomingLetter->letter_number) }}" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="sender" class="block font-label-md text-label-md text-on-surface mb-1">Pengirim <span class="text-error">*</span></label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">domain</span>
+                            <input type="text" name="sender" id="sender"
+                                class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
+                                value="{{ old('sender', $incomingLetter->sender) }}" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="date_received" class="block font-label-md text-label-md text-on-surface mb-1">Tanggal Diterima <span class="text-error">*</span></label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">calendar_month</span>
+                            <input type="date" name="date_received" id="date_received"
+                                class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
+                                value="{{ old('date_received', $incomingLetter->date_received) }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="flex flex-col h-full">
+                    <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">Perihal / Ringkasan <span class="text-error">*</span></label>
+                    <textarea name="subject" id="subject"
+                        class="block w-full flex-1 rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-none min-h-[150px]"
+                        required>{{ old('subject', $incomingLetter->subject) }}</textarea>
+                </div>
             </div>
         </div>
 
@@ -122,22 +127,122 @@
 
 @section('scripts')
 <script>
-    const fileInput = document.getElementById('file');
-    if (fileInput) {
-        fileInput.addEventListener('change', function(e) {
-            const fileName = e.target.files[0]?.name;
-            if (fileName) {
-                document.getElementById('file_name_display').textContent = fileName;
-                const dragText = document.getElementById('file_drag_text');
-                if(dragText) dragText.style.display = 'none';
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('file');
+        const fileNameDisplay = document.getElementById('file_name_display');
+        const fileDragText = document.getElementById('file_drag_text');
+        const uploadIcon = document.getElementById('upload_icon');
+
+        const inputLetterNumber = document.getElementById('letter_number');
+        const inputSender = document.getElementById('sender');
+        const inputSubject = document.getElementById('subject');
+
+        function updateFileInfo(file) {
+            if (file) {
+                fileNameDisplay.textContent = file.name;
+                if (fileDragText) fileDragText.style.display = 'none';
                 
-                const icon = this.closest('.border-dashed').querySelector('.material-symbols-outlined');
-                if (icon) {
-                    icon.textContent = 'check_circle';
-                    icon.classList.add('text-primary');
+                if (uploadIcon) {
+                    uploadIcon.textContent = 'hourglass_empty';
+                    uploadIcon.classList.add('text-primary', 'animate-spin');
+                    uploadIcon.classList.remove('text-on-surface-variant');
+                }
+                if (dropzone) {
+                    dropzone.classList.add('bg-primary-container/10', 'border-primary');
+                    dropzone.classList.remove('bg-surface-container-low', 'border-outline-variant');
+                }
+
+                // Call OCR Endpoint
+                extractOcrData(file);
+            }
+        }
+
+        function extractOcrData(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('_token', '{{ csrf_token() }}');
+
+            fetch('{{ route('incoming-letters.ocr') }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                uploadIcon.classList.remove('animate-spin');
+                if (data.error) {
+                    uploadIcon.textContent = 'error';
+                    uploadIcon.classList.replace('text-primary', 'text-error');
+                    console.error(data.error);
+                } else {
+                    uploadIcon.textContent = 'check_circle';
+                    
+                    // Auto-fill fields
+                    if (data.letter_number) {
+                        inputLetterNumber.value = data.letter_number;
+                    }
+                    if (data.sender) {
+                        inputSender.value = data.sender;
+                    }
+                    if (data.subject) {
+                        inputSubject.value = data.subject;
+                    }
+                }
+            })
+            .catch(error => {
+                uploadIcon.classList.remove('animate-spin');
+                uploadIcon.textContent = 'error';
+                uploadIcon.classList.replace('text-primary', 'text-error');
+                console.error('Error extracting OCR:', error);
+            });
+        }
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                updateFileInfo(e.target.files[0]);
+            });
+        }
+
+        if (dropzone) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropzone.classList.add('bg-surface-container', 'border-primary', 'border-solid');
+                dropzone.classList.remove('border-dashed');
+            }
+
+            function unhighlight(e) {
+                dropzone.classList.remove('bg-surface-container', 'border-primary', 'border-solid');
+                dropzone.classList.add('border-dashed');
+            }
+
+            dropzone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                let dt = e.dataTransfer;
+                let files = dt.files;
+                
+                if (files.length > 0) {
+                    fileInput.files = files; // Assign files to the input
+                    updateFileInfo(files[0]);
                 }
             }
-        });
-    }
+        }
+    });
 </script>
 @endsection
