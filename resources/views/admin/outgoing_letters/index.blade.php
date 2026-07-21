@@ -5,17 +5,37 @@
 
 @section('content')
 <!-- Action Bar -->
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-    <div class="flex items-center gap-3">
-        <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
-            <input class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Cari nomor surat, perihal..." type="text">
-        </div>
+<div class="flex flex-col mb-6 gap-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <form action="{{ route('outgoing-letters.index') }}" method="GET" class="flex items-center gap-3">
+            @if(request('letter_type_id'))
+                <input type="hidden" name="letter_type_id" value="{{ request('letter_type_id') }}">
+            @endif
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+                <input name="search" value="{{ request('search') }}" class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Cari nomor surat, perihal..." type="text">
+            </div>
+            <button type="submit" class="hidden">Search</button>
+        </form>
+        <a href="{{ route('outgoing-letters.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            Buat Surat Keluar
+        </a>
     </div>
-    <a href="{{ route('outgoing-letters.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
-        <span class="material-symbols-outlined text-[18px]">add</span>
-        Buat Surat Keluar
-    </a>
+
+    <!-- Letter Type Filters (Chips) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        <a href="{{ route('outgoing-letters.index', ['search' => request('search')]) }}" 
+           class="px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-colors {{ !request('letter_type_id') ? 'bg-primary text-on-primary' : 'bg-surface-container border border-outline-variant text-on-surface-variant hover:bg-surface-container-high' }}">
+            Semua Jenis
+        </a>
+        @foreach($letterTypes as $type)
+        <a href="{{ route('outgoing-letters.index', ['letter_type_id' => $type->id, 'search' => request('search')]) }}" 
+           class="px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-colors {{ request('letter_type_id') == $type->id ? 'bg-primary text-on-primary' : 'bg-surface-container border border-outline-variant text-on-surface-variant hover:bg-surface-container-high' }}">
+            {{ $type->name }} ({{ $type->letter_code }})
+        </a>
+        @endforeach
+    </div>
 </div>
 
 <!-- Table Card -->

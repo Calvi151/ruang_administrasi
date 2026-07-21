@@ -14,21 +14,43 @@ class OutgoingLetterController extends Controller
     {
         $query = OutgoingLetter::with(['letterType', 'creator'])->orderByDesc('created_at');
         
+        if ($request->has('letter_type_id') && $request->letter_type_id) {
+            $query->where('letter_type_id', $request->letter_type_id);
+        }
+        
         if ($request->has('search') && $request->search) {
             $search = $request->search;
-            $query->where('letter_number', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('letter_number', 'like', "%{$search}%")
                   ->orWhere('recipient', 'like', "%{$search}%")
                   ->orWhere('subject', 'like', "%{$search}%");
+            });
         }
         
         $letters = $query->paginate(10)->withQueryString();
-        return view('admin.outgoing_letters.index', compact('letters'));
+        $letterTypes = LetterType::all();
+        
+        return view('admin.outgoing_letters.index', compact('letters', 'letterTypes'));
     }
 
     public function create()
     {
         $letterTypes = LetterType::all();
-        return view('admin.outgoing_letters.create', compact('letterTypes'));
+        
+        $nextLetterNumbers = [];
+        $now = \Carbon\Carbon::now();
+        $year = $now->year;
+        $month = $now->month;
+        $romanMonth = $this->getRomanMonth($month);
+        $companyCode = env('COMPANY_CODE', 'TAP');
+        
+        foreach ($letterTypes as $type) {
+            $nextSeq = $this->getNextSequenceNumber($type->id, $year);
+            $noUrut = str_pad($nextSeq, 2, '0', STR_PAD_LEFT);
+            $nextLetterNumbers[$type->id] = "{$noUrut}/{$type->letter_code}/{$companyCode}/{$romanMonth}/{$year}";
+        }
+
+        return view('admin.outgoing_letters.create', compact('letterTypes', 'nextLetterNumbers'));
     }
 
     private function getRomanMonth($monthNumber)
@@ -38,6 +60,27 @@ class OutgoingLetterController extends Controller
             7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 11 => 'XI', 12 => 'XII'
         ];
         return $map[(int)$monthNumber];
+    }
+
+    private function getNextSequenceNumber($letterTypeId, $year)
+    {
+        // Cari semua nomor surat untuk jenis dan tahun ini
+        $letters = OutgoingLetter::where('letter_type_id', $letterTypeId)
+                                 ->whereYear('created_at', $year)
+                                 ->get(['letter_number']);
+        
+        $maxNum = 0;
+        foreach ($letters as $letter) {
+            $parts = explode('/', $letter->letter_number);
+            if (isset($parts[0]) && is_numeric($parts[0])) {
+                $num = (int)$parts[0];
+                if ($num > $maxNum) {
+                    $maxNum = $num;
+                }
+            }
+        }
+        
+        return $maxNum + 1;
     }
 
     public function store(Request $request)
@@ -65,8 +108,8 @@ class OutgoingLetterController extends Controller
         $kodeSurat = $letterType->letter_code;
 
         // Cari nomor urut berdasarkan jenis surat
-        $count = OutgoingLetter::where('letter_type_id', $letterType->id)->count();
-        $noUrut = str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+        $nextSeq = $this->getNextSequenceNumber($letterType->id, $year);
+        $noUrut = str_pad($nextSeq, 2, '0', STR_PAD_LEFT);
 
         $companyCode = env('COMPANY_CODE', 'TAP');
 

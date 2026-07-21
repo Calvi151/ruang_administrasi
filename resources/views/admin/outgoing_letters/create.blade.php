@@ -88,7 +88,7 @@
                 <div>
                     <strong>Otomatisasi Sistem:</strong><br>
                     Format nomor surat: <code>No Urut/Kode Surat/Kode Perusahaan/Bulan/Tahun</code>.<br>
-                    Teks <strong>[NOMOR_SURAT]</strong> di dalam isi surat akan otomatis diganti dengan nomor surat asli saat disimpan.
+                    Nomor surat akan langsung digenerate secara otomatis di dalam editor berdasarkan urutan surat sebelumnya.
                 </div>
             </div>
 
@@ -187,6 +187,7 @@
         const btnBack = document.getElementById('btn-back');
         
         const letterTemplates = @json($letterTypes->pluck('template', 'id'));
+        const nextLetterNumbers = @json($nextLetterNumbers);
         
         // Multi-step form logic
         if (btnNext && btnBack && step1 && step2) {
@@ -218,6 +219,7 @@
                     const selectedOption = this.options[this.selectedIndex];
                     const typeName = selectedOption.text.split(' (')[0].trim();
                     const typeCode = selectedOption.getAttribute('data-code');
+                    const realLetterNumber = nextLetterNumbers[this.value] || '[Otomatis]';
                     
                     // Set default subject input
                     const subjectInput = document.getElementById('subject');
@@ -230,7 +232,7 @@
                     
                     // Gabungkan header standar, isi custom di tengah, dan footer standar
                     let template = `
-<p><strong>Nomor Surat:</strong> [NOMOR_SURAT]</p>
+<p><strong>Nomor Surat:</strong> ${realLetterNumber}</p>
 <p><strong>Perihal:</strong> <span class="subject-placeholder">${typeName}</span></p>
 <p><strong>Lampiran:</strong> - </p>
 <br>
