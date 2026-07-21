@@ -7,9 +7,9 @@
 <!-- Stat Cards Grid (sesuai Stitch: rounded-xl, p-6, simpel) -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-8">
     <!-- Card 1: Surat Masuk -->
-    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:shadow-md transition-shadow">
+    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-md hover:border-primary/40 hover:bg-primary/5 dark:hover:bg-primary-container/20 transition-all duration-300 group cursor-default">
         <div class="flex justify-between items-start mb-4">
-            <div class="p-3 bg-primary-container/10 rounded-lg text-primary">
+            <div class="p-3 bg-primary-container/10 rounded-lg text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-primary/20">
                 <span class="material-symbols-outlined icon-fill">inbox</span>
             </div>
             <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary bg-secondary-container/30 px-2 py-1 rounded-full">
@@ -23,9 +23,9 @@
     </div>
 
     <!-- Card 2: Surat Keluar -->
-    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:shadow-md transition-shadow">
+    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-md hover:border-secondary/40 hover:bg-secondary/5 dark:hover:bg-secondary-container/20 transition-all duration-300 group cursor-default">
         <div class="flex justify-between items-start mb-4">
-            <div class="p-3 bg-secondary/10 rounded-lg text-secondary">
+            <div class="p-3 bg-secondary/10 rounded-lg text-secondary transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-secondary/20">
                 <span class="material-symbols-outlined icon-fill">send</span>
             </div>
             <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary bg-secondary-container/30 px-2 py-1 rounded-full">
@@ -39,9 +39,9 @@
     </div>
 
     <!-- Card 3: Menunggu Approval -->
-    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:shadow-md transition-shadow">
+    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-md hover:border-amber-500/40 hover:bg-amber-500/5 dark:hover:bg-amber-500/10 transition-all duration-300 group cursor-default">
         <div class="flex justify-between items-start mb-4">
-            <div class="p-3 bg-amber-500/10 rounded-lg text-amber-600">
+            <div class="p-3 bg-amber-500/10 rounded-lg text-amber-600 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-amber-500/20">
                 <span class="material-symbols-outlined icon-fill">pending_actions</span>
             </div>
             @if($outgoingPending > 0)
@@ -61,9 +61,9 @@
     </div>
 
     <!-- Card 4: Karyawan Aktif -->
-    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:shadow-md transition-shadow">
+    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/50 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-md hover:border-tertiary/40 hover:bg-tertiary/5 dark:hover:bg-tertiary-container/20 transition-all duration-300 group cursor-default">
         <div class="flex justify-between items-start mb-4">
-            <div class="p-3 bg-tertiary/10 rounded-lg text-tertiary">
+            <div class="p-3 bg-tertiary/10 rounded-lg text-tertiary transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-tertiary/20">
                 <span class="material-symbols-outlined icon-fill">badge</span>
             </div>
             <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">
