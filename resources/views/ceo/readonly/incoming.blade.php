@@ -24,7 +24,7 @@
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="border-b border-outline-variant/30 bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                <tr class="border-b border-outline-variant/30 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm uppercase tracking-wider">
                     <th class="py-4 px-6 font-semibold w-1/5">Nomor Surat</th>
                     <th class="py-4 px-6 font-semibold w-1/5">Pengirim</th>
                     <th class="py-4 px-6 font-semibold w-2/5">Perihal</th>

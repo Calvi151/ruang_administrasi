@@ -39,11 +39,11 @@
 </div>
 
 <!-- Table Card -->
-<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse min-w-[900px]">
             <thead>
-                <tr class="bg-surface-container-lowest border-b border-outline-variant/30 font-label-sm text-label-sm text-on-surface-variant">
+                <tr class="bg-surface-container border-y border-outline-variant/40 font-label-sm text-label-sm text-on-surface-variant">
                     <th class="px-6 py-3 font-medium">Nomor Surat</th>
                     <th class="px-6 py-3 font-medium">Tanggal</th>
                     <th class="px-6 py-3 font-medium">Tujuan</th>
@@ -54,20 +54,20 @@
             </thead>
             <tbody class="font-body-sm text-body-sm">
                 @forelse($letters as $letter)
-                <tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest transition-colors group">
-                    <td class="px-6 py-3 text-on-surface font-medium">{{ $letter->letter_number }}</td>
+                <tr class="border-b border-outline-variant/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
+                    <td class="px-6 py-3 text-secondary font-semibold">{{ $letter->letter_number }}</td>
                     <td class="px-6 py-3 text-on-surface-variant">{{ \Carbon\Carbon::parse($letter->date_sent)->format('d M Y') }}</td>
-                    <td class="px-6 py-3 text-on-surface-variant">{{ $letter->recipient }}</td>
+                    <td class="px-6 py-3 text-on-surface font-semibold uppercase">{{ $letter->recipient }}</td>
                     <td class="px-6 py-3 text-on-surface-variant max-w-xs truncate">{{ $letter->subject }}</td>
                     <td class="px-6 py-3">
                         @if($letter->status == 'pending')
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px]">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> PENDING
-                            </span>
+                            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 font-label-sm text-[11px] font-bold tracking-wider">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> MENUNGGU
+                            </div>
                         @elseif($letter->status == 'acc')
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-[11px]">
-                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> ACC
-                            </span>
+                            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-sm text-[11px] font-bold tracking-wider">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> DISETUJUI
+                            </div>
                         @else
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container/40 text-error font-label-sm text-[11px]">
                                 <span class="w-1.5 h-1.5 rounded-full bg-error"></span> DITOLAK
@@ -120,3 +120,6 @@
     </div>
 </div>
 @endsection
+
+
+

@@ -13,7 +13,7 @@
 </div>
 
 <!-- Form Card -->
-<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
     <!-- Form Header -->
     <div class="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-lowest">
         <h3 class="font-h3 text-h3 text-on-surface">Detail Surat Masuk</h3>
@@ -87,7 +87,10 @@
                                 value="{{ old('sender') }}" required>
                         </div>
                     </div>
+                </div>
 
+                <!-- Right Column -->
+                <div class="space-y-5">
                     <!-- Date Received -->
                     <div>
                         <label for="date_received" class="block font-label-md text-label-md text-on-surface mb-1">
@@ -100,17 +103,20 @@
                                 value="{{ old('date_received', date('Y-m-d')) }}" required>
                         </div>
                     </div>
-                </div>
 
-                <!-- Right Column for Subject -->
-                <div class="flex flex-col h-full">
-                    <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">
-                        Perihal / Ringkasan <span class="text-error">*</span>
-                    </label>
-                    <textarea name="subject" id="subject"
-                        class="block w-full flex-1 rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-none min-h-[150px]"
-                        placeholder="Tuliskan ringkasan isi surat secara singkat dan jelas..."
-                        required>{{ old('subject') }}</textarea>
+                    <!-- Subject -->
+                    <div>
+                        <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">
+                            Perihal / Ringkasan <span class="text-error">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">subject</span>
+                            <input type="text" name="subject" id="subject"
+                                class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
+                                placeholder="Tuliskan ringkasan isi surat secara singkat dan jelas..."
+                                value="{{ old('subject') }}" required>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

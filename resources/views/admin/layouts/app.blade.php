@@ -136,15 +136,40 @@
       }
     </script>
     <style>
+        /* ============================================================
+           LAYOUT SHIFT FIX — root cause: scrollbar appearing/disappearing
+           causes the page width to change by ~15px. Solution:
+           - scrollbar-gutter: stable  → reserves scrollbar space always
+           - overflow-y: scroll        → fallback for older browsers
+           This prevents ANY width change when TinyMCE opens menus/dialogs
+        ============================================================ */
+        html {
+            overflow-y: scroll;
+            scrollbar-gutter: stable;
+        }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
         .icon-fill {
             font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        /* Dark mode smooth transition */
-        html.dark *, html:not(.dark) * {
+        /* Dark mode smooth transition — scoped ke elemen UI, BUKAN body/html/main agar TinyMCE tidak memicu reflow */
+        html.dark a, html:not(.dark) a,
+        html.dark button, html:not(.dark) button,
+        html.dark .bg-surface, html:not(.dark) .bg-surface,
+        html.dark [class*="bg-surface"], html:not(.dark) [class*="bg-surface"],
+        html.dark [class*="bg-primary"], html:not(.dark) [class*="bg-primary"],
+        html.dark [class*="bg-secondary"], html:not(.dark) [class*="bg-secondary"],
+        html.dark [class*="border-"], html:not(.dark) [class*="border-"],
+        html.dark [class*="text-on-"], html:not(.dark) [class*="text-on-"],
+        html.dark [class*="text-primary"], html:not(.dark) [class*="text-primary"],
+        html.dark [class*="text-secondary"], html:not(.dark) [class*="text-secondary"] {
             transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
+        }
+        /* Layout containers: NO transition — prevents reflow when TinyMCE injects styles */
+        body, main, header, nav, .flex-1, aside {
+            transition: none !important;
         }
         /* Custom scrollbar for dark mode */
         html.dark ::-webkit-scrollbar-track { background: #12131e; }
@@ -183,9 +208,9 @@
         html.dark .text-on-surface-variant      { color: #9ca3bf !important; }
         html.dark .text-on-background           { color: #e2e4f0 !important; }
         html.dark .text-on-secondary-container  { color: #6ee7b7 !important; }
+        html.dark .text-primary                 { color: #60a5fa !important; } /* Tailwind blue-400 */
+        html.dark .text-secondary               { color: #4ade80 !important; } /* Tailwind green-400 */
         html.dark .text-outline                 { color: #636885 !important; }
-        html.dark .text-primary                 { color: #b4c5ff !important; }
-        html.dark .text-secondary               { color: #68dba9 !important; }
         html.dark .text-tertiary                { color: #ff8a80 !important; }
         html.dark .text-heading-slate           { color: #c5c8df !important; }
 
@@ -241,6 +266,21 @@
         /* ----- MISC UTILITY ----- */
         html.dark .shadow-sm                    { box-shadow: 0 1px 2px rgba(0,0,0,0.6) !important; }
         html.dark .shadow-md                    { box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; }
+    
+
+        /* Fix TinyMCE jumping — lock editor width */
+        .tox-tinymce {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+        /* Block TinyMCE padding-right injection to body */
+        body {
+            padding-right: 0 !important;
+            overflow-x: hidden !important;
+        }
+        .tox-tinymce-aux {
+            z-index: 999999 !important;
+        }
     </style>
     @yield('styles')
 </head>
@@ -315,7 +355,7 @@
             <div class="flex items-center gap-4">
                 <div class="hidden sm:flex items-center gap-2 text-on-surface-variant dark:text-dark-on-surface-variant font-body-sm text-body-sm bg-surface-container dark:bg-dark-surface-container px-3 py-1.5 rounded-full">
                     <span class="material-symbols-outlined text-[18px]">calendar_today</span>
-                    <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}</span>
+                    <span>{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d M Y') }}</span>
                 </div>
                 <!-- Dark Mode Toggle -->
                 <button id="dark-mode-toggle" onclick="toggleDarkMode()"
@@ -331,11 +371,12 @@
                             ->take(5)
                             ->get();
                         $hasNotif = $notifications->count() > 0;
+                        $latestNotifTime = $hasNotif ? $notifications->first()->updated_at->timestamp : 0;
                     @endphp
                     <button id="notification-btn" class="relative p-2 text-on-surface-variant dark:text-dark-on-surface-variant hover:bg-surface-container-high/50 dark:hover:bg-dark-surface-container-high/50 rounded-full transition-all focus:ring-2 focus:ring-primary/20">
                         <span class="material-symbols-outlined">notifications</span>
                         @if($hasNotif)
-                            <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface dark:border-dark-surface-container"></span>
+                            <span id="notif-badge" data-time="{{ $latestNotifTime }}" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface dark:border-dark-surface-container"></span>
                         @endif
                     </button>
                     <!-- Notification Dropdown -->
@@ -391,7 +432,7 @@
         </header>
         
         <!-- Canvas -->
-        <div class="flex-1 p-margin_mobile md:p-margin_desktop overflow-auto w-full">
+        <div class="flex-1 p-margin_mobile md:p-margin_desktop overflow-y-scroll overflow-x-hidden w-full">
             @if(session('success'))
             <div class="bg-status-mint dark:bg-green-900/30 text-secondary dark:text-green-300 border border-secondary-fixed dark:border-green-700/40 px-4 py-3 rounded-xl font-label-md text-label-md mb-6 flex items-center gap-3">
                 <span class="material-symbols-outlined icon-fill">check_circle</span>
@@ -431,14 +472,27 @@
             const isDark = document.getElementById('html-root').classList.contains('dark');
             updateDarkModeIcons(isDark);
             
-            // Notification toggle
+            // Notification toggle & read status
             const notifBtn = document.getElementById('notification-btn');
             const notifDropdown = document.getElementById('notification-dropdown');
+            const notifBadge = document.getElementById('notif-badge');
+            
+            if (notifBadge) {
+                const latestTime = parseInt(notifBadge.getAttribute('data-time'));
+                const savedTime = localStorage.getItem('ruang_admin_notif_time');
+                if (savedTime && parseInt(savedTime) >= latestTime) {
+                    notifBadge.style.display = 'none';
+                }
+            }
             
             if (notifBtn && notifDropdown) {
                 notifBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     notifDropdown.classList.toggle('hidden');
+                    if (notifBadge && notifBadge.style.display !== 'none') {
+                        notifBadge.style.display = 'none';
+                        localStorage.setItem('ruang_admin_notif_time', notifBadge.getAttribute('data-time'));
+                    }
                 });
                 
                 document.addEventListener('click', function(e) {
@@ -447,7 +501,72 @@
                     }
                 });
             }
+            
+            // Live Search for Tables
+            const searchInputs = document.querySelectorAll('input[placeholder*="Cari"]');
+            searchInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const term = e.target.value.toLowerCase();
+                    const tableBody = document.querySelector('table tbody');
+                    if (tableBody) {
+                        const rows = tableBody.querySelectorAll('tr');
+                        rows.forEach(row => {
+                            // Skip empty state row (usually has colspan)
+                            if (row.querySelector('td[colspan]')) return;
+                            
+                            const text = row.textContent.toLowerCase();
+                            if (text.includes(term)) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+            });
+
+            // =============================================
+            // TinyMCE Layout-Shift Fix: MutationObserver
+            // Intercept & cancel any style injection TinyMCE
+            // makes to <body> (padding-right, overflow, etc.)
+            // that causes the page width to jump/reflow.
+            // =============================================
+            (function() {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                            const el = mutation.target;
+                            // Only watch body element
+                            if (el === document.body) {
+                                // Remove any padding-right TinyMCE injected
+                                if (el.style.paddingRight) {
+                                    el.style.paddingRight = '';
+                                }
+                                // Remove overflow:hidden TinyMCE may inject
+                                if (el.style.overflow === 'hidden') {
+                                    el.style.overflow = '';
+                                }
+                                if (el.style.overflowY === 'hidden') {
+                                    el.style.overflowY = '';
+                                }
+                            }
+                        }
+                    });
+                });
+
+                observer.observe(document.body, {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
+            })();
         });
     </script>
 </body>
 </html>
+
+
+
+
+
+
+

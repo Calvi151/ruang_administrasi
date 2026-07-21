@@ -11,7 +11,7 @@
     </a>
 </div>
 
-<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
     <div class="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-lowest">
         <h3 class="font-h3 text-h3 text-on-surface">Detail Surat Keluar Baru</h3>
         <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Buat draft surat keluar baru untuk diajukan</p>
@@ -40,7 +40,7 @@
                 <span class="material-symbols-outlined">looks_one</span>
                 Langkah 1: Informasi Dasar
             </h4>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Tujuan -->
                 <div>
@@ -122,11 +122,13 @@
             </div>
 
             <!-- Isi Surat (TinyMCE) -->
-            <div>
+            <div class="tinymce-wrapper min-w-0 flex flex-col">
                 <label for="content" class="block font-label-md text-label-md text-on-surface mb-1">Isi Surat / Keterangan <span class="text-error">*</span></label>
-                <textarea name="content" id="content" rows="15"
-                    class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y"
-                    placeholder="Ketik isi atau keterangan surat di sini...">{{ old('content') }}</textarea>
+                <div class="flex-1 min-h-[400px]">
+                    <textarea name="content" id="content" rows="15" class="tinymce-field
+                        block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y"
+                        placeholder="Ketik isi atau keterangan surat di sini...">{{ old('content') }}</textarea>
+                </div>
             </div>
 
             <div class="flex justify-between gap-3 pt-4 border-t border-outline-variant/30">
@@ -154,7 +156,7 @@
                 document.getElementById('file_name_display').textContent = fileName;
                 const dragText = document.getElementById('file_drag_text');
                 if(dragText) dragText.style.display = 'none';
-                
+
                 const icon = this.closest('.border-dashed').querySelector('.material-symbols-outlined');
                 if (icon) {
                     icon.textContent = 'check_circle';
@@ -167,6 +169,20 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
+    // =====================================================================
+    // AKAR MASALAH: TinyMCE di-init saat #step-2 masih `display:none`
+    // (karena baru terlihat setelah user klik "Lanjut Isi Surat").
+    // Saat elemen induk display:none, browser TIDAK BISA menghitung
+    // offsetWidth (hasilnya 0), sehingga TinyMCE membangun iframe editor
+    // dengan lebar yang salah/collapsed. Begitu #step-2 dimunculkan,
+    // TinyMCE tidak otomatis menghitung ulang -> muncul sebagai editor
+    // "melebar/menyusut" atau layoutnya tidak pas sampai ada trigger lain.
+    //
+    // FIX: setelah #step-2 ditampilkan, paksa TinyMCE reflow dengan
+    // dispatch event 'resize' + set lebar container secara eksplisit.
+    // =====================================================================
+    let tinyMCEReady = false;
+
     tinymce.init({
         selector: '#content',
         height: 600,
@@ -185,10 +201,37 @@
         font_family_formats: 'Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats; Inter=Inter,sans-serif',
         content_style: 'body { font-family: "Inter", "Times New Roman", sans-serif; font-size: 12pt; line-height: 1.5; padding: 20px; }',
         visual: false,
-        setup: function(editor) { 
-            editor.on('change', function() { editor.save(); }); 
+        toolbar_sticky: false,
+        toolbar_mode: 'wrap',
+        // FIX: kunci lebar editor ke 100% dari parent, jangan biarkan
+        // TinyMCE menghitung sendiri dari viewport
+        width: '100%',
+        resize: false,
+        setup: function(editor) {
+            editor.on('change', function() { editor.save(); });
+            editor.on('init', function() {
+                tinyMCEReady = true;
+                // Paksa container ikut lebar parent begitu editor siap
+                editor.getContainer().style.width = '100%';
+            });
         }
     });
+
+    // Helper: paksa TinyMCE menghitung ulang layout setelah container
+    // yang tadinya display:none dimunculkan.
+    function refreshTinyMCELayout() {
+        if (!tinyMCEReady) return;
+        const editor = tinymce.get('content');
+        if (!editor) return;
+
+        // requestAnimationFrame memastikan browser sudah selesai
+        // menerapkan class 'hidden' dihapus (layout sudah reflow)
+        // sebelum kita memaksa TinyMCE membaca ulang dimensinya.
+        requestAnimationFrame(function() {
+            editor.getContainer().style.width = '100%';
+            window.dispatchEvent(new Event('resize'));
+        });
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const letterTypeSelect = document.getElementById('letter_type_id');
@@ -196,33 +239,47 @@
         const step2 = document.getElementById('step-2');
         const btnNext = document.getElementById('btn-next');
         const btnBack = document.getElementById('btn-back');
-        
+
         const letterTemplates = @json($letterTypes->pluck('template', 'id'));
         const nextLetterNumbers = @json($nextLetterNumbers);
-        
+
         // Multi-step form logic
         if (btnNext && btnBack && step1 && step2) {
             btnNext.addEventListener('click', function() {
-                // Basic HTML5 validation check for Step 1
                 const recipient = document.getElementById('recipient');
                 const letterType = document.getElementById('letter_type_id');
                 const dateSent = document.getElementById('date_sent');
-                
+
                 if (!recipient.value || !letterType.value || !dateSent.value) {
                     alert('Harap lengkapi Tujuan, Tanggal, dan Jenis Surat terlebih dahulu.');
                     return;
                 }
-                
+
                 step1.classList.add('hidden');
                 step2.classList.remove('hidden');
+
+                // FIX UTAMA: paksa TinyMCE reflow setelah container terlihat
+                refreshTinyMCELayout();
             });
-            
+
             btnBack.addEventListener('click', function() {
                 step2.classList.add('hidden');
                 step1.classList.remove('hidden');
             });
         }
-        
+
+        // FIX tambahan: ResizeObserver sebagai jaring pengaman —
+        // jika lebar #step-2 berubah karena alasan lain (sidebar toggle,
+        // resize window, dsb), TinyMCE ikut menyesuaikan otomatis.
+        if (step2 && 'ResizeObserver' in window) {
+            const ro = new ResizeObserver(function() {
+                if (!step2.classList.contains('hidden')) {
+                    refreshTinyMCELayout();
+                }
+            });
+            ro.observe(step2);
+        }
+
         // Template insertion logic
         if (letterTypeSelect) {
             letterTypeSelect.addEventListener('change', function() {
@@ -231,17 +288,14 @@
                     const typeName = selectedOption.text.split(' (')[0].trim();
                     const typeCode = selectedOption.getAttribute('data-code');
                     const realLetterNumber = nextLetterNumbers[this.value] || '[Otomatis]';
-                    
-                    // Set default subject input
+
                     const subjectInput = document.getElementById('subject');
                     if (subjectInput) {
                         subjectInput.value = typeName;
                     }
-                    
-                    // Ambil isi template dari master Jenis Surat
+
                     let customBody = letterTemplates[this.value] || '<p>[Isi surat]</p>';
-                    
-                    // Ambil tanggal
+
                     const dateInputVal = document.getElementById('date_sent').value;
                     let formattedDate = '................';
                     if (dateInputVal) {
@@ -252,7 +306,6 @@
                         }
                     }
 
-                    // Gabungkan header standar, isi custom di tengah, dan footer standar
                     let template = `
 <table style="width: 100%; border-collapse: collapse; border: none;">
   <tbody>
@@ -281,9 +334,8 @@ ${customBody}
 <p>&nbsp;</p>
 <p>Demikian ${typeName} ini dibuat. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.</p>
                     `;
-                    
+
                     if (tinymce.get('content')) {
-                        // Selalu timpa (overwrite) isi editor dengan template yang sudah digabung
                         tinymce.get('content').setContent(template);
                     } else {
                         const contentTextarea = document.getElementById('content');
@@ -292,31 +344,26 @@ ${customBody}
                         }
                     }
 
-                    // Trigger input event to sync with TinyMCE (if it's the default template or has Perihal)
                     if (subjectInput) {
                         subjectInput.dispatchEvent(new Event('input'));
                     }
                 }
             });
 
-            // Sync subject input with TinyMCE
             const subjectInput = document.getElementById('subject');
             if (subjectInput) {
                 subjectInput.addEventListener('input', function() {
                     if (tinymce.get('content')) {
                         let body = tinymce.get('content').getBody();
                         let placeholder = body.querySelector('.subject-placeholder');
-                        
+
                         if (placeholder) {
                             placeholder.textContent = this.value;
                         } else {
-                            // Regex fallback to find Perihal: and replace text after it until the end of the tag
                             let html = tinymce.get('content').getContent();
                             let newHtml = html.replace(/(<strong>Perihal:\s*<\/strong>\s*|<p>\s*Perihal:\s*)(.*?)(<\/p>|<br>)/ig, '$1' + this.value + '$3');
-                            
-                            // To avoid unnecessary resets that ruin cursor position, only setContent if it actually changed
+
                             if(newHtml !== html) {
-                                // Save cursor position
                                 const bookmark = tinymce.get('content').selection.getBookmark(2, true);
                                 tinymce.get('content').setContent(newHtml);
                                 tinymce.get('content').selection.moveToBookmark(bookmark);
@@ -325,15 +372,14 @@ ${customBody}
                     }
                 });
             }
-            
-            // Sync date input with TinyMCE
+
             const dateInput = document.getElementById('date_sent');
             if (dateInput) {
                 dateInput.addEventListener('change', function() {
                     if (tinymce.get('content')) {
                         let body = tinymce.get('content').getBody();
                         let placeholder = body.querySelector('.date-placeholder');
-                        
+
                         if (placeholder) {
                             const d = new Date(this.value);
                             if (!isNaN(d.getTime())) {

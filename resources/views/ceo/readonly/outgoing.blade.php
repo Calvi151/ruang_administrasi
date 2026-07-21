@@ -57,8 +57,8 @@
                                 <span class="w-1.5 h-1.5 rounded-full bg-error"></span> DITOLAK
                             </span>
                         @else
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px]">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> PENDING
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px] font-bold tracking-wider">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> MENUNGGU
                             </span>
                         @endif
                     </td>

@@ -11,7 +11,7 @@
     </a>
 </div>
 
-<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
     <div class="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-lowest">
         <h3 class="font-h3 text-h3 text-on-surface">Edit Surat Masuk</h3>
         <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Perbarui detail data surat masuk</p>
@@ -88,7 +88,10 @@
                                 value="{{ old('sender', $incomingLetter->sender) }}" required>
                         </div>
                     </div>
+                </div>
 
+                <!-- Right Column -->
+                <div class="space-y-5">
                     <div>
                         <label for="date_received" class="block font-label-md text-label-md text-on-surface mb-1">Tanggal Diterima <span class="text-error">*</span></label>
                         <div class="relative">
@@ -98,14 +101,16 @@
                                 value="{{ old('date_received', $incomingLetter->date_received) }}" required>
                         </div>
                     </div>
-                </div>
 
-                <!-- Right Column -->
-                <div class="flex flex-col h-full">
-                    <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">Perihal / Ringkasan <span class="text-error">*</span></label>
-                    <textarea name="subject" id="subject"
-                        class="block w-full flex-1 rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-none min-h-[150px]"
-                        required>{{ old('subject', $incomingLetter->subject) }}</textarea>
+                    <div>
+                        <label for="subject" class="block font-label-md text-label-md text-on-surface mb-1">Perihal / Ringkasan <span class="text-error">*</span></label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">subject</span>
+                            <input type="text" name="subject" id="subject"
+                                class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
+                                value="{{ old('subject', $incomingLetter->subject) }}" required>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

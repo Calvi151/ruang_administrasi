@@ -22,8 +22,8 @@
                     {{ $outgoingLetter->letter_number }}
                 </h3>
             </div>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-label-md text-sm">
-                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> PENDING
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-label-md text-sm font-bold tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> MENUNGGU
             </span>
         </div>
         
@@ -98,7 +98,7 @@
             @csrf
             <button type="submit" class="w-full flex items-center justify-center gap-2 bg-secondary text-on-secondary py-3.5 rounded-xl font-label-md text-label-md font-bold hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-sm">
                 <span class="material-symbols-outlined icon-fill">check_circle</span>
-                Setujui Surat (ACC)
+                Setujui Surat
             </button>
         </form>
         

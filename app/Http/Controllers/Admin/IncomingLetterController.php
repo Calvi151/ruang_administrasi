@@ -21,6 +21,9 @@ class IncomingLetterController extends Controller
             $parser = new Parser();
             $pdf = $parser->parseFile($file->getPathname());
             $text = $pdf->getText();
+            
+            // Clean up common PDF parsing artifacts like stray '<' and '>' characters
+            $text = str_replace(['<', '>'], '', $text);
 
             $data = [
                 'letter_number' => '',
@@ -48,6 +51,7 @@ class IncomingLetterController extends Controller
             }
 
             // ── 2. Extract Perihal / Subject ──
+            $subjectFound = false;
             foreach ($lines as $i => $line) {
                 if (preg_match('/^(?:perihal|hal)\s*[:\.]\s*(.*)/i', $line, $m)) {
                     $subject = trim($m[1]);
@@ -56,7 +60,25 @@ class IncomingLetterController extends Controller
                         $subject .= ' ' . trim($lines[$i + 1]);
                     }
                     $data['subject'] = trim($subject);
+                    $subjectFound = true;
                     break;
+                }
+            }
+
+            // Fallback: look for common document titles
+            if (!$subjectFound) {
+                $titleKeywords = ['SURAT KETERANGAN', 'SURAT KEPUTUSAN', 'SURAT TUGAS', 'SURAT EDARAN', 'UNDANGAN', 'PEMBERITAHUAN', 'BERITA ACARA', 'MEMORANDUM', 'SURAT PERINTAH', 'SURAT PENGANTAR', 'SURAT PERNYATAAN', 'JUKNIS', 'PETUNJUK TEKNIS'];
+                $searchLines = array_slice($lines, 0, 25);
+                foreach ($searchLines as $line) {
+                    $upperLine = mb_strtoupper($line);
+                    foreach ($titleKeywords as $keyword) {
+                        if (str_contains($upperLine, $keyword)) {
+                            // Set subject and capitalize nicely
+                            $data['subject'] = ucwords(strtolower(trim($line)));
+                            $subjectFound = true;
+                            break 2;
+                        }
+                    }
                 }
             }
 
@@ -72,54 +94,36 @@ class IncomingLetterController extends Controller
             }
 
             if (!$senderFound) {
-                // Look in the first 15 lines for an org name (all-caps line or contains keywords)
-                $headerLines = array_slice($lines, 0, 20);
-                $orgKeywords = ['pemerintah', 'kementerian', 'dinas', 'badan', 'lembaga',
-                                'universitas', 'sekolah', 'sma', 'smk', 'smp', 'sd',
-                                'yayasan', 'kecamatan', 'kelurahan', 'kabupaten', 'kota',
-                                'politeknik', 'instansi', 'kantor'];
+                // If "Dari:" is not found, we look at the first 5 lines for a Kop Surat (Header)
+                // Kop Surat is typically ALL CAPS and at the very top.
+                $headerLines = array_slice($lines, 0, 5);
                 foreach ($headerLines as $line) {
-                    $lower = strtolower($line);
-                    foreach ($orgKeywords as $kw) {
-                        if (str_contains($lower, $kw)) {
-                            // Avoid picking up address lines
-                            if (!preg_match('/jl\.|jalan|no\.|rt|rw|kode pos|\d{5}/i', $line)) {
-                                $data['sender'] = $line;
-                                $senderFound = true;
-                                break 2;
-                            }
+                    $line = trim($line);
+                    // If it's ALL CAPS, at least 10 chars, and not an address or date
+                    if (mb_strtoupper($line) === $line && strlen($line) > 10) {
+                        if (!preg_match('/(?:JALAN|JL\.|KODE POS|NOMOR|TANGGAL)/i', $line)) {
+                            $data['sender'] = $line;
+                            $senderFound = true;
+                            break;
                         }
                     }
                 }
             }
 
-            if (!$senderFound) {
-                // Last resort: find the longest ALL-CAPS line in first 10 lines (usually org header)
-                $headerLines = array_slice($lines, 0, 10);
-                $bestLine = '';
-                foreach ($headerLines as $line) {
-                    if (mb_strtoupper($line) === $line && strlen($line) > strlen($bestLine) && strlen($line) > 10) {
-                        $bestLine = $line;
-                    }
-                }
-                if ($bestLine) {
-                    $data['sender'] = $bestLine;
-                }
-            }
-
             // ── 4. Try to extract date from PDF ──
-            foreach ($lines as $line) {
-                // Match Indonesian date patterns: "21 Juli 2026" or "21-07-2026"
-                if (preg_match('/(\d{1,2})\s+(?:Januari|Februari|Maret|April|Mei|Juni|Juli|Agustus|September|Oktober|November|Desember)\s+(\d{4})/i', $line, $m)) {
+            // Only search in the top 15 lines to avoid picking up random dates in the letter body
+            $dateLines = array_slice($lines, 0, 15);
+            foreach ($dateLines as $line) {
+                // Match Indonesian date patterns: "21 Juli 2026", usually near a city name or "Tanggal:"
+                if (preg_match('/(\d{1,2})\s+(Januari|Februari|Maret|April|Mei|Juni|Juli|Agustus|September|Oktober|November|Desember)\s+(\d{4})/i', $line, $m)) {
                     $bulan = [
                         'januari'=>'01','februari'=>'02','maret'=>'03','april'=>'04',
                         'mei'=>'05','juni'=>'06','juli'=>'07','agustus'=>'08',
                         'september'=>'09','oktober'=>'10','november'=>'11','desember'=>'12'
                     ];
-                    preg_match('/(\d{1,2})\s+(\w+)\s+(\d{4})/i', $line, $dm);
-                    $bln = $bulan[strtolower($dm[2])] ?? null;
+                    $bln = $bulan[strtolower($m[2])] ?? null;
                     if ($bln) {
-                        $data['date_received'] = sprintf('%04d-%02d-%02d', $dm[3], $bln, str_pad($dm[1], 2, '0', STR_PAD_LEFT));
+                        $data['date_received'] = sprintf('%04d-%02d-%02d', $m[3], $bln, str_pad($m[1], 2, '0', STR_PAD_LEFT));
                         break;
                     }
                 }

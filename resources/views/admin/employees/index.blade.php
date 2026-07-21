@@ -19,11 +19,11 @@
 </div>
 
 <!-- Table Card -->
-<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse min-w-[900px]">
             <thead>
-                <tr class="bg-surface-container-lowest border-b border-outline-variant/30 font-label-sm text-label-sm text-on-surface-variant">
+                <tr class="bg-surface-container-highest border-b border-outline-variant/40 font-label-sm text-label-sm text-on-surface">
                     <th class="px-6 py-3 font-medium w-12">#</th>
                     <th class="px-6 py-3 font-medium w-[30%]">Profil</th>
                     <th class="px-6 py-3 font-medium w-[25%]">NIP / Akses</th>
@@ -33,8 +33,8 @@
             </thead>
             <tbody class="font-body-sm text-body-sm">
                 @forelse($employees as $index => $employee)
-                <tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest transition-colors group">
-                    <td class="px-6 py-3 text-on-surface-variant font-medium">{{ $index + 1 }}</td>
+                <tr class="border-b border-outline-variant/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
+                    <td class="px-6 py-3 text-on-surface font-medium">{{ $index + 1 }}</td>
                     <td class="px-6 py-3">
                         <div class="flex items-center gap-3">
                             @if($employee->photo)
@@ -56,7 +56,7 @@
                             {{ $employee->user ? $employee->user->role : 'karyawan' }}
                         </span>
                     </td>
-                    <td class="px-6 py-3 text-on-surface-variant">{{ $employee->number ?? '-' }}</td>
+                    <td class="px-6 py-3 text-on-surface">{{ $employee->number ?? '-' }}</td>
                     <td class="px-6 py-3 text-right">
                         <div class="flex items-center justify-end gap-2">
                             <a href="{{ route('employees.edit', $employee->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-amber-400 hover:bg-amber-400/15 hover:text-amber-300 transition-colors" title="Edit">
@@ -88,3 +88,6 @@
     </div>
 </div>
 @endsection
+
+
+

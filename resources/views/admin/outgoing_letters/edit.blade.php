@@ -11,7 +11,7 @@
     </a>
 </div>
 
-<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
     <!-- Letter Number Header -->
     <div class="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-lowest flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -23,8 +23,8 @@
                 <h3 class="font-h3 text-h3 text-on-surface">{{ $outgoingLetter->letter_number }}</h3>
             </div>
         </div>
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px]">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> PENDING
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-[11px] font-bold tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> MENUNGGU
         </span>
     </div>
 
@@ -46,9 +46,13 @@
         </div>
         @endif
 
-        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- FIX: grid-cols-1 md:grid-cols-2 di sini membuat kolom kanan (tempat
+             TinyMCE) baru punya lebar pasti SETELAH Tailwind CDN selesai compile
+             class grid. Ditambah id="edit-grid" supaya bisa dikunci lebar
+             minimumnya lewat CSS di bawah -->
+        <div id="edit-grid" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 min-w-0">
             <!-- Left Column -->
-            <div class="space-y-5">
+            <div class="space-y-5 min-w-0">
                 <div>
                     <label for="recipient" class="block font-label-md text-label-md text-on-surface mb-1">Tujuan (Penerima) <span class="text-error">*</span></label>
                     <div class="relative">
@@ -104,11 +108,15 @@
                     </div>
                 </div>
 
-                <div>
+                <!-- FIX: dibungkus .tinymce-wrapper + class tinymce-field,
+                     dikunci lebar lewat CSS global di layout.blade.php -->
+                <div class="tinymce-wrapper min-w-0 flex flex-col">
                     <label for="content" class="block font-label-md text-label-md text-on-surface mb-1">Isi Surat <span class="text-error">*</span></label>
-                    <textarea name="content" id="content" rows="10"
-                        class="block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y"
-                        required>{{ old('content', $outgoingLetter->content) }}</textarea>
+                    <div class="flex-1 min-h-[400px]">
+                        <textarea name="content" id="content" rows="10" class="tinymce-field
+                            block w-full rounded-lg border-outline-variant bg-surface-container-lowest text-on-surface shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm resize-y"
+                            required>{{ old('content', $outgoingLetter->content) }}</textarea>
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,6 +139,10 @@
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
+    // FIX: di halaman ini TinyMCE ada di dalam grid 2 kolom yang lebarnya
+    // baru pasti SETELAH Tailwind CDN compile class grid-cols-2.
+    // width:'100%' + resize:false + reflow di event 'init' mencegah
+    // TinyMCE "mengunci" lebar yang salah dari awal render.
     tinymce.init({
         selector: '#content',
         height: 600,
@@ -149,8 +161,34 @@
         font_family_formats: 'Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats; Inter=Inter,sans-serif',
         content_style: 'body { font-family: "Inter", "Times New Roman", sans-serif; font-size: 12pt; line-height: 1.5; padding: 20px; }',
         visual: false,
-        setup: function(editor) { 
-            editor.on('change', function() { editor.save(); }); 
+        toolbar_sticky: false,
+        toolbar_mode: 'wrap',
+        width: '100%',
+        resize: false,
+        setup: function(editor) {
+            editor.on('change', function() { editor.save(); });
+            editor.on('init', function() {
+                editor.getContainer().style.width = '100%';
+                // Jaga-jaga: paksa reflow sekali lagi setelah font & grid settle
+                setTimeout(function() {
+                    window.dispatchEvent(new Event('resize'));
+                }, 200);
+            });
+        }
+    });
+
+    // Jaring pengaman tambahan: kalau lebar kolom grid berubah
+    // (mis. sidebar toggle, resize window), TinyMCE ikut menyesuaikan.
+    document.addEventListener('DOMContentLoaded', function() {
+        const editGrid = document.getElementById('edit-grid');
+        if (editGrid && 'ResizeObserver' in window) {
+            const ro = new ResizeObserver(function() {
+                const editor = tinymce.get('content');
+                if (editor) {
+                    editor.getContainer().style.width = '100%';
+                }
+            });
+            ro.observe(editGrid);
         }
     });
 
@@ -162,7 +200,7 @@
                 document.getElementById('file_name_display').textContent = fileName;
                 const dragText = document.getElementById('file_drag_text');
                 if(dragText) dragText.style.display = 'none';
-                
+
                 const icon = this.closest('.border-dashed').querySelector('.material-symbols-outlined');
                 if (icon) {
                     icon.textContent = 'check_circle';

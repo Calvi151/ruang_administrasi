@@ -22,7 +22,7 @@
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="border-b border-outline-variant bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wide">
+                <tr class="border-b border-outline-variant bg-surface-container-low text-on-surface font-label-sm text-label-sm uppercase tracking-wide">
                     <th class="py-4 px-6 font-semibold">Nama</th>
                     <th class="py-4 px-6 font-semibold">NIP</th>
                     <th class="py-4 px-6 font-semibold">Jabatan</th>
