@@ -171,10 +171,16 @@
         body, main, header, nav, .flex-1, aside {
             transition: none !important;
         }
-        /* Custom scrollbar for dark mode */
+        /* Scrollbar — lebar SAMA di dark & light agar scrollbar-gutter:stable
+           tidak berubah ukuran saat toggle mode (yg menyebabkan layout shift) */
+        ::-webkit-scrollbar              { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track        { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb        { background: #c0c4d0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover  { background: #a0a4bb; }
+
         html.dark ::-webkit-scrollbar-track { background: #12131e; }
         html.dark ::-webkit-scrollbar-thumb { background: #3a3d54; border-radius: 4px; }
-        html.dark ::-webkit-scrollbar { width: 6px; }
+        html.dark ::-webkit-scrollbar-thumb:hover { background: #4a4e6a; }
 
         /* ============================================================
            DARK MODE — Override semua Tailwind surface & text tokens
