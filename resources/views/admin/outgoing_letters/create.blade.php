@@ -190,7 +190,7 @@
         plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'noneditable'
         ],
         toolbar: 'undo redo | blocks fontfamily fontsize | ' +
             'bold italic underline strikethrough | alignleft aligncenter ' +
@@ -306,8 +306,32 @@
                         }
                     }
 
-                    let template = `
-<table style="width: 100%; border-collapse: collapse; border: none;">
+                    // =========================================================
+                    // LOGIKA PEMBAGIAN 2 KELOMPOK LAYOUT SURAT
+                    // =========================================================
+                    const typeNameLower = typeName.toLowerCase();
+                    // Deteksi apakah ini Surat Naskah Khusus (Group 2)
+                    const isNaskahKhusus = ['keterangan', 'tugas', 'keputusan', 'sk', 'perintah', 'kuasa', 'rekomendasi'].some(keyword => typeNameLower.includes(keyword));
+
+                    let template = '';
+
+                    if (isNaskahKhusus) {
+                        // KELOMPOK 2: Surat Naskah Khusus (SK, Keterangan, Tugas, dll)
+                        // Format: Judul Tengah (Underline), Nomor di bawahnya. Tanpa Perihal/Lampiran.
+                        template = `
+<div class="mceNonEditable" style="text-align: center; margin-bottom: 20px; font-family: 'Times New Roman', serif;">
+    <h3 style="margin: 0; font-size: 14pt; text-transform: uppercase; text-decoration: underline;">${typeName}</h3>
+    <p style="margin: 0; font-size: 12pt;">Nomor: ${realLetterNumber}</p>
+</div>
+<br>
+${customBody}
+<br>
+                        `;
+                    } else {
+                        // KELOMPOK 1: Surat Biasa / Korespondensi (Undangan, Edaran, dll)
+                        // Format: Tabel Nomor, Perihal, Lampiran di pojok kiri atas.
+                        template = `
+<table class="mceNonEditable" style="width: 100%; border-collapse: collapse; border: none; background-color: #f8f9fa;">
   <tbody>
     <tr>
       <td style="width: 12%; vertical-align: top;"><strong>Nomor</strong></td>
@@ -328,12 +352,10 @@
   </tbody>
 </table>
 <br>
-<p>Dengan hormat,</p>
-<p>&nbsp;</p>
 ${customBody}
-<p>&nbsp;</p>
-<p>Demikian ${typeName} ini dibuat. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.</p>
-                    `;
+<br>
+                        `;
+                    }
 
                     if (tinymce.get('content')) {
                         tinymce.get('content').setContent(template);

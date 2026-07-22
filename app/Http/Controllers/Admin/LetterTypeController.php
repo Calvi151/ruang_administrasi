@@ -22,7 +22,7 @@ class LetterTypeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'letter_code' => 'required|string|unique:letter_type',
+            'letter_code' => 'required|string',
             'type_name' => 'required|string',
             'template' => 'nullable|string',
         ]);
@@ -45,7 +45,7 @@ class LetterTypeController extends Controller
     public function update(Request $request, LetterType $letterType)
     {
         $validated = $request->validate([
-            'letter_code' => 'required|string|unique:letter_type,letter_code,' . $letterType->id,
+            'letter_code' => 'required|string',
             'type_name' => 'required|string',
             'template' => 'nullable|string',
         ]);

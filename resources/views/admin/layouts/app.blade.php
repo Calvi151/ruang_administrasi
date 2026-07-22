@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>@yield('title', 'Ruang Administrasi - Dashboard')</title>
-    <!-- Fonts (Inter — sesuai Stitch) -->
+    <!-- Fonts (Montserrat + Plus Jakarta Sans — Administrative Authority) -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
@@ -29,67 +29,67 @@
         theme: {
           extend: {
             "colors": {
-                    "on-secondary-fixed-variant": "#005137",
-                    "secondary": "#006c4a",
-                    "primary": "#004ac6",
-                    "on-error": "#ffffff",
-                    "surface-dim": "#d9d9e5",
-                    "primary-container": "#2563eb",
-                    "on-secondary": "#ffffff",
-                    "outline-variant": "#c3c6d7",
-                    "on-primary-container": "#eeefff",
-                    "on-error-container": "#93000a",
-                    "background": "#faf8ff",
-                    "tertiary": "#4338d9",
-                    "primary-fixed-dim": "#b4c5ff",
-                    "primary-fixed": "#dbe1ff",
-                    "on-tertiary-fixed": "#0f0069",
-                    "secondary-fixed-dim": "#68dba9",
-                    "inverse-primary": "#b4c5ff",
-                    "tertiary-fixed": "#e2dfff",
-                    "tertiary-container": "#5d55f3",
-                    "surface-bright": "#faf8ff",
+                    "primary": "#0f1b3d",
                     "on-primary": "#ffffff",
+                    "primary-container": "#0f1b3d",
+                    "on-primary-container": "#7984ab",
+                    "inverse-primary": "#bac5f0",
+                    "primary-fixed": "#dbe1ff",
+                    "primary-fixed-dim": "#bac5f0",
+                    "on-primary-fixed": "#0d1a3c",
+                    "on-primary-fixed-variant": "#3a4569",
+                    "secondary": "#d9a441",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#ffc55f",
+                    "on-secondary-container": "#755100",
+                    "on-secondary-fixed-variant": "#5f4100",
+                    "secondary-fixed": "#ffdeaa",
+                    "secondary-fixed-dim": "#f5bd58",
+                    "on-secondary-fixed": "#271900",
+                    "tertiary": "#64748b",
                     "on-tertiary": "#ffffff",
-                    "surface": "#faf8ff",
+                    "tertiary-container": "#0d1e31",
+                    "on-tertiary-container": "#76869e",
+                    "tertiary-fixed": "#d3e4fe",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-tertiary-fixed-variant": "#38485d",
                     "error": "#ba1a1a",
-                    "on-primary-fixed-variant": "#003ea8",
-                    "on-tertiary-container": "#f2eeff",
-                    "tertiary-fixed-dim": "#c3c0ff",
-                    "inverse-surface": "#2e3039",
-                    "secondary-fixed": "#85f8c4",
-                    "surface-tint": "#0053db",
-                    "surface-container-lowest": "#ffffff",
-                    "on-primary-fixed": "#00174b",
-                    "surface-variant": "#e1e2ed",
-                    "on-secondary-container": "#00714e",
-                    "surface-container-highest": "#e1e2ed",
-                    "on-background": "#191b23",
-                    "on-surface": "#191b23",
-                    "surface-container-high": "#e7e7f3",
-                    "inverse-on-surface": "#f0f0fb",
-                    "surface-container-low": "#f3f3fe",
-                    "on-tertiary-fixed-variant": "#3323cc",
-                    "outline": "#737686",
-                    "on-secondary-fixed": "#002114",
-                    "on-surface-variant": "#434655",
+                    "on-error": "#ffffff",
                     "error-container": "#ffdad6",
-                    "secondary-container": "#82f5c1",
-                    "surface-container": "#ededf9",
+                    "on-error-container": "#93000a",
+                    "surface": "#fbf9f4",
+                    "surface-bright": "#fbf9f4",
+                    "surface-dim": "#dbdad5",
+                    "surface-container": "#f0eee9",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f5f3ee",
+                    "surface-container-high": "#eae8e3",
+                    "surface-container-highest": "#e4e2dd",
+                    "surface-variant": "#e4e2dd",
+                    "surface-tint": "#525d83",
+                    "on-surface": "#1b1c19",
+                    "on-surface-variant": "#45464e",
+                    "on-background": "#1b1c19",
+                    "background": "#fbf9f4",
+                    "outline": "#76767f",
+                    "outline-variant": "#c6c6cf",
+                    "inverse-surface": "#30312e",
+                    "inverse-on-surface": "#f2f1ec",
                     "status-mint": "#ecfdf5",
                     "status-peach": "#fff7ed",
                     "status-lilac": "#f5f3ff",
                     "heading-slate": "#0f172a",
-                    "border-muted": "#f1f5f9",
+                    "border-muted": "#e4e2dd",
                     /* Dark mode surface tokens */
-                    "dark-surface": "#1e2030",
-                    "dark-surface-container": "#252840",
-                    "dark-surface-container-high": "#2d3050",
-                    "dark-surface-container-low": "#191b2e",
+                    "dark-surface": "#14161e",
+                    "dark-surface-container": "#1c1e2a",
+                    "dark-surface-container-high": "#252836",
+                    "dark-surface-container-low": "#111320",
                     "dark-on-surface": "#e2e4f0",
-                    "dark-on-surface-variant": "#a0a4bb",
-                    "dark-outline-variant": "#3a3d54",
-                    "dark-primary": "#b4c5ff"
+                    "dark-on-surface-variant": "#9ca3bf",
+                    "dark-outline-variant": "#33374f",
+                    "dark-primary": "#bac5f0"
             },
             "borderRadius": {
                     "DEFAULT": "0.25rem",
@@ -108,16 +108,16 @@
                     "macro-padding": "32px"
             },
             "fontFamily": {
-                    "label-sm": ["Inter"],
-                    "display": ["Inter"],
-                    "body-lg": ["Inter"],
-                    "body-md": ["Inter"],
-                    "body-sm": ["Inter"],
-                    "h1": ["Inter"],
-                    "h1-mobile": ["Inter"],
-                    "h2": ["Inter"],
-                    "h3": ["Inter"],
-                    "label-md": ["Inter"]
+                    "label-sm": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                    "display": ["Montserrat", "Inter", "sans-serif"],
+                    "body-lg": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                    "body-md": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                    "body-sm": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                    "h1": ["Montserrat", "Inter", "sans-serif"],
+                    "h1-mobile": ["Montserrat", "Inter", "sans-serif"],
+                    "h2": ["Montserrat", "Inter", "sans-serif"],
+                    "h3": ["Montserrat", "Inter", "sans-serif"],
+                    "label-md": ["Plus Jakarta Sans", "Inter", "sans-serif"]
             },
             "fontSize": {
                     "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
@@ -190,34 +190,34 @@
         /* ----- BACKGROUNDS ----- */
         html.dark .bg-background,
         html.dark .bg-surface,
-        html.dark .bg-surface-bright            { background-color: #1e2030 !important; }
+        html.dark .bg-surface-bright            { background-color: #14161e !important; }
 
-        html.dark .bg-surface-container-lowest  { background-color: #1a1c2e !important; }
-        html.dark .bg-surface-container-low     { background-color: #1e2035 !important; }
-        html.dark .bg-surface-container         { background-color: #252840 !important; }
-        html.dark .bg-surface-container-high    { background-color: #2d3050 !important; }
-        html.dark .bg-surface-container-highest { background-color: #333560 !important; }
-        html.dark .bg-surface-dim               { background-color: #13141e !important; }
-        html.dark .bg-surface-variant           { background-color: #252840 !important; }
+        html.dark .bg-surface-container-lowest  { background-color: #111320 !important; }
+        html.dark .bg-surface-container-low     { background-color: #181a26 !important; }
+        html.dark .bg-surface-container         { background-color: #1c1e2a !important; }
+        html.dark .bg-surface-container-high    { background-color: #252836 !important; }
+        html.dark .bg-surface-container-highest { background-color: #2e3142 !important; }
+        html.dark .bg-surface-dim               { background-color: #0e1018 !important; }
+        html.dark .bg-surface-variant           { background-color: #1c1e2a !important; }
 
-        /* Primary container (icon background) — lebih gelap agar tidak menyilaukan */
-        html.dark .bg-primary-fixed             { background-color: #1e2f5a !important; }
-        html.dark .bg-primary-container         { background-color: #1a2d6e !important; }
-        html.dark .bg-tertiary-fixed            { background-color: #3b1215 !important; }
-        html.dark .bg-tertiary-container        { background-color: #6b1215 !important; }
+        /* Primary container — deep navy */
+        html.dark .bg-primary-fixed             { background-color: #1a2240 !important; }
+        html.dark .bg-primary-container         { background-color: #152050 !important; }
+        html.dark .bg-tertiary-fixed            { background-color: #1e2636 !important; }
+        html.dark .bg-tertiary-container        { background-color: #1a2030 !important; }
 
-        /* Secondary container badge */
-        html.dark .bg-secondary-container       { background-color: #0a3b28 !important; }
+        /* Secondary container — warm amber dark */
+        html.dark .bg-secondary-container       { background-color: #3d2a0a !important; }
 
         /* ----- TEXT ----- */
         html.dark .text-on-surface              { color: #e2e4f0 !important; }
         html.dark .text-on-surface-variant      { color: #9ca3bf !important; }
         html.dark .text-on-background           { color: #e2e4f0 !important; }
-        html.dark .text-on-secondary-container  { color: #6ee7b7 !important; }
-        html.dark .text-primary                 { color: #60a5fa !important; } /* Tailwind blue-400 */
-        html.dark .text-secondary               { color: #4ade80 !important; } /* Tailwind green-400 */
+        html.dark .text-on-secondary-container  { color: #f5bd58 !important; }
+        html.dark .text-primary                 { color: #bac5f0 !important; }
+        html.dark .text-secondary               { color: #f5bd58 !important; }
         html.dark .text-outline                 { color: #636885 !important; }
-        html.dark .text-tertiary                { color: #ff8a80 !important; }
+        html.dark .text-tertiary                { color: #b7c8e1 !important; }
         html.dark .text-heading-slate           { color: #c5c8df !important; }
 
         /* Teks umum di dalam tabel / konten */
@@ -226,52 +226,52 @@
         html.dark li, html.dark label          { color: inherit; }
 
         /* ----- BORDERS ----- */
-        html.dark .border-outline-variant       { border-color: #33374f !important; }
-        html.dark .border-outline               { border-color: #4a4e6a !important; }
-        html.dark .border-secondary-fixed       { border-color: #1a6b4a !important; }
-        html.dark .border-border-muted          { border-color: #33374f !important; }
+        html.dark .border-outline-variant       { border-color: #2a2d3e !important; }
+        html.dark .border-outline               { border-color: #3a3e52 !important; }
+        html.dark .border-secondary-fixed       { border-color: #5a4020 !important; }
+        html.dark .border-border-muted          { border-color: #2a2d3e !important; }
 
         /* ----- HOVER STATES ----- */
-        html.dark .hover\:bg-surface-container:hover          { background-color: #252840 !important; }
-        html.dark .hover\:bg-surface-container-high:hover     { background-color: #2d3050 !important; }
-        html.dark .hover\:bg-surface-container-lowest:hover   { background-color: #252840 !important; }
-        html.dark .hover\:bg-surface-container-high\/50:hover { background-color: rgba(45,48,80,0.5) !important; }
+        html.dark .hover\:bg-surface-container:hover          { background-color: #1c1e2a !important; }
+        html.dark .hover\:bg-surface-container-high:hover     { background-color: #252836 !important; }
+        html.dark .hover\:bg-surface-container-lowest:hover   { background-color: #1c1e2a !important; }
+        html.dark .hover\:bg-surface-container-high\/50:hover { background-color: rgba(37,40,54,0.5) !important; }
 
         /* ----- INPUT & FORM ----- */
         html.dark input, html.dark select, html.dark textarea {
-            background-color: #252840 !important;
-            border-color: #33374f !important;
+            background-color: #1c1e2a !important;
+            border-color: #2a2d3e !important;
             color: #e2e4f0 !important;
         }
         html.dark input::placeholder,
-        html.dark textarea::placeholder         { color: #5a5e7a !important; }
+        html.dark textarea::placeholder         { color: #505672 !important; }
         html.dark input:focus, html.dark select:focus,
-        html.dark textarea:focus                { border-color: #b4c5ff !important; box-shadow: 0 0 0 3px rgba(180,197,255,0.15) !important; }
+        html.dark textarea:focus                { border-color: #bac5f0 !important; box-shadow: 0 0 0 3px rgba(186,197,240,0.12) !important; }
 
-        /* ----- MODALS & DROPDOWNS (Bootstrap) ----- */
-        html.dark .modal-content                { background-color: #1a1c2e !important; border-color: #33374f !important; }
-        html.dark .modal-header, html.dark .modal-footer { border-color: #33374f !important; }
+        /* ----- MODALS & DROPDOWNS ----- */
+        html.dark .modal-content                { background-color: #111320 !important; border-color: #2a2d3e !important; }
+        html.dark .modal-header, html.dark .modal-footer { border-color: #2a2d3e !important; }
         html.dark .modal-title, html.dark .modal-body    { color: #e2e4f0 !important; }
-        html.dark .dropdown-menu                { background-color: #1a1c2e !important; border-color: #33374f !important; }
+        html.dark .dropdown-menu                { background-color: #111320 !important; border-color: #2a2d3e !important; }
         html.dark .dropdown-item                { color: #9ca3bf !important; }
-        html.dark .dropdown-item:hover          { background-color: #252840 !important; color: #e2e4f0 !important; }
+        html.dark .dropdown-item:hover          { background-color: #1c1e2a !important; color: #e2e4f0 !important; }
 
         /* ----- BADGES ----- */
-        html.dark .bg-secondary-container\/30   { background-color: rgba(10, 59, 40, 0.5) !important; }
+        html.dark .bg-secondary-container\/30   { background-color: rgba(61, 42, 10, 0.5) !important; }
         html.dark .bg-error-container           { background-color: #3b0d0d !important; }
         html.dark .text-error                   { color: #ff7070 !important; }
         html.dark .bg-error-container\/30       { background-color: rgba(59, 13, 13, 0.5) !important; }
-        html.dark .bg-status-mint               { background-color: #0a3b28 !important; }
+        html.dark .bg-status-mint               { background-color: #0a3020 !important; }
 
         /* Amber / warning */
-        html.dark .bg-amber-100                 { background-color: #3b2a05 !important; }
-        html.dark .text-amber-800               { color: #fbbf24 !important; }
-        html.dark .bg-amber-500\/10             { background-color: rgba(59, 42, 5, 0.4) !important; }
-        html.dark .text-amber-600               { color: #fbbf24 !important; }
+        html.dark .bg-amber-100                 { background-color: #3d2a0a !important; }
+        html.dark .text-amber-800               { color: #f5bd58 !important; }
+        html.dark .bg-amber-500\/10             { background-color: rgba(61, 42, 10, 0.4) !important; }
+        html.dark .text-amber-600               { color: #f5bd58 !important; }
 
         /* ----- MISC UTILITY ----- */
-        html.dark .shadow-sm                    { box-shadow: 0 1px 2px rgba(0,0,0,0.6) !important; }
-        html.dark .shadow-md                    { box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; }
+        html.dark .shadow-sm                    { box-shadow: 0 1px 3px rgba(0,0,0,0.7) !important; }
+        html.dark .shadow-md                    { box-shadow: 0 4px 14px rgba(0,0,0,0.6) !important; }
     
 
         /* Fix TinyMCE jumping — lock editor width */
