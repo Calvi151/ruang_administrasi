@@ -12,8 +12,8 @@
             <input class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest dark:bg-ds-bg border border-outline-variant dark:border-ds-border focus:border-primary dark:focus:border-ds-accent focus:ring-2 focus:ring-primary/20 dark:focus:ring-ds-accent/20 outline-none transition-all font-body-sm text-body-sm text-on-surface dark:text-ds-text-primary placeholder:text-outline dark:placeholder:text-ds-text-secondary" placeholder="Cari jenis surat..." type="text">
         </div>
     </div>
-    <a href="{{ route('letter-types.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary dark:bg-ds-bg text-on-primary dark:text-ds-text-primary dark:border dark:border-ds-border font-label-md text-label-md hover:opacity-90 dark:hover:bg-ds-hover transition-all shadow-sm">
-        <span class="material-symbols-outlined text-[18px]">add</span>
+    <a href="{{ route('letter-types.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/30 active:scale-95 shadow-sm dark:bg-primary dark:text-on-primary dark:border-none group">
+        <span class="material-symbols-outlined text-[18px] transition-transform duration-300 group-hover:rotate-90">add</span>
         Tambah Jenis Surat
     </a>
 </div>

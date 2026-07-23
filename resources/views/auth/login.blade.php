@@ -195,11 +195,7 @@
             </div>
         </div>
 
-        <div class="w-full max-w-md relative">
-            <!-- Decorative Framing Frame (Editorial Touch) -->
-            <div class="absolute -left-6 top-0 bottom-0 w-[1px] bg-primary/10 hidden md:block"></div>
-            <div class="absolute -top-6 -left-6 w-3 h-[1px] bg-secondary hidden md:block"></div>
-            <div class="absolute -bottom-6 -left-6 w-3 h-[1px] bg-secondary hidden md:block"></div>
+        <div class="w-full max-w-md relative bg-gradient-to-b from-white to-surface-container border border-primary/10 shadow-[0_8px_30px_rgba(0,2,16,0.06)] rounded-3xl p-8 md:p-10">
 
             <div class="mb-12 opacity-0 animate-fade-in-up">
                 <h2 class="font-headline-lg text-headline-lg text-primary mb-2">Selamat Datang</h2>
