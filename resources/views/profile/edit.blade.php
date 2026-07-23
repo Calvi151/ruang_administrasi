@@ -152,23 +152,31 @@
 
                 <!-- Foto Profil (Spans remaining height) -->
                 <div class="flex-grow flex flex-col">
-                    <label class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-1">Foto Profil</label>
-                    <div class="flex-grow w-full border-2 border-dashed border-outline dark:border-ds-border rounded-xl bg-surface-container-low/50 dark:bg-ds-bg/50 hover:bg-surface-container-low dark:hover:bg-ds-hover transition-colors flex flex-col items-center justify-center p-4 cursor-pointer group relative overflow-hidden min-h-[140px]" onclick="document.getElementById('photo').click()" id="dropzone">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary">Foto Profil</label>
+                        @if($employee && $employee->photo)
+                            <button type="button" id="btn_delete_photo" onclick="removePhoto()" class="text-xs text-error hover:underline flex items-center gap-1 font-medium z-30 relative">
+                                <span class="material-symbols-outlined text-[15px]">delete</span> Hapus Foto
+                            </button>
+                        @endif
+                    </div>
+                    <input type="hidden" name="delete_photo" id="delete_photo" value="0">
+                    <div class="flex-grow w-full border-2 border-dashed border-outline dark:border-ds-border rounded-xl bg-surface-container-low/50 dark:bg-ds-bg/50 hover:bg-surface-container-low dark:hover:bg-ds-hover transition-colors flex flex-col items-center justify-center p-4 cursor-pointer group relative overflow-hidden min-h-[140px]" id="dropzone">
                         
-                        <input type="file" name="photo" id="photo" accept=".jpg,.jpeg,.png" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewImage(this)">
+                        <input type="file" name="photo" id="photo" accept=".jpg,.jpeg,.png" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30" onchange="previewImage(this)">
                         
                         @if($employee && $employee->photo)
                             <!-- Existing Image Preview -->
                             <img id="image_preview" src="{{ asset('storage/' . $employee->photo) }}" class="absolute inset-0 w-full h-full object-cover z-0">
                             
-                            <div class="text-center z-20 bg-black/50 absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" id="upload_content">
+                            <div class="text-center z-20 bg-black/50 absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" id="upload_content">
                                 <span class="material-symbols-outlined text-white text-[32px] mb-2">add_photo_alternate</span>
                                 <p class="text-sm text-white font-medium">Ubah Foto</p>
                             </div>
                         @else
                             <img id="image_preview" src="" class="absolute inset-0 w-full h-full object-cover z-0 hidden">
                             
-                            <div class="text-center z-20" id="upload_content">
+                            <div class="text-center z-20 pointer-events-none" id="upload_content">
                                 <div class="w-12 h-12 mb-3 bg-surface-container-lowest dark:bg-ds-bg shadow-sm border border-outline-variant dark:border-ds-border rounded-lg mx-auto flex items-center justify-center text-outline dark:text-ds-text-secondary group-hover:text-primary dark:group-hover:text-primary-fixed transition-colors">
                                     <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
                                 </div>
@@ -275,14 +283,38 @@
                 preview.classList.remove('opacity-30');
                 preview.classList.add('opacity-100');
                 
+                document.getElementById('delete_photo').value = '0';
+                
                 // Set hover overlay styling
                 const uploadContent = document.getElementById('upload_content');
-                uploadContent.className = 'text-center z-20 bg-black/50 absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity';
+                uploadContent.className = 'text-center z-20 bg-black/50 absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none';
                 uploadContent.innerHTML = '<span class="material-symbols-outlined text-white text-[32px] mb-2">add_photo_alternate</span><p class="text-sm text-white font-medium">Ubah Foto</p>';
             }
             
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    function removePhoto() {
+        document.getElementById('delete_photo').value = '1';
+        document.getElementById('photo').value = '';
+        
+        const preview = document.getElementById('image_preview');
+        preview.src = '';
+        preview.classList.add('hidden');
+
+        const btnDelete = document.getElementById('btn_delete_photo');
+        if (btnDelete) btnDelete.classList.add('hidden');
+
+        const uploadContent = document.getElementById('upload_content');
+        uploadContent.className = 'text-center z-20 pointer-events-none';
+        uploadContent.innerHTML = `
+            <div class="w-12 h-12 mb-3 bg-surface-container-lowest dark:bg-ds-bg shadow-sm border border-outline-variant dark:border-ds-border rounded-lg mx-auto flex items-center justify-center text-outline dark:text-ds-text-secondary group-hover:text-primary dark:group-hover:text-primary-fixed transition-colors">
+                <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant dark:text-ds-text-secondary mb-1"><span class="text-primary dark:text-primary-fixed font-medium">Pilih foto</span> atau tarik dan lepas</p>
+            <p class="text-xs text-outline dark:text-ds-text-secondary">JPG, PNG maks. 2MB</p>
+        `;
     }
 
     // Drag and drop logic

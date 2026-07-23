@@ -63,38 +63,38 @@
     <!-- Secondary Stats (col-span-7, 3 columns) -->
     <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-component-gap">
         <!-- Surat Masuk -->
-        <div class="editorial-card p-6 rounded-lg flex flex-col justify-between hover:border-[#D9A441] dark:hover:border-ds-accent transition-colors">
+        <a href="{{ route('incoming-letters.index') }}" class="editorial-card stat-card p-6 rounded-lg flex flex-col justify-between cursor-pointer group">
             <div class="flex justify-between items-start mb-6">
                 <h3 class="font-label-md text-label-md text-on-surface-variant dark:text-ds-text-secondary uppercase tracking-wider">Surat Masuk</h3>
-                <span class="material-symbols-outlined text-outline dark:text-ds-text-secondary">mail</span>
+                <span class="material-symbols-outlined text-outline dark:text-ds-text-secondary stat-icon">mail</span>
             </div>
             <div>
-                <span class="font-display-lg text-4xl font-bold text-primary dark:text-ds-text-primary">{{ $totalIncoming }}</span>
+                <span class="font-display-lg text-4xl font-bold text-primary dark:text-ds-text-primary stat-number">{{ $totalIncoming }}</span>
                 <p class="font-body-sm text-body-sm text-on-surface-variant dark:text-ds-text-secondary mt-2">Total masuk</p>
             </div>
-        </div>
+        </a>
         <!-- Surat Keluar -->
-        <div class="editorial-card p-6 rounded-lg flex flex-col justify-between hover:border-[#D9A441] dark:hover:border-ds-accent transition-colors">
+        <a href="{{ route('outgoing-letters.index') }}" class="editorial-card stat-card p-6 rounded-lg flex flex-col justify-between cursor-pointer group">
             <div class="flex justify-between items-start mb-6">
                 <h3 class="font-label-md text-label-md text-on-surface-variant dark:text-ds-text-secondary uppercase tracking-wider">Surat Keluar</h3>
-                <span class="material-symbols-outlined text-outline dark:text-ds-text-secondary">send</span>
+                <span class="material-symbols-outlined text-outline dark:text-ds-text-secondary stat-icon">send</span>
             </div>
             <div>
-                <span class="font-display-lg text-4xl font-bold text-primary dark:text-ds-text-primary">{{ $totalOutgoing }}</span>
+                <span class="font-display-lg text-4xl font-bold text-primary dark:text-ds-text-primary stat-number">{{ $totalOutgoing }}</span>
                 <p class="font-body-sm text-body-sm text-on-surface-variant dark:text-ds-text-secondary mt-2">Total keluar</p>
             </div>
-        </div>
+        </a>
         <!-- Karyawan Aktif -->
-        <div class="editorial-card p-6 rounded-lg flex flex-col justify-between hover:border-[#D9A441] dark:hover:border-ds-accent transition-colors">
+        <a href="{{ route('employees.index') }}" class="editorial-card stat-card p-6 rounded-lg flex flex-col justify-between cursor-pointer group">
             <div class="flex justify-between items-start mb-6">
                 <h3 class="font-label-md text-label-md text-on-surface-variant dark:text-ds-text-secondary uppercase tracking-wider">Karyawan Aktif</h3>
-                <span class="material-symbols-outlined text-outline dark:text-ds-text-secondary">person</span>
+                <span class="material-symbols-outlined text-outline dark:text-ds-text-secondary stat-icon">person</span>
             </div>
             <div>
-                <span class="font-display-lg text-4xl font-bold text-primary dark:text-ds-text-primary">{{ $totalEmployees }}</span>
+                <span class="font-display-lg text-4xl font-bold text-primary dark:text-ds-text-primary stat-number">{{ $totalEmployees }}</span>
                 <p class="font-body-sm text-body-sm text-on-surface-variant dark:text-ds-text-secondary mt-2">Staf terdaftar</p>
             </div>
-        </div>
+        </a>
     </div>
 </section>
 

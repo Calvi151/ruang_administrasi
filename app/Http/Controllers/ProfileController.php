@@ -45,7 +45,12 @@ class ProfileController extends Controller
             'password' => ['nullable', 'string', 'min:8'],
         ]);
 
-        if ($request->hasFile('photo')) {
+        if ($request->boolean('delete_photo')) {
+            if ($employee->photo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($employee->photo);
+            }
+            $validated['photo'] = null;
+        } elseif ($request->hasFile('photo')) {
             if ($employee->photo) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($employee->photo);
             }

@@ -161,6 +161,62 @@
             border-color: #2A3654;
         }
 
+        /* === Stat Cards Interactive Animations (Light & Dark Theme) === */
+        .stat-card {
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.3s ease, background-color 0.3s ease !important;
+            will-change: transform, box-shadow;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(217, 164, 65, 0.15), transparent);
+            transform: skewX(-25deg);
+            transition: left 0.75s ease-in-out;
+            pointer-events: none;
+        }
+        html.dark .stat-card::after {
+            background: linear-gradient(90deg, transparent, rgba(229, 176, 77, 0.12), transparent);
+        }
+        .stat-card:hover::after {
+            left: 150%;
+        }
+        .stat-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: #D9A441 !important;
+            box-shadow: 0 14px 28px -6px rgba(15, 27, 61, 0.12), 0 4px 14px -2px rgba(217, 164, 65, 0.2) !important;
+        }
+        html.dark .stat-card:hover {
+            border-color: #E5B04D !important;
+            box-shadow: 0 16px 32px -6px rgba(0, 0, 0, 0.65), 0 0 24px rgba(229, 176, 77, 0.22) !important;
+        }
+        .stat-card .stat-icon {
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+        }
+        .stat-card:hover .stat-icon {
+            transform: scale(1.28) rotate(8deg);
+            color: #D9A441 !important;
+        }
+        html.dark .stat-card:hover .stat-icon {
+            color: #E5B04D !important;
+        }
+        .stat-card .stat-number {
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+            display: inline-block;
+        }
+        .stat-card:hover .stat-number {
+            transform: scale(1.08);
+            color: #D9A441 !important;
+        }
+        html.dark .stat-card:hover .stat-number {
+            color: #E5B04D !important;
+        }
+
         /* === Table row hover === */
         .table-row-hover:hover {
             background-color: rgba(0, 2, 16, 0.02);
