@@ -5,16 +5,16 @@
     <title>Surat Keluar - {{ $outgoingLetter->letter_number }}</title>
     <style>
         @page {
-            margin-top: 3cm;
-            margin-left: 3cm;
+            margin-top: 1cm;
+            margin-left: 2.5cm;
             margin-right: 2.5cm;
-            margin-bottom: 2.5cm;
+            margin-bottom: 2cm;
         }
-
+        
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12pt;
-            line-height: 1.5;
+            line-height: 1.15;
             margin: 0;
             padding: 0;
         }
@@ -23,7 +23,7 @@
             text-align: center;
             border-bottom: 3px solid black;
             padding-bottom: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
         
         .kop-surat h1 {
@@ -41,7 +41,7 @@
         
         .meta-surat {
             width: 100%;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             border-collapse: collapse;
         }
         
@@ -52,13 +52,12 @@
 
         .tanggal-surat {
             text-align: right;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         
         .isi-surat {
             text-align: justify;
             margin-bottom: 30px;
-            min-height: 250px;
         }
 
         .ttd-box {

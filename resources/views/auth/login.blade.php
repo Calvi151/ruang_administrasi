@@ -1,269 +1,291 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="light">
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk - Ruang Administrasi</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com" rel="preconnect">
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Tailwind Config -->
     <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-primary-fixed-variant": "#003ea8",
-                    "surface-bright": "#f8f9ff",
-                    "on-tertiary-fixed": "#360f00",
-                    "status-lilac": "#f5f3ff",
-                    "on-background": "#0b1c30",
-                    "background": "#f8f9ff",
-                    "on-error": "#ffffff",
-                    "primary-fixed": "#dbe1ff",
-                    "inverse-surface": "#213145",
-                    "primary-fixed-dim": "#b4c5ff",
-                    "background-pristine": "#ffffff",
-                    "secondary": "#006a61",
-                    "primary-container": "#2563eb",
-                    "tertiary-fixed": "#ffdbcd",
-                    "surface-container": "#e5eeff",
-                    "heading-slate": "#0f172a",
-                    "on-primary": "#ffffff",
-                    "tertiary-container": "#bc4800",
-                    "inverse-primary": "#b4c5ff",
-                    "status-peach": "#fff7ed",
-                    "on-primary-container": "#eeefff",
-                    "on-secondary-fixed": "#00201d",
-                    "surface-variant": "#d3e4fe",
-                    "on-tertiary": "#ffffff",
-                    "surface-dim": "#cbdbf5",
-                    "secondary-container": "#86f2e4",
-                    "on-tertiary-container": "#ffede6",
-                    "on-primary-fixed": "#00174b",
-                    "error-container": "#ffdad6",
-                    "error": "#ba1a1a",
-                    "on-surface-variant": "#434655",
-                    "surface-container-lowest": "#ffffff",
-                    "tertiary-fixed-dim": "#ffb596",
-                    "outline-variant": "#c3c6d7",
-                    "on-secondary": "#ffffff",
-                    "surface-tint": "#0053db",
-                    "outline": "#737686",
-                    "status-mint": "#ecfdf5",
-                    "secondary-fixed-dim": "#6bd8cb",
-                    "inverse-on-surface": "#eaf1ff",
-                    "on-error-container": "#93000a",
-                    "on-surface": "#0b1c30",
-                    "on-secondary-fixed-variant": "#005049",
-                    "on-tertiary-fixed-variant": "#7d2d00",
-                    "border-muted": "#f1f5f9",
-                    "surface-container-high": "#dce9ff",
-                    "secondary-fixed": "#89f5e7",
-                    "tertiary": "#943700",
-                    "surface-container-low": "#eff4ff",
-                    "surface-container-highest": "#d3e4fe",
-                    "surface": "#f8f9ff",
-                    "primary": "#004ac6",
-                    "on-secondary-container": "#006f66"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.75rem",
-                    "lg": "1rem",
-                    "xl": "1.5rem",
-                    "full": "9999px"
-            },
-            "fontFamily": {
-                    "body-md": ["Plus Jakarta Sans"],
-                    "label-sm": ["Plus Jakarta Sans"],
-                    "headline-xl": ["Plus Jakarta Sans"],
-                    "body-lg": ["Plus Jakarta Sans"],
-                    "label-md": ["Plus Jakarta Sans"],
-                    "headline-md": ["Plus Jakarta Sans"],
-                    "headline-xl-mobile": ["Plus Jakarta Sans"],
-                    "headline-lg": ["Plus Jakarta Sans"]
-            },
-            "fontSize": {
-                    "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
-                    "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
-                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                    "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600"}],
-                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-                    "headline-xl-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
-            }
-          }
-        }
-      }
+        try {
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        "colors": {
+                            "tertiary": "#020302",
+                            "outline-variant": "#c6c6cf",
+                            "on-primary-fixed": "#0d1a3c",
+                            "on-surface-variant": "#45464e",
+                            "primary-container": "#0f1b3d",
+                            "secondary-fixed-dim": "#f5bd58",
+                            "surface-variant": "#e4e2e2",
+                            "surface-dim": "#dbd9d9",
+                            "error-container": "#ffdad6",
+                            "inverse-on-surface": "#f2f0f0",
+                            "on-secondary-fixed": "#271900",
+                            "error": "#ba1a1a",
+                            "on-surface": "#1b1c1c",
+                            "on-primary": "#ffffff",
+                            "on-background": "#1b1c1c",
+                            "surface-tint": "#525d83",
+                            "surface-container-high": "#eae8e7",
+                            "secondary-container": "#ffc55f",
+                            "surface-container": "#efeded",
+                            "on-error": "#ffffff",
+                            "tertiary-fixed-dim": "#c8c6c2",
+                            "secondary-fixed": "#ffdeaa",
+                            "on-primary-container": "#7984ab",
+                            "tertiary-fixed": "#e4e2dd",
+                            "outline": "#76767f",
+                            "tertiary-container": "#1d1d1a",
+                            "primary-fixed": "#dbe1ff",
+                            "on-error-container": "#93000a",
+                            "surface": "#fbf9f8",
+                            "surface-container-lowest": "#ffffff",
+                            "on-secondary-container": "#755100",
+                            "primary": "#000210",
+                            "on-tertiary-container": "#858581",
+                            "surface-container-highest": "#e4e2e2",
+                            "surface-container-low": "#f5f3f3",
+                            "on-secondary-fixed-variant": "#5f4100",
+                            "on-tertiary-fixed": "#1b1c19",
+                            "on-tertiary": "#ffffff",
+                            "on-primary-fixed-variant": "#3a4569",
+                            "on-secondary": "#ffffff",
+                            "inverse-surface": "#303030",
+                            "primary-fixed-dim": "#bac5f0",
+                            "surface-bright": "#fbf9f8",
+                            "on-tertiary-fixed-variant": "#474744",
+                            "background": "#fbf9f8",
+                            "inverse-primary": "#bac5f0",
+                            "secondary": "#7d5700"
+                        },
+                        "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "margin-desktop": "64px",
+                            "base": "8px",
+                            "margin-mobile": "20px",
+                            "container-max": "1280px",
+                            "gutter": "24px"
+                        },
+                        "fontFamily": {
+                            "headline-lg": ["Playfair Display"],
+                            "body-md": ["Work Sans"],
+                            "display-lg": ["Playfair Display"],
+                            "body-lg": ["Work Sans"],
+                            "headline-lg-mobile": ["Playfair Display"],
+                            "label-sm": ["Work Sans"],
+                            "label-md": ["Work Sans"],
+                            "headline-md": ["Playfair Display"]
+                        },
+                        "fontSize": {
+                            "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                            "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                            "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                            "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                            "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                            "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                            "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                            "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }]
+                        }
+                    }
+                }
+            };
+        } catch (_e) {}
     </script>
     <style>
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .ambient-shadow { box-shadow: 0 8px 30px rgba(0, 74, 198, 0.04), 0 2px 10px rgba(0, 0, 0, 0.02); }
-        .hero-pattern {
-            background-color: #0b1c30;
-            background-image: radial-gradient(circle at top right, rgba(0, 74, 198, 0.6), transparent 50%),
-                              radial-gradient(circle at bottom left, rgba(0, 106, 97, 0.6), transparent 50%);
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
     </style>
 </head>
-<body class="bg-background font-body-md text-on-background min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
-    
-    <div class="flex w-full min-h-screen">
+<body class="bg-surface text-on-surface antialiased h-screen w-full flex overflow-hidden font-body-md">
+
+    <!-- Left Panel: Brand & Context -->
+    <div class="hidden lg:flex flex-col w-1/2 bg-primary-container relative h-full">
+        <!-- Background Pattern/Illustration -->
+        <div class="absolute inset-0 z-0 opacity-40 mix-blend-overlay" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW5d1ST2GQNN-chDuGexnX9e5hvO29w9WG4L2_QBftnn8X1g6N6UxjDu_uAqCekng2UKdW1cwJQpYWEVrXXV2Ha5pJF_LaTA1P7GPYNMfCaUUDpgum0oNXRjt4RGP_y-G92DqxMGyBgeN8Ew6AEf0-1HUcoUmaVBjPfFiKW9EqDWxVp54FLtCICinNkbrXG-5--WQrf255QzfA7UznTeOlPC4J-LORGQu1g1n6oid_cLFKe0Ay5f1f7fyrz29npKREZMOHQ-qws0s'); background-size: cover; background-position: center;"></div>
         
-        <!-- Left Panel: Branding -->
-        <div class="hidden lg:flex w-[45%] hero-pattern flex-col justify-between p-12 text-white relative overflow-hidden">
-            <!-- Decorative blur orbs -->
-            <div class="absolute -top-32 -right-32 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
-            <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
-
-            <div class="relative z-10 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
-                    <span class="material-symbols-outlined icon-fill text-white">dashboard_customize</span>
-                </div>
-                <div class="font-headline-md font-bold tracking-tight">Ruang Administrasi</div>
-            </div>
-
-            <div class="relative z-10 max-w-md">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 font-label-sm text-white/90 mb-6">
-                    <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
-                    Sistem Manajemen Terpadu v2.0
-                </div>
-                <h1 class="font-headline-xl font-bold leading-tight mb-6">Kelola instansi Anda dengan <span class="text-secondary-fixed">cerdas</span> & efisien.</h1>
-                <p class="font-body-lg text-white/70 leading-relaxed">
-                    Platform administrasi terpusat untuk mengelola kehadiran, persuratan, dan data operasional dengan keamanan standar tinggi.
-                </p>
-                
-                <div class="mt-12 grid grid-cols-2 gap-8">
-                    <div>
-                        <div class="font-headline-lg font-bold">99.9%</div>
-                        <div class="font-label-sm text-white/50 uppercase tracking-wider mt-1">Uptime Server</div>
-                    </div>
-                    <div>
-                        <div class="font-headline-lg font-bold">256-bit</div>
-                        <div class="font-label-sm text-white/50 uppercase tracking-wider mt-1">Enkripsi Data</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative z-10 font-label-sm text-white/40">
-                &copy; {{ date('Y') }} Ruang Administrasi System. All rights reserved.
-            </div>
+        <!-- Architectural Overlay Lines -->
+        <div class="absolute inset-0 z-10 pointer-events-none">
+            <div class="absolute left-1/4 top-0 bottom-0 w-px bg-on-primary/10"></div>
+            <div class="absolute right-1/4 top-0 bottom-0 w-px bg-on-primary/10"></div>
+            <div class="absolute top-1/3 left-0 right-0 h-px bg-on-primary/10"></div>
         </div>
 
-        <!-- Right Panel: Login Form -->
-        <div class="w-full lg:w-[55%] flex items-center justify-center p-8 bg-surface-container-lowest">
-            <div class="w-full max-w-md">
-                
-                <!-- Mobile Logo -->
-                <div class="lg:hidden flex items-center gap-3 mb-10 justify-center">
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-secondary-container flex items-center justify-center shadow-lg shadow-primary/20">
-                        <span class="material-symbols-outlined icon-fill text-white">dashboard_customize</span>
-                    </div>
-                    <div class="font-headline-md font-bold text-on-background tracking-tight">Ruang Administrasi</div>
+        <!-- Content Container -->
+        <div class="relative z-20 flex flex-col justify-between h-full p-margin-desktop text-on-primary">
+            
+            <!-- Logo / Brand Anchor -->
+            <div class="font-headline-md text-headline-md font-bold tracking-tight">
+                Ruang Administrasi.
+            </div>
+            <div class="flex items-center gap-2 mt-1">
+                <div class="h-px w-8 bg-secondary-container"></div>
+                <span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-container">Sistem Informasi</span>
+            </div>
+
+            <!-- Value Proposition -->
+            <div class="max-w-md">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-[1px] bg-secondary-container"></div>
+                    <span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-container">Sistem Informasi</span>
                 </div>
+                <h1 class="font-display-lg text-display-lg mb-6 leading-tight">
+                    Efisiensi Administrasi Terpusat
+                </h1>
+                <p class="font-body-lg text-body-lg text-on-primary-container">
+                    Kelola alur surat masuk, surat keluar, dan persetujuan dokumen dalam satu platform yang aman dan berwibawa.
+                </p>
+            </div>
 
-                <div class="text-center lg:text-left mb-10">
-                    <h2 class="font-headline-xl font-bold text-on-background tracking-tight mb-2">Selamat Datang</h2>
-                    <p class="font-body-lg text-on-surface-variant">Silakan masuk menggunakan kredensial Anda.</p>
-                </div>
-
-                @if (session('status'))
-                    <div class="bg-status-mint text-secondary border border-secondary-fixed px-4 py-3 rounded-xl font-label-md mb-6 flex items-center gap-3">
-                        <span class="material-symbols-outlined icon-fill">check_circle</span>
-                        {{ session('status') }}
-                    </div>
-                @endif
+            <!-- Contextual UI Mockup (Bento/Card Style) -->
+            <div class="relative w-full max-w-sm mt-12 backdrop-blur-md bg-white/5 border border-white/10 p-6 rounded-none shadow-2xl">
+                <!-- Vertical Gold Accent -->
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary-container"></div>
                 
-                @if ($errors->any())
-                    <div class="bg-error-container text-on-error-container border border-error-container/50 px-4 py-3 rounded-xl font-label-md mb-6 flex items-start gap-3">
-                        <span class="material-symbols-outlined mt-0.5">error</span>
-                        <div>
-                            <strong>Login Gagal:</strong>
-                            <ul class="list-disc pl-4 mt-1 font-body-md">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-primary-container uppercase tracking-wider mb-1">Status Terkini</p>
+                        <h3 class="font-body-md text-body-md font-medium text-on-primary">Surat Keputusan #412</h3>
                     </div>
-                @endif
-
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
-                    @csrf
-
-                    <!-- NIP Input -->
-                    <div class="space-y-2">
-                        <label for="nip" class="font-label-md text-on-background block">Nomor Induk Pegawai (NIP)</label>
-                        <div class="relative">
-                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">badge</span>
-                            <input type="text" id="nip" name="nip" value="{{ old('nip') }}" required autofocus autocomplete="username"
-                                class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-surface border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-md text-on-background placeholder:text-outline/70" 
-                                placeholder="Contoh: 198001012005011001">
-                        </div>
-                    </div>
-
-                    <!-- Password Input -->
-                    <div class="space-y-2">
-                        <label for="password" class="font-label-md text-on-background block">Kata Sandi</label>
-                        <div class="relative">
-                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
-                            <input type="password" id="password" name="password" required autocomplete="current-password"
-                                class="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-surface border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-md text-on-background placeholder:text-outline/70" 
-                                placeholder="Masukkan kata sandi">
-                            <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors flex items-center justify-center">
-                                <span class="material-symbols-outlined" id="eye-icon">visibility</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Options -->
-                    <div class="flex items-center justify-between pt-2">
-                        <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="checkbox" name="remember" id="remember_me" class="w-5 h-5 rounded border-outline-variant/50 text-primary focus:ring-primary/20 transition-colors">
-                            <span class="font-label-md text-on-surface-variant group-hover:text-on-background transition-colors">Ingat saya</span>
-                        </label>
-
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="font-label-md text-primary hover:text-on-primary-fixed-variant transition-colors">
-                                Lupa kata sandi?
-                            </a>
-                        @endif
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="pt-4">
-                        <button type="submit" class="w-full py-4 rounded-full bg-primary text-on-primary font-label-md text-[15px] hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group">
-                            Masuk ke Sistem
-                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                        </button>
-                    </div>
-                </form>
-
+                    <span class="material-symbols-outlined text-secondary-container">verified</span>
+                </div>
+                <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+                <div class="flex justify-between items-center">
+                    <span class="font-label-sm text-label-sm text-on-primary-container">Oleh: Direktur Utama</span>
+                    <span class="font-label-sm text-label-sm text-secondary-container font-semibold">Disetujui</span>
+                </div>
+            </div>
+            
+            <div class="mt-auto pt-12">
+                <p class="font-label-sm text-label-sm text-on-primary-container opacity-60">
+                    &copy; {{ date('Y') }} Institusi Berwibawa. Hak Cipta Dilindungi.
+                </p>
             </div>
         </div>
     </div>
 
+    <!-- Right Panel: Login Form (Editorial Style) -->
+    <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-margin-mobile md:p-margin-desktop bg-surface relative z-10 h-full overflow-y-auto">
+        
+        <!-- Mobile Logo -->
+        <div class="lg:hidden w-full max-w-md mb-12 text-center">
+            <div class="font-headline-md text-headline-md font-bold tracking-tight text-primary">
+                Ruang Administrasi.
+            </div>
+        </div>
+
+        <div class="w-full max-w-md relative">
+            <!-- Decorative Framing Frame (Editorial Touch) -->
+            <div class="absolute -left-6 top-0 bottom-0 w-[1px] bg-primary/10 hidden md:block"></div>
+            <div class="absolute -top-6 -left-6 w-3 h-[1px] bg-secondary hidden md:block"></div>
+            <div class="absolute -bottom-6 -left-6 w-3 h-[1px] bg-secondary hidden md:block"></div>
+
+            <div class="mb-12 opacity-0 animate-fade-in-up">
+                <h2 class="font-headline-lg text-headline-lg text-primary mb-2">Selamat Datang</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">Silakan masuk ke akun Anda untuk melanjutkan.</p>
+            </div>
+
+            @if (session('status'))
+                <div class="bg-surface-variant text-on-surface border border-outline px-4 py-3 mb-6 font-label-md flex items-center gap-3">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    {{ session('status') }}
+                </div>
+            @endif
+            
+            @if ($errors->any())
+                <div class="bg-error-container text-on-error-container border border-error-container/50 px-4 py-3 mb-6 font-label-md flex items-start gap-3">
+                    <span class="material-symbols-outlined mt-0.5">error</span>
+                    <div>
+                        <strong>Login Gagal:</strong>
+                        <ul class="list-disc pl-4 mt-1 font-body-md">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
+            <form action="{{ route('login') }}" method="POST" class="space-y-8 opacity-0 animate-fade-in-up delay-100">
+                @csrf
+                
+                <!-- NIP Input (Changed from Email as per instruction) -->
+                <div class="relative group">
+                    <label for="nip" class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2 transition-colors group-focus-within:text-secondary">Nomor Induk Pegawai (NIP)</label>
+                    <input type="text" id="nip" name="nip" value="{{ old('nip') }}" required autofocus autocomplete="username" class="block w-full px-0 py-3 bg-transparent border-0 border-b border-primary/20 text-primary font-body-md focus:ring-0 focus:border-secondary focus:border-b-2 transition-all duration-300 placeholder:text-on-surface-variant/50 hover:border-primary/50" placeholder="Contoh: 198001012005011001">
+                    <span class="material-symbols-outlined absolute right-0 top-10 text-on-surface-variant/50 pointer-events-none group-focus-within:text-secondary transition-colors">badge</span>
+                </div>
+
+                <!-- Password Input -->
+                <div class="relative group">
+                    <label for="password" class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2 transition-colors group-focus-within:text-secondary">Kata Sandi</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password" class="block w-full px-0 py-3 bg-transparent border-0 border-b border-primary/20 text-primary font-body-md focus:ring-0 focus:border-secondary focus:border-b-2 transition-all duration-300 placeholder:text-on-surface-variant/50 hover:border-primary/50" placeholder="••••••••">
+                    <button type="button" onclick="togglePassword()" class="absolute right-0 top-10 text-on-surface-variant/50 hover:text-primary transition-colors focus:outline-none">
+                        <span class="material-symbols-outlined" id="eye-icon">visibility_off</span>
+                    </button>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="flex items-center justify-between pt-2">
+                    <div class="flex items-center">
+                        <input id="remember_me" name="remember" type="checkbox" class="h-4 w-4 rounded-none border-primary/30 text-primary focus:ring-primary bg-transparent accent-secondary">
+                        <label for="remember_me" class="ml-2 block font-label-md text-label-md text-on-surface-variant cursor-pointer hover:text-on-background transition-colors">
+                            Ingat saya
+                        </label>
+                    </div>
+                    <div class="text-sm">
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" class="font-label-md text-label-md font-semibold text-primary hover:text-secondary border-b border-transparent hover:border-secondary transition-all duration-200">
+                                Lupa Kata Sandi?
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="pt-6">
+                    <button type="submit" class="w-full flex justify-center py-4 px-4 border border-transparent font-label-md text-label-md font-bold text-on-primary bg-primary hover:bg-secondary-container hover:text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-300 uppercase tracking-widest shadow-[0_4px_14px_0_rgba(0,2,16,0.1)] hover:shadow-[0_6px_20px_rgba(255,197,95,0.23)] hover:-translate-y-1">
+                        Masuk Sistem
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    
     <script>
         function togglePassword() {
             const input = document.getElementById('password');
             const icon = document.getElementById('eye-icon');
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.textContent = 'visibility_off';
+                icon.textContent = 'visibility';
             } else {
                 input.type = 'password';
-                icon.textContent = 'visibility';
+                icon.textContent = 'visibility_off';
             }
         }
     </script>
 </body>
 </html>
-
