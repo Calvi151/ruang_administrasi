@@ -13,11 +13,11 @@
             @endif
             <div class="relative">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
-                <input name="search" value="{{ request('search') }}" class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Cari nomor surat, perihal..." type="text">
+                <input name="search" value="{{ request('search') }}" class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest dark:bg-ds-bg border border-outline-variant dark:border-ds-border focus:border-primary dark:focus:border-ds-accent focus:ring-2 focus:ring-primary/20 dark:focus:ring-ds-accent/20 outline-none transition-all font-body-sm text-body-sm text-on-surface dark:text-ds-text-primary placeholder:text-outline dark:placeholder:text-ds-text-secondary" placeholder="Cari nomor surat, perihal..." type="text">
             </div>
             <button type="submit" class="hidden">Search</button>
         </form>
-        <a href="{{ route('outgoing-letters.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
+        <a href="{{ route('outgoing-letters.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary dark:bg-ds-bg text-on-primary dark:text-ds-text-primary dark:border dark:border-ds-border font-label-md text-label-md hover:opacity-90 dark:hover:bg-ds-hover transition-all shadow-sm">
             <span class="material-symbols-outlined text-[18px]">add</span>
             Buat Surat Keluar
         </a>
@@ -26,24 +26,24 @@
     <!-- Letter Type Filters (Chips) -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
         <a href="{{ route('outgoing-letters.index', ['search' => request('search')]) }}" 
-           class="px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-colors {{ !request('letter_type_id') ? 'bg-primary text-on-primary' : 'bg-surface-container border border-outline-variant text-on-surface-variant hover:bg-surface-container-high' }}">
+           class="px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-colors {{ !request('letter_type_id') ? 'bg-primary dark:bg-ds-accent text-on-primary dark:text-[#271900]' : 'bg-surface-container dark:bg-ds-surface border border-outline-variant dark:border-ds-border text-on-surface-variant dark:text-ds-text-secondary hover:bg-surface-container-high dark:hover:bg-ds-hover' }}">
             Semua Jenis
         </a>
         @foreach($letterTypes as $type)
         <a href="{{ route('outgoing-letters.index', ['letter_type_id' => $type->id, 'search' => request('search')]) }}" 
-           class="px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-colors {{ request('letter_type_id') == $type->id ? 'bg-primary text-on-primary' : 'bg-surface-container border border-outline-variant text-on-surface-variant hover:bg-surface-container-high' }}">
-            {{ $type->name }} ({{ $type->letter_code }})
+           class="px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-colors {{ request('letter_type_id') == $type->id ? 'bg-primary dark:bg-ds-accent text-on-primary dark:text-[#271900]' : 'bg-surface-container dark:bg-ds-surface border border-outline-variant dark:border-ds-border text-on-surface-variant dark:text-ds-text-secondary hover:bg-surface-container-high dark:hover:bg-ds-hover' }}">
+            {{ $type->type_name }} ({{ $type->letter_code }})
         </a>
         @endforeach
     </div>
 </div>
 
 <!-- Table Card -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container-lowest dark:bg-ds-surface rounded-xl shadow-sm border border-outline-variant/50 dark:border-ds-border overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse min-w-[900px]">
             <thead>
-                <tr class="bg-surface-container border-y border-outline-variant/40 font-label-sm text-label-sm text-on-surface-variant">
+                <tr class="bg-surface-container dark:bg-ds-bg border-y border-outline-variant/40 dark:border-ds-border font-label-sm text-label-sm text-on-surface-variant dark:text-ds-text-secondary">
                     <th class="px-6 py-3 font-medium">Nomor Surat</th>
                     <th class="px-6 py-3 font-medium">Tanggal</th>
                     <th class="px-6 py-3 font-medium">Tujuan</th>
@@ -54,11 +54,11 @@
             </thead>
             <tbody class="font-body-sm text-body-sm">
                 @forelse($letters as $letter)
-                <tr class="border-b border-outline-variant/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
-                    <td class="px-6 py-3 text-secondary font-semibold">{{ $letter->letter_number }}</td>
-                    <td class="px-6 py-3 text-on-surface-variant">{{ \Carbon\Carbon::parse($letter->date_sent)->format('d M Y') }}</td>
-                    <td class="px-6 py-3 text-on-surface font-semibold uppercase">{{ $letter->recipient }}</td>
-                    <td class="px-6 py-3 text-on-surface-variant max-w-xs truncate">{{ $letter->subject }}</td>
+                <tr class="border-b border-outline-variant/20 dark:border-ds-border hover:bg-black/5 dark:hover:bg-ds-hover transition-colors group">
+                    <td class="px-6 py-3 text-secondary dark:text-ds-accent font-semibold">{{ $letter->letter_number }}</td>
+                    <td class="px-6 py-3 text-on-surface-variant dark:text-ds-text-secondary">{{ \Carbon\Carbon::parse($letter->date_sent)->format('d M Y') }}</td>
+                    <td class="px-6 py-3 text-on-surface dark:text-ds-text-primary font-semibold uppercase">{{ $letter->recipient }}</td>
+                    <td class="px-6 py-3 text-on-surface-variant dark:text-ds-text-secondary max-w-xs truncate">{{ $letter->subject }}</td>
                     <td class="px-6 py-3">
                         @if($letter->status == 'pending')
                             <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 font-label-sm text-[11px] font-bold tracking-wider">
@@ -107,9 +107,9 @@
                 @empty
                 <tr>
                     <td colspan="6" class="px-6 py-12 text-center">
-                        <div class="flex flex-col items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-[48px] text-outline/30">send</span>
-                            <h4 class="font-h3 text-h3 text-on-surface">Belum ada surat keluar</h4>
+                        <div class="flex flex-col items-center gap-3 text-on-surface-variant dark:text-ds-text-secondary">
+                            <span class="material-symbols-outlined text-[48px] opacity-30">send</span>
+                            <h4 class="font-h3 text-h3 text-on-surface dark:text-ds-text-primary">Belum ada surat keluar</h4>
                             <p class="font-body-sm text-body-sm max-w-sm">Daftar surat keluar masih kosong.</p>
                         </div>
                     </td>

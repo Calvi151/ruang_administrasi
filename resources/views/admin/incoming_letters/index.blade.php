@@ -10,22 +10,22 @@
         <!-- Search Input -->
         <div class="relative">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
-            <input class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Cari nomor surat, perihal..." type="text">
+            <input class="w-72 pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest dark:bg-ds-bg border border-outline-variant dark:border-ds-border focus:border-primary dark:focus:border-ds-accent focus:ring-2 focus:ring-primary/20 dark:focus:ring-ds-accent/20 outline-none transition-all font-body-sm text-body-sm text-on-surface dark:text-ds-text-primary placeholder:text-outline dark:placeholder:text-ds-text-secondary" placeholder="Cari nomor surat, perihal..." type="text">
         </div>
     </div>
     <!-- Primary Action Button -->
-    <a href="{{ route('incoming-letters.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
+    <a href="{{ route('incoming-letters.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary dark:bg-ds-bg text-on-primary dark:text-ds-text-primary dark:border dark:border-ds-border font-label-md text-label-md hover:opacity-90 dark:hover:bg-ds-hover transition-all shadow-sm">
         <span class="material-symbols-outlined text-[18px]">add</span>
         Catat Surat Masuk
     </a>
 </div>
 
 <!-- Table Card -->
-<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="bg-surface-container-lowest dark:bg-ds-surface rounded-xl shadow-sm border border-outline-variant/50 dark:border-ds-border overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse min-w-[900px]">
             <thead>
-                <tr class="bg-surface-container border-y border-outline-variant/40 font-label-sm text-label-sm text-on-surface-variant">
+                <tr class="bg-surface-container dark:bg-ds-bg border-y border-outline-variant/40 dark:border-ds-border font-label-sm text-label-sm text-on-surface-variant dark:text-ds-text-secondary">
                     <th class="px-6 py-3 font-medium">Nomor Surat</th>
                     <th class="px-6 py-3 font-medium">Tanggal</th>
                     <th class="px-6 py-3 font-medium">Pengirim</th>
@@ -35,17 +35,17 @@
             </thead>
             <tbody class="font-body-sm text-body-sm">
                 @forelse($letters as $letter)
-                <tr class="border-b border-outline-variant/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
-                    <td class="px-6 py-3 text-primary font-semibold">
+                <tr class="border-b border-outline-variant/20 dark:border-ds-border hover:bg-black/5 dark:hover:bg-ds-hover transition-colors group">
+                    <td class="px-6 py-3 text-primary dark:text-ds-accent font-semibold">
                         {{ $letter->letter_number }}
                     </td>
-                    <td class="px-6 py-3 text-on-surface-variant">
+                    <td class="px-6 py-3 text-on-surface-variant dark:text-ds-text-secondary">
                         {{ \Carbon\Carbon::parse($letter->date_received)->format('d M Y') }}
                     </td>
-                    <td class="px-6 py-3 text-on-surface font-semibold uppercase">
+                    <td class="px-6 py-3 text-on-surface dark:text-ds-text-primary font-semibold uppercase">
                         {{ $letter->sender }}
                     </td>
-                    <td class="px-6 py-3 text-on-surface-variant max-w-xs truncate">
+                    <td class="px-6 py-3 text-on-surface-variant dark:text-ds-text-secondary max-w-xs truncate">
                         {{ strip_tags($letter->subject) }}
                     </td>
                     <td class="px-6 py-3 text-right">
@@ -77,9 +77,9 @@
                 @empty
                 <tr>
                     <td colspan="5" class="px-6 py-12 text-center">
-                        <div class="flex flex-col items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-[48px] text-outline/30">drafts</span>
-                            <h4 class="font-h3 text-h3 text-on-surface">Belum ada surat masuk</h4>
+                        <div class="flex flex-col items-center gap-3 text-on-surface-variant dark:text-ds-text-secondary">
+                            <span class="material-symbols-outlined text-[48px] opacity-30">drafts</span>
+                            <h4 class="font-h3 text-h3 text-on-surface dark:text-ds-text-primary">Belum ada surat masuk</h4>
                             <p class="font-body-sm text-body-sm max-w-sm">Kotak masuk Anda saat ini bersih. Surat yang baru tiba akan muncul di sini.</p>
                         </div>
                     </td>
