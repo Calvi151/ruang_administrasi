@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <title>Surat Keluar - {{ $outgoingLetter->letter_number }}</title>
     <style>
+        @page {
+            margin-top: 3cm;
+            margin-left: 3cm;
+            margin-right: 2.5cm;
+            margin-bottom: 2.5cm;
+        }
+
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12pt;
             line-height: 1.5;
-            margin: 2cm 2.5cm; /* Margin standar surat resmi */
+            margin: 0;
+            padding: 0;
         }
         
         .kop-surat {
@@ -22,11 +30,8 @@
             font-size: 16pt;
             margin: 0;
             text-transform: uppercase;
-        }
-        
-        .kop-surat h2 {
-            font-size: 14pt;
-            margin: 0;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
         
         .kop-surat p {
@@ -36,11 +41,13 @@
         
         .meta-surat {
             width: 100%;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            border-collapse: collapse;
         }
         
         .meta-surat td {
             vertical-align: top;
+            padding: 2px 0;
         }
 
         .tanggal-surat {
@@ -50,78 +57,103 @@
         
         .isi-surat {
             text-align: justify;
-            margin-bottom: 40px;
-            min-height: 300px; /* Memberi ruang untuk isi */
+            margin-bottom: 30px;
+            min-height: 250px;
         }
 
         .ttd-box {
-            width: 300px;
+            width: 250px;
             float: right;
             text-align: center;
-            margin-top: 50px;
+            margin-top: 40px;
+            page-break-inside: avoid;
         }
         
         .ttd-nama {
             font-weight: bold;
             text-decoration: underline;
-            margin-top: 80px;
+            margin-top: 70px;
             margin-bottom: 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- KOP SURAT (Silakan sesuaikan dengan identitas asli) -->
+@php
+    $typeName = $outgoingLetter->letterType->type_name ?? '';
+    $typeNameLower = strtolower($typeName);
+    
+    // Deteksi kategori Surat Naskah Khusus (SK, Keterangan, Tugas, Keputusan, Peringatan, dll)
+    $isNaskahKhusus = false;
+    $keywords = ['keterangan', 'tugas', 'keputusan', 'sk', 'perintah', 'kuasa', 'rekomendasi', 'peringatan'];
+    foreach ($keywords as $kw) {
+        if (str_contains($typeNameLower, $kw)) {
+            $isNaskahKhusus = true;
+            break;
+        }
+    }
+
+    $content = $outgoingLetter->content;
+
+    // Untuk surat biasa (Korespondensi: Edaran, Undangan, dll), 
+    // bersihkan tabel meta (Nomor/Perihal/Lampiran) bawaan template editor jika ada agar tidak ganda / tertimpa.
+    if (!$isNaskahKhusus) {
+        // Hapus tabel mceNonEditable / meta bawaan editor jika ada di awal teks
+        $content = preg_replace('/<table[^>]*mceNonEditable[^>]*>.*?<\/table>/is', '', $content);
+        $content = preg_replace('/^(\s*<br\s*\/?>\s*)*<table[^>]*>.*?Nomor.*?Perihal.*?<\/table>/is', '', $content);
+    }
+@endphp
+
+    <!-- KOP SURAT -->
     <div class="kop-surat">
-        <h2>YAYASAN PENDIDIKAN TARUNA ANDIGHA</h2>
-        <h1>SMK TARUNA ANDIGHA</h1>
+        <h1>THE PRIME TEKHNOLOGI</h1>
         <p>Jl. Veteran No. 123, Kota Bogor, Jawa Barat 16124<br>
-        Email: info@smktarunaandigha.sch.id | Telp: (0251) 123456</p>
+        Email: info@theprimetekhnologi.com | Telp: (0251) 123456</p>
     </div>
 
-    <!-- TANGGAL SURAT -->
-    <div class="tanggal-surat">
-        Bogor, {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}
-    </div>
+    @if(!$isNaskahKhusus)
+        <!-- TANGGAL SURAT -->
+        <div class="tanggal-surat">
+            Bogor, {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}
+        </div>
 
-    <!-- META SURAT -->
-    <table class="meta-surat">
-        <tr>
-            <td width="70">Nomor</td>
-            <td width="10">:</td>
-            <td>{{ $outgoingLetter->letter_number }}</td>
-        </tr>
-        <tr>
-            <td>Lampiran</td>
-            <td>:</td>
-            <td>-</td>
-        </tr>
-        <tr>
-            <td>Perihal</td>
-            <td>:</td>
-            <td><strong>{{ $outgoingLetter->subject }}</strong></td>
-        </tr>
-    </table>
+        <!-- META SURAT (3 POIN: NOMOR, LAMPIRAN, PERIHAL) -->
+        <table class="meta-surat">
+            <tr>
+                <td width="70">Nomor</td>
+                <td width="10">:</td>
+                <td>{{ $outgoingLetter->letter_number }}</td>
+            </tr>
+            <tr>
+                <td>Lampiran</td>
+                <td>:</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Perihal</td>
+                <td>:</td>
+                <td><strong>{{ $outgoingLetter->subject }}</strong></td>
+            </tr>
+        </table>
 
-    <!-- TUJUAN -->
-    <div style="margin-bottom: 20px;">
-        Yth. <strong>{{ $outgoingLetter->recipient }}</strong><br>
-        di Tempat
-    </div>
+        <!-- TUJUAN -->
+        <div style="margin-bottom: 20px;">
+            Yth. <strong>{{ $outgoingLetter->recipient }}</strong><br>
+            di Tempat
+        </div>
+    @endif
 
     <!-- ISI SURAT -->
     <div class="isi-surat">
-        {!! $outgoingLetter->content !!}
+        {!! $content !!}
     </div>
 
     <!-- TANDA TANGAN -->
     <div class="ttd-box">
-        <p style="margin-bottom: 0;">Kepala Sekolah,</p>
+        <p style="margin-bottom: 0;">Pimpinan / Manager,</p>
         
-        <!-- Ruang untuk tanda tangan basah / cap -->
-        
-        <p class="ttd-nama">CEO / Kepala Sekolah</p>
-        <p style="margin: 0;">NIP. .........................</p>
+        <p class="ttd-nama">{{ optional($outgoingLetter->creator)->name ?? 'THE PRIME TEKHNOLOGI' }}</p>
+        <p style="margin: 0;">NIP. {{ optional($outgoingLetter->creator)->nip ?? '.........................' }}</p>
     </div>
 
 </body>
