@@ -1,6 +1,9 @@
-@extends('layouts.admin')
+@extends('admin.layouts.app')
 
-@section('admin_content')
+@section('title', 'Detail Karyawan - Ruang Administrasi')
+@section('page-title', 'Detail Karyawan')
+
+@section('content')
 <div class="mb-4">
     <a href="{{ route('employees.index') }}" class="btn btn-sm btn-outline-secondary border-0 mb-3">
         <i class="fa-solid fa-arrow-left me-2"></i>Kembali ke Daftar

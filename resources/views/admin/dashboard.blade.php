@@ -276,6 +276,14 @@
 </section>
 @endsection
 
+@php
+    $defaultMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'];
+    $defaultZeros  = [0, 0, 0, 0, 0, 0];
+    $jsonMonths    = json_encode(!empty($months) ? $months : $defaultMonths);
+    $jsonIncoming  = json_encode(!empty($monthlyIncomingData) ? $monthlyIncomingData : $defaultZeros);
+    $jsonOutgoing  = json_encode(!empty($monthlyOutgoingData) ? $monthlyOutgoingData : $defaultZeros);
+@endphp
+
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -290,16 +298,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const gridColor = isDark ? 'rgba(42,54,84,0.5)' : 'rgba(0,0,0,0.06)';
     const textColor = isDark ? '#8B93A8' : '#45464e';
 
-    // --- Monthly data from controller ---
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
-    const currentMonth = new Date().getMonth(); // 0-indexed
-    const displayMonths = months.slice(0, currentMonth + 1);
-
-    const monthlyIn = @json($monthlyIncoming);
-    const monthlyOut = @json($monthlyOutgoing);
-
-    const incomingData = displayMonths.map((_, i) => monthlyIn[i + 1] || 0);
-    const outgoingData = displayMonths.map((_, i) => monthlyOut[i + 1] || 0);
+    // --- Realtime Monthly data from controller ---
+    const displayMonths = {!! $jsonMonths !!};
+    const incomingData = {!! $jsonIncoming !!};
+    const outgoingData = {!! $jsonOutgoing !!};
 
     // --- Line Chart: Tren Volume Surat ---
     const trendCtx = document.getElementById('trendChart').getContext('2d');

@@ -258,6 +258,33 @@
            DARK MODE — Global overrides for surface/text tokens
         ============================================================ */
 
+        /* Dark mode surface & card background overrides */
+        html.dark .bg-surface,
+        html.dark .bg-white { background-color: #141C33 !important; }
+        html.dark .bg-surface-bright,
+        html.dark .bg-surface-container-lowest { background-color: #1A2440 !important; }
+        html.dark .bg-surface-container,
+        html.dark .bg-surface-container-low { background-color: #0F172E !important; }
+        html.dark .text-on-surface,
+        html.dark .text-on-background,
+        html.dark .text-gray-800,
+        html.dark .prose { color: #E8E6E0 !important; }
+        html.dark .text-on-surface-variant { color: #9CA3AF !important; }
+        html.dark .text-primary { color: #E5B04D !important; }
+        html.dark .border-outline-variant,
+        html.dark .border-outline-variant\/50,
+        html.dark .border-outline-variant\/30,
+        html.dark .border-outline-variant\/20,
+        html.dark .border-border-muted,
+        html.dark .border-border-muted\/50 { border-color: #2A3654 !important; }
+        html.dark .bg-primary-container\/10 { background-color: rgba(229, 176, 77, 0.15) !important; }
+        html.dark .bg-primary-fixed,
+        html.dark .bg-primary-fixed\/20 { background-color: rgba(229, 176, 77, 0.15) !important; color: #E5B04D !important; }
+        html.dark .border-primary-fixed-dim\/30 { border-color: rgba(229, 176, 77, 0.3) !important; }
+        html.dark .border-dashed { border-color: #2A3654 !important; }
+        html.dark .text-outline { color: #8B93A8 !important; }
+        html.dark .text-outline\/30 { color: #5D6A85 !important; }
+
         /* Dark mode input/form overrides */
         html.dark input, html.dark select, html.dark textarea {
             background-color: #141C33 !important;
@@ -307,7 +334,7 @@
     <!-- SideNavBar (Administrative Authority: dark navy, amber active, border-l-4) -->
     <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col bg-primary-container dark:bg-ds-sidebar border-r border-outline/10 dark:border-ds-border py-8 z-50">
         <div class="px-6 mb-12">
-            <h1 class="font-headline-md text-headline-md font-bold text-on-primary dark:text-ds-text-primary">Ruang Administrasi</h1>
+            <h1 class="font-headline-md text-headline-md font-bold text-secondary-fixed-dim dark:text-ds-accent leading-tight">Ruang Administrasi</h1>
             <p class="font-body-sm text-body-sm text-on-primary-container dark:text-ds-text-secondary mt-1">Sistem Kelola Surat</p>
         </div>
         
@@ -359,8 +386,15 @@
     <main class="flex-1 flex flex-col md:ml-sidebar_width min-w-0">
         <!-- TopNavBar (Administrative Authority) -->
         <header class="w-full h-20 sticky top-0 z-40 bg-surface dark:bg-ds-bg border-b border-on-primary-container/10 dark:border-ds-border flex justify-between items-center px-margin-edge">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-6">
                 <h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-ds-text-primary hidden md:block">@yield('page-title', 'Ruang Administrasi')</h1>
+                <!-- Search bar di Header -->
+                <div class="hidden lg:block relative w-64">
+                    <form action="{{ route('incoming-letters.index') }}" method="GET">
+                        <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-ds-text-secondary text-[18px]">search</span>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari surat atau dokumen..." class="w-full pl-10 pr-4 py-2 bg-surface-container-low dark:bg-ds-surface border border-outline-variant dark:border-ds-border rounded-full text-xs font-body-md text-on-surface dark:text-ds-text-primary focus:border-secondary dark:focus:border-ds-accent focus:outline-none transition-all placeholder:text-on-surface-variant/70 dark:placeholder:text-ds-text-secondary">
+                    </form>
+                </div>
             </div>
             <div class="flex items-center gap-4">
                 <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-surface-container-low dark:bg-ds-surface border border-outline-variant dark:border-ds-border rounded-full">

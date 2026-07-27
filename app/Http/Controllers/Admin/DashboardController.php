@@ -18,16 +18,25 @@ class DashboardController extends Controller
         $recentOutgoing  = \App\Models\OutgoingLetter::latest()->take(5)->get();
         $recentIncoming  = \App\Models\IncomingLetter::latest()->take(5)->get();
 
-        // Tren bulanan (tahun ini) untuk line chart
-        $monthlyIncoming = \App\Models\IncomingLetter::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->whereYear('created_at', now()->year)
-            ->groupByRaw('MONTH(created_at)')
-            ->pluck('total', 'month');
+        // 6 Bulan terakhir secara realtime untuk Chart.js
+        $months = [];
+        $monthlyIncomingData = [];
+        $monthlyOutgoingData = [];
 
-        $monthlyOutgoing = \App\Models\OutgoingLetter::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->whereYear('created_at', now()->year)
-            ->groupByRaw('MONTH(created_at)')
-            ->pluck('total', 'month');
+        for ($i = 5; $i >= 0; $i--) {
+            $dt = now()->subMonths($i);
+            $months[] = $dt->locale('id')->isoFormat('MMM Y');
+
+            $inCount = \App\Models\IncomingLetter::whereMonth('created_at', $dt->month)
+                ->whereYear('created_at', $dt->year)
+                ->count();
+            $outCount = \App\Models\OutgoingLetter::whereMonth('created_at', $dt->month)
+                ->whereYear('created_at', $dt->year)
+                ->count();
+
+            $monthlyIncomingData[] = $inCount;
+            $monthlyOutgoingData[] = $outCount;
+        }
 
         // Kategori surat per jenis (untuk donut chart)
         $categoryData = \App\Models\OutgoingLetter::selectRaw('letter_type_id, COUNT(*) as total')
@@ -44,8 +53,7 @@ class DashboardController extends Controller
             'totalIncoming', 'totalOutgoing',
             'outgoingPending', 'outgoingAcc', 'outgoingReject',
             'totalEmployees', 'recentOutgoing', 'recentIncoming',
-            'monthlyIncoming', 'monthlyOutgoing', 'categoryData'
+            'months', 'monthlyIncomingData', 'monthlyOutgoingData', 'categoryData'
         ));
     }
 }
-

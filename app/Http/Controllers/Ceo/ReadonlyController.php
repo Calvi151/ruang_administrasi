@@ -25,15 +25,23 @@ class ReadonlyController extends Controller
     public function outgoingLetters(Request $request)
     {
         $search = $request->input('search');
+        $status = $request->input('status');
         $query = \App\Models\OutgoingLetter::with(['letterType', 'creator']);
         
         if ($search) {
-            $query->where('letter_number', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('letter_number', 'like', "%{$search}%")
                   ->orWhere('subject', 'like', "%{$search}%")
-                  ->orWhere('perihal', 'like', "%{$search}%");
+                  ->orWhere('perihal', 'like', "%{$search}%")
+                  ->orWhere('recipient', 'like', "%{$search}%");
+            });
+        }
+
+        if ($status && in_array($status, ['pending', 'acc', 'reject'])) {
+            $query->where('status', $status);
         }
         
-        $letters = $query->paginate(10);
+        $letters = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->all());
         return view('ceo.readonly.outgoing', compact('letters'));
     }
 

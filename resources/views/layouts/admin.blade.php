@@ -351,8 +351,8 @@
     <div id="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
-            <div class="sidebar-header">
-                <i class="fa-solid fa-folder-open me-2"></i>Ruang Admin
+            <div class="sidebar-header text-warning">
+                <i class="fa-solid fa-folder-open me-2"></i>Ruang Administrasi
             </div>
 
             <ul class="list-unstyled components">
