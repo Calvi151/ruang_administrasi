@@ -12,28 +12,45 @@ class OutgoingLetterController extends Controller
 {
     public function index(Request $request)
     {
-        $query = OutgoingLetter::with(['letterType', 'creator'])->orderByDesc('created_at');
+        $query = OutgoingLetter::with(['letterType', 'creator', 'incomingLetter'])->orderByDesc('created_at');
         
         if ($request->has('letter_type_id') && $request->letter_type_id) {
             $query->where('letter_type_id', $request->letter_type_id);
         }
         
-        if ($request->has('search') && $request->search) {
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('letter_number', 'like', "%{$search}%")
                   ->orWhere('recipient', 'like', "%{$search}%")
-                  ->orWhere('subject', 'like', "%{$search}%");
+                  ->orWhere('subject', 'like', "%{$search}%")
+                  ->orWhereHas('incomingLetter', function($sub) use ($search) {
+                      $sub->where('letter_number', 'like', "%{$search}%")
+                          ->orWhere('sender', 'like', "%{$search}%");
+                  });
             });
         }
         
         $letters = $query->paginate(10)->withQueryString();
         $letterTypes = LetterType::all();
         
-        return view('admin.outgoing_letters.index', compact('letters', 'letterTypes'));
+        // Stats counts
+        $totalAll = OutgoingLetter::count();
+        $countUmum = OutgoingLetter::where('category', 'umum')->count();
+        $countBalasan = OutgoingLetter::where('category', 'balasan')->count();
+
+        return view('admin.outgoing_letters.index', compact('letters', 'letterTypes', 'totalAll', 'countUmum', 'countBalasan'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $letterTypes = LetterType::all();
         
@@ -50,7 +67,14 @@ class OutgoingLetterController extends Controller
             $nextLetterNumbers[$type->id] = "{$noUrut}/{$type->letter_code}/{$companyCode}/{$romanMonth}/{$year}";
         }
 
-        return view('admin.outgoing_letters.create', compact('letterTypes', 'nextLetterNumbers'));
+        $replyTo = null;
+        if ($request->filled('reply_to')) {
+            $replyTo = \App\Models\IncomingLetter::find($request->reply_to);
+        }
+
+        $incomingLetters = \App\Models\IncomingLetter::orderByDesc('date_received')->get();
+
+        return view('admin.outgoing_letters.create', compact('letterTypes', 'nextLetterNumbers', 'replyTo', 'incomingLetters'));
     }
 
     private function getRomanMonth($monthNumber)
@@ -86,6 +110,8 @@ class OutgoingLetterController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'category' => 'nullable|in:umum,balasan',
+            'incoming_letter_id' => 'nullable|exists:incoming_letters,id',
             'recipient' => 'required|string',
             'date_sent' => 'required|date',
             'letter_type_id' => 'required|exists:letter_type,id',
@@ -94,12 +120,12 @@ class OutgoingLetterController extends Controller
             'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
+        if (empty($validated['category'])) {
+            $validated['category'] = !empty($validated['incoming_letter_id']) ? 'balasan' : 'umum';
+        }
 
-
-        // Generate Nomor Surat Otomatis
-        // Format: {No urut}/{kodesurat}/TAP/{bulan_romawi}/{Tahun}
-        // Menggunakan tanggal hari ini (saat surat diregister/dibuat) untuk penomoran
-        $now = \Carbon\Carbon::now();
+        // Generate nomor surat otomatis berdasarkan urutan sebelumnya
+        $now = \Carbon\Carbon::parse($validated['date_sent']);
         $year = $now->year;
         $month = $now->month;
         $romanMonth = $this->getRomanMonth($month);
@@ -107,35 +133,39 @@ class OutgoingLetterController extends Controller
         $letterType = LetterType::find($validated['letter_type_id']);
         $kodeSurat = $letterType->letter_code;
 
-        // Cari nomor urut berdasarkan jenis surat
-        $nextSeq = $this->getNextSequenceNumber($letterType->id, $year);
+        $nextSeq = $this->getNextSequenceNumber($validated['letter_type_id'], $year);
         $noUrut = str_pad($nextSeq, 2, '0', STR_PAD_LEFT);
-
-        $companyCode = env('COMPANY_CODE', 'TAP');
-
-        $letterNumber = "{$noUrut}/{$kodeSurat}/{$companyCode}/{$romanMonth}/{$year}";
-
-        $validated['letter_number'] = $letterNumber;
         
-        // Ganti placeholder [NOMOR_SURAT] dengan nomor surat asli di konten
-        $validated['content'] = str_replace('[NOMOR_SURAT]', $letterNumber, $validated['content']);
-        $validated['status'] = 'pending'; // Butuh ACC CEO
-        $validated['creator_id'] = auth()->id() ?? 1;
+        $companyCode = env('COMPANY_CODE', 'TAP');
+        $letterNumber = "{$noUrut}/{$kodeSurat}/{$companyCode}/{$romanMonth}/{$year}";
 
         if ($request->hasFile('file_path')) {
             $validated['file_path'] = $request->file('file_path')->store('outgoing_letters', 'public');
-        } else {
-            unset($validated['file_path']);
         }
 
-        OutgoingLetter::create($validated);
+        // Cek dan ganti placeholder [NOMOR_SURAT] di content
+        $validated['content'] = str_replace('[NOMOR_SURAT]', $letterNumber, $validated['content']);
+
+        $outgoingLetter = OutgoingLetter::create([
+            'letter_number' => $letterNumber,
+            'category'      => $validated['category'] ?? 'umum',
+            'incoming_letter_id' => $validated['incoming_letter_id'] ?? null,
+            'date_sent' => $validated['date_sent'],
+            'letter_type_id' => $validated['letter_type_id'],
+            'creator_id' => auth()->id(),
+            'recipient' => $validated['recipient'],
+            'subject' => $validated['subject'],
+            'content' => $validated['content'],
+            'file_path' => $validated['file_path'] ?? null,
+            'status' => 'pending',
+        ]);
 
         return redirect()->route('outgoing-letters.index')->with('success', "Surat Keluar berhasil dibuat dengan nomor: {$letterNumber}");
     }
 
     public function show(OutgoingLetter $outgoingLetter)
     {
-        $outgoingLetter->load(['letterType', 'creator']);
+        $outgoingLetter->load(['letterType', 'creator', 'incomingLetter']);
         return view('admin.outgoing_letters.show', compact('outgoingLetter'));
     }
 
@@ -146,7 +176,8 @@ class OutgoingLetterController extends Controller
         }
 
         $letterTypes = LetterType::all();
-        return view('admin.outgoing_letters.edit', compact('outgoingLetter', 'letterTypes'));
+        $incomingLetters = \App\Models\IncomingLetter::orderByDesc('date_received')->get();
+        return view('admin.outgoing_letters.edit', compact('outgoingLetter', 'letterTypes', 'incomingLetters'));
     }
 
     public function update(Request $request, OutgoingLetter $outgoingLetter)
@@ -156,6 +187,8 @@ class OutgoingLetterController extends Controller
         }
 
         $validated = $request->validate([
+            'category' => 'nullable|in:umum,balasan',
+            'incoming_letter_id' => 'nullable|exists:incoming_letters,id',
             'recipient' => 'required|string',
             'date_sent' => 'required|date',
             'letter_type_id' => 'required|exists:letter_type,id',
@@ -163,6 +196,10 @@ class OutgoingLetterController extends Controller
             'content' => 'required|string',
             'file_path' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
+
+        if (empty($validated['category'])) {
+            $validated['category'] = !empty($validated['incoming_letter_id']) ? 'balasan' : 'umum';
+        }
 
         if ($request->hasFile('file_path')) {
             if ($outgoingLetter->file_path) {
@@ -207,6 +244,27 @@ class OutgoingLetterController extends Controller
 
         $outgoingLetter->delete();
         return redirect()->route('outgoing-letters.index')->with('success', 'Surat Keluar berhasil dihapus.');
+    }
+
+    public function deliver(Request $request, OutgoingLetter $outgoingLetter)
+    {
+        if (!in_array($outgoingLetter->status, ['acc', 'delivered'])) {
+            return back()->with('error', 'Hanya surat yang sudah disetujui (ACC) yang dapat diproses untuk dikirim (Delivery).');
+        }
+
+        $validated = $request->validate([
+            'delivery_method' => 'required|string|max:100',
+            'delivery_note'   => 'nullable|string|max:500',
+        ]);
+
+        $outgoingLetter->update([
+            'status'          => 'delivered',
+            'delivery_method' => $validated['delivery_method'],
+            'delivery_note'   => $validated['delivery_note'],
+            'delivered_at'    => now(),
+        ]);
+
+        return redirect()->route('outgoing-letters.index')->with('success', "Surat No. {$outgoingLetter->letter_number} berhasil dikirim (Delivered)!");
     }
 
     public function exportPdf(OutgoingLetter $outgoingLetter)

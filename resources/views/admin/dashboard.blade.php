@@ -117,8 +117,8 @@
                 </thead>
                 <tbody class="divide-y divide-outline/10 dark:divide-ds-border">
                     @forelse($recentIncoming as $letter)
-                    <tr class="table-row-hover transition-colors">
-                        <td class="px-6 py-4 font-body-sm text-body-sm font-semibold text-secondary dark:text-ds-accent">{{ $letter->letter_number }}</td>
+                    <tr onclick="window.location='{{ route('incoming-letters.show', $letter->id) }}'" class="table-row-hover transition-colors cursor-pointer group hover:bg-blue-50/40 dark:hover:bg-white/5" title="Klik untuk membuka detail surat ini">
+                        <td class="px-6 py-4 font-body-sm text-body-sm font-semibold text-[#0055CC] dark:text-ds-accent group-hover:underline">{{ $letter->letter_number }}</td>
                         <td class="px-6 py-4 font-body-sm text-body-sm font-medium text-on-surface dark:text-ds-text-primary uppercase">{{ $letter->sender }}</td>
                         <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant dark:text-ds-text-secondary truncate max-w-[180px]">{{ Str::limit(strip_tags($letter->subject), 30) }}</td>
                     </tr>
@@ -154,8 +154,8 @@
                 </thead>
                 <tbody class="divide-y divide-outline/10 dark:divide-ds-border">
                     @forelse($recentOutgoing as $letter)
-                    <tr class="table-row-hover transition-colors">
-                        <td class="px-6 py-4 font-body-sm text-body-sm font-semibold text-secondary dark:text-ds-accent">{{ $letter->letter_number }}</td>
+                    <tr onclick="window.location='{{ route('outgoing-letters.show', $letter->id) }}'" class="table-row-hover transition-colors cursor-pointer group hover:bg-blue-50/40 dark:hover:bg-white/5" title="Klik untuk membuka detail surat ini">
+                        <td class="px-6 py-4 font-body-sm text-body-sm font-semibold text-[#0055CC] dark:text-ds-accent group-hover:underline">{{ $letter->letter_number }}</td>
                         <td class="px-6 py-4 font-body-sm text-body-sm font-medium text-on-surface dark:text-ds-text-primary uppercase">{{ $letter->recipient }}</td>
                         <td class="px-6 py-4">
                             @if($letter->status == 'acc')

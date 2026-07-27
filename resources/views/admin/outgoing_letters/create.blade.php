@@ -36,6 +36,55 @@
 
         <!-- STEP 1: Basic Info -->
         <div id="step-1" class="p-6 space-y-6">
+            <div>
+                <label class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-2">Kategori Surat Keluar <span class="text-error">*</span></label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
+                    <label class="border border-outline-variant dark:border-ds-border rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:border-primary bg-surface-container-lowest dark:bg-ds-surface">
+                        <input type="radio" name="category" value="umum" {{ old('category', !empty($replyTo) ? 'balasan' : 'umum') === 'umum' ? 'checked' : '' }} class="text-primary focus:ring-primary" onchange="toggleReplySection()">
+                        <div>
+                            <span class="block font-bold text-xs text-on-surface dark:text-ds-text-primary">🏢 Surat Perusahaan (Umum)</span>
+                            <span class="block text-[11px] text-on-surface-variant">Inisiatif baru dari kantor</span>
+                        </div>
+                    </label>
+                    <label class="border border-outline-variant dark:border-ds-border rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:border-primary bg-surface-container-lowest dark:bg-ds-surface">
+                        <input type="radio" name="category" value="balasan" {{ old('category', !empty($replyTo) ? 'balasan' : 'umum') === 'balasan' ? 'checked' : '' }} class="text-primary focus:ring-primary" onchange="toggleReplySection()">
+                        <div>
+                            <span class="block font-bold text-xs text-on-surface dark:text-ds-text-primary">↩️ Surat Balasan</span>
+                            <span class="block text-[11px] text-on-surface-variant">Jawaban atas surat lain</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Pilih Surat Masuk yang Dibalas (Muncul saat Kategori = Balasan) -->
+            <div id="reply-select-container" class="p-5 rounded-2xl bg-[#0055CC]/5 dark:bg-[#1A2440]/80 border-2 border-dashed border-[#0055CC]/40 dark:border-amber-400/50 {{ old('category', !empty($replyTo) ? 'balasan' : 'umum') === 'balasan' ? '' : 'hidden' }} transition-all shadow-sm">
+                <label for="incoming_letter_id" class="block font-extrabold text-sm text-[#0055CC] dark:text-amber-300 mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-amber-500">mark_email_read</span>
+                    <span>Pilih Surat Masuk yang Akan Dibalas (Referensi)</span>
+                    <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-[20px]">search</span>
+                    <select name="incoming_letter_id" id="incoming_letter_id" class="block w-full rounded-xl border border-outline-variant dark:border-ds-border bg-white dark:bg-[#0B1220] text-on-surface dark:text-white shadow-sm focus:border-[#0055CC] dark:focus:border-amber-400 focus:ring-2 focus:ring-[#0055CC]/20 dark:focus:ring-amber-400/20 py-3 pl-10 pr-10 text-xs font-semibold outline-none transition-all" onchange="autoFillFromIncoming(this)" {{ old('category', !empty($replyTo) ? 'balasan' : 'umum') === 'balasan' ? 'required' : '' }}>
+                        <option value="">-- Cari & Pilih Nomor / Pengirim Surat Masuk yang Dibalas --</option>
+                        @if(isset($incomingLetters))
+                            @foreach($incomingLetters as $inLetter)
+                                <option value="{{ $inLetter->id }}" 
+                                    data-sender="{{ $inLetter->sender }}" 
+                                    data-subject="{{ strip_tags($inLetter->subject) }}" 
+                                    {{ old('incoming_letter_id', !empty($replyTo) ? $replyTo->id : '') == $inLetter->id ? 'selected' : '' }}>
+                                    [#{{ $inLetter->letter_number }}] - Dari: {{ $inLetter->sender }} (Perihal: {{ Str::limit(strip_tags($inLetter->subject), 65) }})
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+                <p class="text-[11px] text-on-surface-variant dark:text-ds-text-secondary mt-2.5 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px] text-emerald-500">auto_awesome</span>
+                    <span><strong>Fitur Pintar:</strong> Memilih surat di atas akan <strong>otomatis mengisi field Tujuan (Penerima)</strong> dan <strong>Perihal</strong> di bawah tanpa perlu diketik ulang!</span>
+                </p>
+            </div>
+
             <h4 class="font-title-md text-title-md text-primary dark:text-ds-text-primary flex items-center gap-2 border-b border-outline-variant/30 dark:border-ds-border/30 pb-2">
                 <span class="material-symbols-outlined">looks_one</span>
                 Langkah 1: Informasi Dasar
@@ -49,7 +98,7 @@
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline dark:text-ds-text-secondary text-[20px] pointer-events-none">business</span>
                         <input type="text" name="recipient" id="recipient"
                             class="block w-full rounded-lg border-outline-variant dark:border-ds-border bg-surface-container-lowest dark:bg-ds-surface text-on-surface dark:text-ds-text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
-                            placeholder="Nama instansi/perorangan tujuan" value="{{ old('recipient') }}" required>
+                            placeholder="Nama instansi/perorangan tujuan" value="{{ old('recipient', !empty($replyTo) ? $replyTo->sender : '') }}" required>
                     </div>
                 </div>
 
@@ -117,7 +166,7 @@
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline dark:text-ds-text-secondary text-[20px] pointer-events-none">title</span>
                     <input type="text" name="subject" id="subject"
                         class="block w-full rounded-lg border-outline-variant dark:border-ds-border bg-surface-container-lowest dark:bg-ds-surface text-on-surface dark:text-ds-text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-10 pr-3 font-body-sm text-body-sm"
-                        placeholder="Masukkan perihal surat" value="{{ old('subject') }}">
+                        placeholder="Masukkan perihal surat" value="{{ old('subject', !empty($replyTo) ? 'Balasan: ' . strip_tags($replyTo->subject) : '') }}">
                 </div>
             </div>
 
@@ -332,7 +381,7 @@ ${customBody}
                         // KELOMPOK 1: Surat Biasa / Korespondensi (Undangan, Edaran, dll)
                         // Format: Tabel Nomor, Perihal, Lampiran di pojok kiri atas.
                         template = `
-<table class="mceNonEditable" style="width: 100%; border-collapse: collapse; border: none; background-color: #f8f9fa;">
+<table class="mceNonEditable" style="width: 100%; border-collapse: collapse; border: none; background-color: transparent;">
   <tbody>
     <tr>
       <td style="width: 12%; vertical-align: top;"><strong>Nomor</strong></td>
@@ -423,5 +472,47 @@ ${customBody}
             }
         }
     });
+
+    function toggleReplySection() {
+        const checkedVal = document.querySelector('input[name="category"]:checked')?.value;
+        const container = document.getElementById('reply-select-container');
+        const select = document.getElementById('incoming_letter_id');
+        if (checkedVal === 'balasan') {
+            container.classList.remove('hidden');
+            if (select) select.required = true;
+        } else {
+            container.classList.add('hidden');
+            if (select) {
+                select.required = false;
+                select.value = "";
+            }
+        }
+    }
+
+    function autoFillFromIncoming(selectElem) {
+        const selectedOpt = selectElem.options[selectElem.selectedIndex];
+        if (selectedOpt && selectedOpt.value) {
+            const sender = selectedOpt.getAttribute('data-sender') || '';
+            const subject = selectedOpt.getAttribute('data-subject') || '';
+            const recipientInput = document.getElementById('recipient');
+            const subjectInput = document.getElementById('subject');
+            
+            if (sender && recipientInput) {
+                recipientInput.value = sender;
+                recipientInput.style.transition = 'all 0.3s ease';
+                recipientInput.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+                setTimeout(() => { recipientInput.style.backgroundColor = ''; }, 1500);
+            }
+            if (subject && subjectInput) {
+                subjectInput.value = "Balasan: " + subject;
+                subjectInput.style.transition = 'all 0.3s ease';
+                subjectInput.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+                setTimeout(() => { 
+                    subjectInput.style.backgroundColor = ''; 
+                    subjectInput.dispatchEvent(new Event('input'));
+                }, 1500);
+            }
+        }
+    }
 </script>
 @endsection

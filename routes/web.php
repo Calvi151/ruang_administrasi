@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/incoming-letters', IncomingLetterController::class);
         Route::get('/outgoing-letters/{outgoingLetter}/export-pdf', [OutgoingLetterController::class, 'exportPdf'])->name('outgoing-letters.export-pdf');
         Route::get('/outgoing-letters/{outgoingLetter}/export-word', [OutgoingLetterController::class, 'exportWord'])->name('outgoing-letters.export-word');
+        Route::post('/outgoing-letters/{outgoingLetter}/deliver', [OutgoingLetterController::class, 'deliver'])->name('outgoing-letters.deliver');
         Route::resource('/outgoing-letters', OutgoingLetterController::class);
         Route::resource('/letter-types', LetterTypeController::class);
         Route::resource('/employees', EmployeeController::class);

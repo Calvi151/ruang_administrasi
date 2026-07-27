@@ -53,6 +53,36 @@
         <div id="edit-grid" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 min-w-0">
             <!-- Left Column -->
             <div class="space-y-5 min-w-0">
+                <!-- Kategori Surat -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-2">Kategori Surat <span class="text-error">*</span></label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="border border-outline-variant dark:border-ds-border rounded-xl p-3 flex items-center gap-2 cursor-pointer bg-surface-container-lowest dark:bg-ds-surface">
+                            <input type="radio" name="category" value="umum" {{ old('category', $outgoingLetter->category) !== 'balasan' ? 'checked' : '' }} class="text-primary focus:ring-primary" onchange="toggleEditReplySection()">
+                            <span class="font-bold text-xs">🏢 Umum</span>
+                        </label>
+                        <label class="border border-outline-variant dark:border-ds-border rounded-xl p-3 flex items-center gap-2 cursor-pointer bg-surface-container-lowest dark:bg-ds-surface">
+                            <input type="radio" name="category" value="balasan" {{ old('category', $outgoingLetter->category) === 'balasan' ? 'checked' : '' }} class="text-primary focus:ring-primary" onchange="toggleEditReplySection()">
+                            <span class="font-bold text-xs">↩️ Balasan</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Referensi Surat Masuk (Jika Balasan) -->
+                <div id="edit-reply-container" class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 {{ old('category', $outgoingLetter->category) === 'balasan' ? '' : 'hidden' }}">
+                    <label class="block font-bold text-xs text-on-surface dark:text-white mb-1">Referensi Surat Masuk <span class="text-error">*</span></label>
+                    <select name="incoming_letter_id" class="w-full rounded-lg bg-white dark:bg-[#0B1220] border-outline-variant text-xs py-2 px-3">
+                        <option value="">-- Pilih Surat Masuk Referensi --</option>
+                        @if(isset($incomingLetters))
+                            @foreach($incomingLetters as $inLetter)
+                                <option value="{{ $inLetter->id }}" {{ old('incoming_letter_id', $outgoingLetter->incoming_letter_id) == $inLetter->id ? 'selected' : '' }}>
+                                    [#{{ $inLetter->letter_number }}] - Dari: {{ $inLetter->sender }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
                 <div>
                     <label for="recipient" class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-1">Tujuan (Penerima) <span class="text-error">*</span></label>
                     <div class="relative">
@@ -247,6 +277,16 @@
                 }
             }
         });
+    }
+
+    function toggleEditReplySection() {
+        const val = document.querySelector('input[name="category"]:checked')?.value;
+        const container = document.getElementById('edit-reply-container');
+        if (val === 'balasan') {
+            container.classList.remove('hidden');
+        } else {
+            container.classList.add('hidden');
+        }
     }
 </script>
 @endsection

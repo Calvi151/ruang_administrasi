@@ -392,6 +392,99 @@
                     }
                 });
             }
+
+            // ADVANCED REAL-TIME LIVE SEARCH FOR CEO (AJAX + Instant DOM Filter, No Enter Required)
+            const searchInputs = document.querySelectorAll('input[name="search"], input[placeholder*="Cari"], input[placeholder*="cari"]');
+            searchInputs.forEach(input => {
+                let debounceTimer;
+                const form = input.closest('form');
+                
+                // Add status indicator inside input container
+                const wrapper = input.parentElement;
+                let statusBadge = document.createElement('span');
+                statusBadge.className = 'absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-extrabold text-blue-600 dark:text-amber-400 bg-blue-500/10 dark:bg-amber-400/15 border border-blue-500/20 dark:border-amber-400/30 px-2 py-0.5 rounded-md hidden animate-pulse shadow-2xs z-10 pointer-events-none';
+                statusBadge.innerHTML = '⚡ Mencari...';
+                if (wrapper) {
+                    wrapper.style.position = 'relative';
+                    wrapper.appendChild(statusBadge);
+                }
+
+                input.addEventListener('input', function(e) {
+                    const term = e.target.value.trim();
+                    const table = document.querySelector('table');
+                    const tbody = table ? table.querySelector('tbody') : null;
+                    
+                    // 1. Instant client-side visual filtering (0ms latency feedback)
+                    if (tbody && term !== '') {
+                        const termLow = term.toLowerCase();
+                        tbody.querySelectorAll('tr:not(.no-results-placeholder)').forEach(row => {
+                            if (row.querySelector('td[colspan]')) return;
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(termLow) ? '' : 'none';
+                        });
+                    } else if (tbody && term === '') {
+                        tbody.querySelectorAll('tr').forEach(row => {
+                            row.style.display = '';
+                        });
+                    }
+
+                    // 2. Debounced background server search (Fetches exact relevant database records without page reload or Enter!)
+                    if (form && (form.getAttribute('method') || 'GET').toUpperCase() === 'GET') {
+                        clearTimeout(debounceTimer);
+                        if (statusBadge) statusBadge.classList.remove('hidden');
+                        
+                        debounceTimer = setTimeout(() => {
+                            const formData = new FormData(form);
+                            const params = new URLSearchParams(formData);
+                            const actionUrl = form.getAttribute('action') || window.location.pathname;
+                            const fetchUrl = `${actionUrl}?${params.toString()}`;
+
+                            fetch(fetchUrl, {
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'Accept': 'text/html'
+                                }
+                            })
+                            .then(response => response.text())
+                            .then(html => {
+                                const parser = new DOMParser();
+                                const newDoc = parser.parseFromString(html, 'text/html');
+                                
+                                // Swap table content smoothly with fresh database results
+                                const currentTableContainer = document.querySelector('table')?.closest('.overflow-x-auto') || document.querySelector('table')?.parentElement;
+                                const newTableContainer = newDoc.querySelector('table')?.closest('.overflow-x-auto') || newDoc.querySelector('table')?.parentElement;
+                                
+                                if (currentTableContainer && newTableContainer) {
+                                    currentTableContainer.innerHTML = newTableContainer.innerHTML;
+                                }
+                                
+                                // Update pagination & count totals if present
+                                const currentPagination = document.querySelector('.pagination, nav[role="navigation"]')?.parentElement;
+                                const newPagination = newDoc.querySelector('.pagination, nav[role="navigation"]')?.parentElement;
+                                if (currentPagination && newPagination) {
+                                    currentPagination.innerHTML = newPagination.innerHTML;
+                                }
+                                
+                                // Seamlessly update URL without refreshing browser
+                                window.history.replaceState(null, '', fetchUrl);
+                            })
+                            .catch(err => console.error('Live Search Error:', err))
+                            .finally(() => {
+                                if (statusBadge) statusBadge.classList.add('hidden');
+                            });
+                        }, 380); // 380ms debounce for ultra-smooth typing feeling
+                    }
+                });
+                
+                // Prevent double submissions or page reload if Enter is accidentally pressed
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        clearTimeout(debounceTimer);
+                        input.dispatchEvent(new Event('input'));
+                    }
+                });
+            });
         });
     </script>
     @yield('scripts')

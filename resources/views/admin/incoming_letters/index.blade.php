@@ -36,8 +36,8 @@
             <tbody class="font-body-sm text-body-sm">
                 @forelse($letters as $letter)
                 <tr class="border-b border-outline-variant/20 dark:border-ds-border hover:bg-black/5 dark:hover:bg-ds-hover transition-colors group">
-                    <td class="px-6 py-3 text-primary dark:text-ds-accent font-semibold">
-                        {{ $letter->letter_number }}
+                    <td class="px-6 py-3 font-semibold">
+                        <a href="{{ route('incoming-letters.show', $letter->id) }}" class="text-primary dark:text-ds-accent hover:underline" title="Klik untuk lihat detail surat masuk">{{ $letter->letter_number }}</a>
                     </td>
                     <td class="px-6 py-3 text-on-surface-variant dark:text-ds-text-secondary">
                         {{ \Carbon\Carbon::parse($letter->date_received)->format('d M Y') }}
@@ -46,7 +46,7 @@
                         {{ $letter->sender }}
                     </td>
                     <td class="px-6 py-3 text-on-surface-variant dark:text-ds-text-secondary max-w-xs truncate">
-                        {{ strip_tags($letter->subject) }}
+                        <a href="{{ route('incoming-letters.show', $letter->id) }}" class="hover:text-blue-600 dark:hover:text-blue-400 hover:underline block truncate" title="Klik untuk lihat detail">{{ strip_tags($letter->subject) }}</a>
                     </td>
                     <td class="px-6 py-3 text-right">
                         <div class="flex items-center justify-end gap-2">
@@ -58,6 +58,10 @@
                                 </svg>
                             </a>
                             @endif
+                            <a href="{{ route('outgoing-letters.create', ['reply_to' => $letter->id]) }}" class="px-2.5 py-1.5 flex items-center gap-1 rounded-lg text-xs font-semibold bg-[#0055CC]/10 dark:bg-amber-400/15 text-[#0055CC] dark:text-amber-300 border border-[#0055CC]/30 dark:border-amber-400/30 hover:bg-[#0055CC] hover:text-white dark:hover:bg-amber-400 dark:hover:text-[#0B1220] transition-colors" title="Balas Surat ini">
+                                <span class="material-symbols-outlined text-[15px]">reply</span>
+                                <span class="font-label-sm">Balas</span>
+                            </a>
                             <a href="{{ route('incoming-letters.show', $letter->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-sky-400 hover:bg-sky-400/15 hover:text-sky-300 transition-colors" title="Detail">
                                 <span class="material-symbols-outlined text-[18px]">visibility</span>
                             </a>

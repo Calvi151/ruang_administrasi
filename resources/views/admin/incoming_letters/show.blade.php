@@ -54,12 +54,87 @@
                     </div>
                 </div>
                 
-                <div class="mt-6 flex gap-4">
+                <div class="mt-6 flex flex-wrap gap-4">
+                    <a href="{{ route('outgoing-letters.create', ['reply_to' => $incomingLetter->id]) }}" class="px-5 py-2.5 rounded-full bg-amber-400 text-[#0B1220] font-bold font-label-md text-label-md hover:shadow-lg hover:shadow-amber-400/30 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">reply</span>
+                        Balas Surat Ini
+                    </a>
                     <a href="{{ route('incoming-letters.edit', $incomingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-2">
                         <span class="material-symbols-outlined text-[18px]">edit</span>
                         Edit Surat
                     </a>
                 </div>
+            </div>
+        </div>
+
+        <!-- Gmail-style Thread Balasan -->
+        <div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-6 relative">
+            <h3 class="font-headline-sm text-headline-sm text-on-background font-bold mb-4 flex items-center gap-2 border-b border-border-muted pb-4">
+                <span class="material-symbols-outlined text-primary dark:text-ds-accent">forum</span>
+                <span>Thread Balasan (Gmail Style)</span>
+                @if($incomingLetter->replies && $incomingLetter->replies->count() > 0)
+                    <span class="px-2.5 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 font-bold ml-2">
+                        {{ $incomingLetter->replies->count() }} Balasan
+                    </span>
+                @else
+                    <span class="px-2.5 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 font-bold ml-2">
+                        0 Balasan
+                    </span>
+                @endif
+            </h3>
+
+            <div class="space-y-4">
+                @forelse($incomingLetter->replies as $reply)
+                    <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/50 dark:border-ds-border hover:border-primary/50 transition-all">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-outline-variant/30 pb-3 mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-brand-amber">shortcut</span>
+                                <div>
+                                    <h4 class="font-headline-sm font-bold text-sm text-on-background">{{ $reply->letter_number }}</h4>
+                                    <span class="text-xs text-on-surface-variant">Kepada: <strong>{{ $reply->recipient }}</strong></span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                @if($reply->status == 'pending')
+                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-full flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Menunggu ACC
+                                    </span>
+                                @elseif($reply->status == 'acc')
+                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[13px]">check_circle</span> Disetujui (Siap Kirim)
+                                    </span>
+                                @elseif($reply->status == 'delivered')
+                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 rounded-full flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[13px]">local_shipping</span> Terkirim (Delivered)
+                                    </span>
+                                @else
+                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 rounded-full">Ditolak</span>
+                                @endif
+                                <span class="text-xs text-on-surface-variant ml-2">{{ \Carbon\Carbon::parse($reply->created_at)->diffForHumans() }}</span>
+                            </div>
+                        </div>
+                        <div class="text-xs text-on-background line-clamp-2 mb-3 bg-white/50 dark:bg-black/20 p-3 rounded-xl border border-outline-variant/20">
+                            {!! strip_tags($reply->content) !!}
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] text-on-surface-variant flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                                Tgl Surat: {{ \Carbon\Carbon::parse($reply->date_sent)->translatedFormat('d M Y') }}
+                            </span>
+                            <div class="flex gap-2">
+                                <a href="{{ route('outgoing-letters.show', $reply->id) }}" class="px-3 py-1 bg-primary/10 text-primary dark:text-ds-accent hover:bg-primary hover:text-white rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">visibility</span> Lihat Balasan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8 text-on-surface-variant dark:text-ds-text-secondary">
+                        <span class="material-symbols-outlined text-4xl opacity-40 mb-2">mark_email_unread</span>
+                        <p class="text-sm font-semibold">Belum ada surat balasan untuk surat masuk ini.</p>
+                        <p class="text-xs opacity-80 mt-1">Klik "Balas Surat Ini" di atas untuk membuat tanggapan secara langsung.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>

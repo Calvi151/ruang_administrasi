@@ -71,8 +71,55 @@
 
             <div>
                 <h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1.5">Isi Surat / Keterangan</h4>
-                <div class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-4">
-                    <div class="font-body-sm text-body-sm text-on-surface leading-relaxed whitespace-pre-wrap">{!! $outgoingLetter->content !!}</div>
+                <style>
+                    .dark .prose-letter table, .dark .prose-letter tr, .dark .prose-letter td, .dark .prose-letter th, .dark .prose-letter div, .dark .prose-letter p, .dark .prose-letter span {
+                        background-color: transparent !important;
+                        color: #E8E6E0 !important;
+                    }
+                    .dark .prose-letter strong, .dark .prose-letter b, .dark .prose-letter h1, .dark .prose-letter h2, .dark .prose-letter h3, .dark .prose-letter h4 {
+                        color: #FFFFFF !important;
+                    }
+                </style>
+                <div class="bg-surface-container-low dark:bg-[#0F172B] border border-outline-variant/30 dark:border-[#2A3654] rounded-lg p-4 prose-letter text-on-surface dark:text-[#E8E6E0]">
+                    <div class="font-body-sm text-body-sm leading-relaxed whitespace-pre-wrap">{!! $outgoingLetter->content !!}</div>
+
+                    <!-- Kolom Tanda Tangan & Cap Stempel -->
+                    <div class="mt-8 pt-6 border-t border-dashed border-outline-variant dark:border-[#2A3654] grid grid-cols-1 sm:grid-cols-2 gap-4 font-sans">
+                        <div class="p-4 rounded-xl bg-surface sm:bg-white dark:bg-[#141C33] border border-outline-variant/40 dark:border-[#2A3654] flex flex-col items-center justify-center text-center shadow-xs">
+                            <span class="text-[11px] font-bold text-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-2">Kolom Cap Stempel Perusahaan</span>
+                            @if(in_array($outgoingLetter->status, ['acc', 'delivered']))
+                                <div class="w-40 h-20 border-2 border-dashed border-blue-600 dark:border-blue-400 rounded-xl flex flex-col items-center justify-center bg-blue-50/50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300">
+                                    <span class="material-symbols-outlined text-2xl mb-0.5">verified</span>
+                                    <span class="text-[11px] font-bold uppercase">Stempel Digital</span>
+                                </div>
+                            @else
+                                <div class="w-40 h-20 border-2 border-dashed border-outline-variant dark:border-gray-600 rounded-xl flex flex-col items-center justify-center text-on-surface-variant dark:text-gray-500 bg-surface-container-lowest dark:bg-[#080E1A]">
+                                    <span class="material-symbols-outlined text-2xl opacity-50 mb-0.5">account_balance</span>
+                                    <span class="text-[11px] font-bold uppercase">[ Kolom Cap Stempel ]</span>
+                                </div>
+                            @endif
+                            <span class="text-[10px] text-on-surface-variant dark:text-gray-400 mt-2 font-semibold">Otorisasi Stempel Resmi</span>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-surface sm:bg-white dark:bg-[#141C33] border border-outline-variant/40 dark:border-[#2A3654] flex flex-col items-center justify-center text-center shadow-xs">
+                            <span class="text-[11px] font-bold text-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-2">Kolom Tanda Tangan Pimpinan</span>
+                            @if(in_array($outgoingLetter->status, ['acc', 'delivered']))
+                                <div class="w-48 h-20 border-2 border-dashed border-emerald-600 dark:border-emerald-400 rounded-xl flex flex-col items-center justify-center bg-emerald-50/50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
+                                    <span class="material-symbols-outlined text-2xl mb-0.5">draw</span>
+                                    <span class="text-[11px] font-bold uppercase">Signed by CEO</span>
+                                    @if($outgoingLetter->approved_at)
+                                        <span class="text-[9px] font-medium opacity-90 mt-0.5">{{ \Carbon\Carbon::parse($outgoingLetter->approved_at)->format('d/m/Y - H:i') }} WIB</span>
+                                    @endif
+                                </div>
+                            @else
+                                <div class="w-48 h-20 border-2 border-dashed border-outline-variant dark:border-gray-600 rounded-xl flex flex-col items-center justify-center text-on-surface-variant dark:text-gray-500 bg-surface-container-lowest dark:bg-[#080E1A]">
+                                    <span class="material-symbols-outlined text-2xl opacity-50 mb-0.5">history_edu</span>
+                                    <span class="text-[11px] font-bold uppercase">[ Kolom Tanda Tangan ]</span>
+                                </div>
+                            @endif
+                            <span class="text-[12px] font-bold text-on-surface dark:text-white mt-2 underline">Chief Executive Officer</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

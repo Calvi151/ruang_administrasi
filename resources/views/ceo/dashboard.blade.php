@@ -123,12 +123,12 @@
                 </thead>
                 <tbody class="font-body-md text-sm divide-y divide-[#E0DED8] dark:divide-[#2A3654] bg-white dark:bg-[#141C33]">
                     @foreach($recentOutgoing as $letter)
-                    <tr class="hover:bg-[#F2F6FC] dark:hover:bg-[#1A2440]/70 transition-colors group">
+                    <tr onclick="window.location='{{ url('ceo/letter-approvals/' . $letter->id) }}'" class="hover:bg-[#F2F6FC] dark:hover:bg-[#1A2440]/70 transition-colors cursor-pointer group" title="Klik untuk meninjau dan ACC surat ini">
                         <td class="py-4 px-6 font-semibold text-brand-navy dark:text-ds-text-primary">
-                            <span class="bg-[#EBF0FA] dark:bg-brand-amber/10 px-2.5 py-1 rounded-md border border-brand-navy/15 dark:border-brand-amber/20 font-mono text-xs">{{ $letter->letter_number ?? '-' }}</span>
+                            <span class="bg-[#EBF0FA] dark:bg-brand-amber/10 px-2.5 py-1 rounded-md border border-brand-navy/15 dark:border-brand-amber/20 font-mono text-xs group-hover:underline">{{ $letter->letter_number ?? '-' }}</span>
                         </td>
                         <td class="py-4 px-4">
-                            <div class="font-bold text-on-surface dark:text-[#E8E6E0] text-xs">{{ optional($letter->creator)->name ?? optional($letter->creator)->nip ?? '-' }}</div>
+                            <div class="font-bold text-on-surface dark:text-[#E8E6E0] text-xs group-hover:text-blue-600 dark:group-hover:text-amber-400">{{ optional($letter->creator)->name ?? optional($letter->creator)->nip ?? '-' }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[180px] font-medium">{{ $letter->subject ?? '-' }}</div>
                         </td>
                         <td class="py-4 px-4 text-gray-600 dark:text-gray-300 text-xs font-medium">
@@ -181,11 +181,11 @@
                 </thead>
                 <tbody class="font-body-md text-sm divide-y divide-[#E0DED8] dark:divide-[#2A3654] bg-white dark:bg-[#141C33]">
                     @foreach($recentIncoming as $letter)
-                    <tr class="hover:bg-[#F2F6FC] dark:hover:bg-[#1A2440]/70 transition-colors">
+                    <tr onclick="window.open('{{ $letter->file_path ? asset('storage/' . $letter->file_path) : url('/ceo/incoming-letters?search=' . urlencode($letter->letter_number)) }}', '_blank')" class="hover:bg-[#F2F6FC] dark:hover:bg-[#1A2440]/70 transition-colors cursor-pointer group" title="Klik untuk membuka arsip dokumen surat masuk ini">
                         <td class="py-4 px-6 font-semibold text-brand-navy dark:text-ds-text-primary">
-                            <span class="bg-[#EBF0FA] dark:bg-brand-amber/10 px-2.5 py-1 rounded-md border border-brand-navy/15 dark:border-brand-amber/20 font-mono text-xs">{{ $letter->letter_number ?? $letter->nomor_surat ?? '-' }}</span>
+                            <span class="bg-[#EBF0FA] dark:bg-brand-amber/10 px-2.5 py-1 rounded-md border border-brand-navy/15 dark:border-brand-amber/20 font-mono text-xs group-hover:underline">{{ $letter->letter_number ?? $letter->nomor_surat ?? '-' }}</span>
                         </td>
-                        <td class="py-4 px-4 text-gray-700 dark:text-[#E8E6E0] font-bold text-xs">{{ $letter->sender ?? $letter->pengirim ?? '-' }}</td>
+                        <td class="py-4 px-4 text-gray-700 dark:text-[#E8E6E0] font-bold text-xs group-hover:text-blue-600 dark:group-hover:text-amber-400">{{ $letter->sender ?? $letter->pengirim ?? '-' }}</td>
                         <td class="py-4 px-4 text-gray-600 dark:text-gray-300 text-xs truncate max-w-[150px] font-medium" title="{{ $letter->subject ?? $letter->perihal ?? '-' }}">
                             {{ Str::limit($letter->subject ?? $letter->perihal ?? '-', 28) }}
                         </td>

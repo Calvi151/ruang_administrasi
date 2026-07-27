@@ -147,13 +147,58 @@
         {!! $content !!}
     </div>
 
-    <!-- TANDA TANGAN -->
-    <div class="ttd-box">
-        <p style="margin-bottom: 0;">Pimpinan / Manager,</p>
-        
-        <p class="ttd-nama">{{ optional($outgoingLetter->creator)->name ?? 'THE PRIME TEKHNOLOGI' }}</p>
-        <p style="margin: 0;">NIP. {{ optional($outgoingLetter->creator)->nip ?? '.........................' }}</p>
-    </div>
+    <!-- KOLOM CAP STEMPEL & TANDA TANGAN -->
+    <table style="width: 100%; margin-top: 40px; page-break-inside: avoid; border-collapse: collapse;">
+        <tr>
+            <td style="width: 50%; vertical-align: top; text-align: center;">
+                <p style="margin: 0; font-weight: bold; color: #444;">Cap Stempel Perusahaan,</p>
+                <div style="margin: 12px auto; height: 85px; width: 150px; display: flex; align-items: center; justify-content: center;">
+                    @if(in_array($outgoingLetter->status, ['acc', 'delivered']))
+                        <!-- Cap Stempel Digital Resmi -->
+                        <div style="border: 2.5px solid #0044BB; border-radius: 50%; width: 80px; height: 80px; margin: 0 auto; line-height: 1.15; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0044BB; font-family: Arial, sans-serif; font-weight: bold; font-size: 7.5pt; text-align: center; padding: 4px; box-sizing: border-box; transform: rotate(-6deg); box-shadow: inset 0 0 0 1px #0044BB;">
+                            THE PRIME<br><span style="font-size: 6.5pt; color: #008037;">★ SEAL ★</span><br>TEKHNOLOGI
+                        </div>
+                    @else
+                        <!-- Kolom Kosong Stempel -->
+                        <div style="border: 1.5px dotted #999; width: 130px; height: 70px; line-height: 70px; color: #777; font-size: 9.5pt; margin: 0 auto; text-align: center; font-family: Arial, sans-serif;">
+                            [ Kolom Cap Stempel ]
+                        </div>
+                    @endif
+                </div>
+                <p style="margin: 0; font-size: 9pt; color: #666; font-style: italic;">Otorisasi PT The Prime Tekhnologi</p>
+            </td>
+            <td style="width: 50%; vertical-align: top; text-align: center;">
+                <p style="margin: 0; font-weight: bold;">Pimpinan / Chief Executive Officer,</p>
+                
+                <div style="margin: 12px auto; height: 85px; display: flex; align-items: center; justify-content: center;">
+                    @if(in_array($outgoingLetter->status, ['acc', 'delivered']))
+                        <!-- TTD Digital Resmi -->
+                        <div style="border: 2px solid #008037; padding: 8px 14px; border-radius: 6px; background-color: #f6fff9; display: inline-block; text-align: center; max-width: 210px;">
+                            <div style="font-size: 11px; font-weight: bold; color: #008037; letter-spacing: 0.5px;">
+                                [✔] SIGNED & APPROVED
+                            </div>
+                            <div style="font-size: 9px; color: #333; margin-top: 3px; font-weight: bold;">
+                                By: Chief Executive Officer
+                            </div>
+                            @if($outgoingLetter->approved_at)
+                            <div style="font-size: 8px; color: #555; margin-top: 3px;">
+                                Tgl: {{ \Carbon\Carbon::parse($outgoingLetter->approved_at)->format('d/m/Y - H:i') }} WIB
+                            </div>
+                            @endif
+                        </div>
+                    @else
+                        <!-- Kolom Kosong Tanda Tangan -->
+                        <div style="border: 1.5px dotted #999; width: 160px; height: 70px; line-height: 70px; color: #777; font-size: 9.5pt; margin: 0 auto; text-align: center; font-family: Arial, sans-serif;">
+                            [ Kolom Tanda Tangan ]
+                        </div>
+                    @endif
+                </div>
+                
+                <p style="font-weight: bold; text-decoration: underline; margin: 0;">{{ optional($outgoingLetter->creator)->name ?? 'Chief Executive Officer' }}</p>
+                <p style="margin: 3px 0 0 0; font-size: 10pt;">NIP. {{ optional($outgoingLetter->creator)->nip ?? '..................................' }}</p>
+            </td>
+        </tr>
+    </table>
 
 </body>
 </html>
