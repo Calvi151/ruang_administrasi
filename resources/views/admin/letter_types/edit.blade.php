@@ -32,10 +32,21 @@
         @endif
 
         <div class="p-6 space-y-6">
+            @if(isset($letterType->outgoing_letters_count) && $letterType->outgoing_letters_count > 0)
+            <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-300 text-xs md:text-sm flex items-start gap-3 shadow-xs">
+                <span class="material-symbols-outlined text-amber-600 dark:text-amber-400 text-[24px] shrink-0">info</span>
+                <div class="leading-relaxed">
+                    <span class="font-bold block text-sm mb-1">Status Terikat (Dipakai oleh {{ $letterType->outgoing_letters_count }} Surat Keluar)</span>
+                    <p>Karena jenis surat ini saat ini sudah terhubung ke database surat terbit (termasuk data dummy), <strong>fitur hapus permanen otomatis dikunci</strong> oleh sistem demi kelengkapan riwayat relasional.</p>
+                    <p class="mt-1">Namun, karena sebagian surat saat ini adalah <strong>Data Dummy</strong>, Anda <strong>tetap diizinkan mengubah Kode atau Nama Surat</strong> di sini jika ingin merapikan duplikasi atau menyusun ulang standar penomoran kantor Anda.</p>
+                </div>
+            </div>
+            @endif
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="letter_code" class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-1">Kode Surat <span class="text-error">*</span></label>
-                    <input type="text" name="letter_code" id="letter_code" class="block w-full rounded-lg border-outline-variant dark:border-ds-border bg-surface-container-lowest dark:bg-ds-surface text-on-surface dark:text-ds-text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm" value="{{ old('letter_code', $letterType->letter_code) }}" required>
+                    <input type="text" name="letter_code" id="letter_code" class="block w-full rounded-lg border-outline-variant dark:border-ds-border bg-surface-container-lowest dark:bg-ds-surface text-on-surface dark:text-ds-text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 px-3 font-body-sm text-body-sm uppercase font-mono font-bold" value="{{ old('letter_code', $letterType->letter_code) }}" required placeholder="Contoh: SK / SKET / SE / COLAB">
                 </div>
                 <div>
                     <label for="type_name" class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-1">Nama Jenis Surat <span class="text-error">*</span></label>

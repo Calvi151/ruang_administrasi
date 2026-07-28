@@ -155,7 +155,7 @@ class IncomingLetterController extends Controller
 
     public function index(Request $request)
     {
-        $query = IncomingLetter::query();
+        $query = IncomingLetter::with('replies');
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where('letter_number', 'like', "%{$search}%")

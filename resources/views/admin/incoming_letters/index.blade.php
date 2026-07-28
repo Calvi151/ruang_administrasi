@@ -58,10 +58,17 @@
                                 </svg>
                             </a>
                             @endif
+                            @if($letter->replies->isNotEmpty())
+                            <span class="px-2.5 py-1.5 flex items-center gap-1 rounded-lg text-xs font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 cursor-not-allowed opacity-90 shadow-2xs select-none" title="Surat ini sudah dibalas (No Balasan: {{ $letter->replies->first()->letter_number ?? 'Terbalas' }}).">
+                                <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                                <span class="font-label-sm">Sudah Dibalas</span>
+                            </span>
+                            @else
                             <a href="{{ route('outgoing-letters.create', ['reply_to' => $letter->id]) }}" class="px-2.5 py-1.5 flex items-center gap-1 rounded-lg text-xs font-semibold bg-[#0055CC]/10 dark:bg-amber-400/15 text-[#0055CC] dark:text-amber-300 border border-[#0055CC]/30 dark:border-amber-400/30 hover:bg-[#0055CC] hover:text-white dark:hover:bg-amber-400 dark:hover:text-[#0B1220] transition-colors" title="Balas Surat ini">
                                 <span class="material-symbols-outlined text-[15px]">reply</span>
                                 <span class="font-label-sm">Balas</span>
                             </a>
+                            @endif
                             <a href="{{ route('incoming-letters.show', $letter->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-sky-400 hover:bg-sky-400/15 hover:text-sky-300 transition-colors" title="Detail">
                                 <span class="material-symbols-outlined text-[18px]">visibility</span>
                             </a>

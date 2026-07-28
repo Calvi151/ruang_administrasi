@@ -55,10 +55,17 @@
                 </div>
                 
                 <div class="mt-6 flex flex-wrap gap-4">
+                    @if($incomingLetter->replies->isNotEmpty())
+                    <button type="button" onclick="alert('✅ Surat ini sudah memiliki dokumen balasan resmi (\'\'+ {{ json_encode($incomingLetter->replies->first()->letter_number) }} +\'\').\n\nSilakan cek riwayat thread balasan pada panel sebelah kanan untuk melihat status atau mengunduhnya.');" class="px-5 py-2.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold font-label-md text-label-md cursor-not-allowed flex items-center gap-2 shadow-2xs select-none" title="Surat sudah dibalas">
+                        <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                        Sudah Dibalas ({{ $incomingLetter->replies->count() }}x)
+                    </button>
+                    @else
                     <a href="{{ route('outgoing-letters.create', ['reply_to' => $incomingLetter->id]) }}" class="px-5 py-2.5 rounded-full bg-amber-400 text-[#0B1220] font-bold font-label-md text-label-md hover:shadow-lg hover:shadow-amber-400/30 hover:-translate-y-0.5 transition-all flex items-center gap-2">
                         <span class="material-symbols-outlined text-[18px]">reply</span>
                         Balas Surat Ini
                     </a>
+                    @endif
                     <a href="{{ route('incoming-letters.edit', $incomingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-2">
                         <span class="material-symbols-outlined text-[18px]">edit</span>
                         Edit Surat

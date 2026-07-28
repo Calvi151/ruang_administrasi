@@ -10,4 +10,9 @@ class LetterType extends Model
     use HasFactory;
     protected $table = 'letter_type';
     protected $fillable = ['letter_code', 'type_name', 'template'];
+
+    public function outgoingLetters()
+    {
+        return $this->hasMany(OutgoingLetter::class, 'letter_type_id');
+    }
 }
