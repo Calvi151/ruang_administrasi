@@ -239,7 +239,7 @@
     <!-- Main Content Area -->
     <div class="flex-1 ml-0 md:ml-[280px] flex flex-col h-screen overflow-hidden">
         <!-- Header (Source of Truth untuk 5 halaman CEO) -->
-        <header class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface dark:bg-[#141C33] shadow-sm z-10 sticky top-0 border-b border-outline-variant/30 dark:border-[#2A3654]">
+        <header class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface dark:bg-[#141C33] shadow-sm z-50 sticky top-0 border-b border-outline-variant/30 dark:border-[#2A3654]">
             <div class="flex items-center gap-4 md:hidden">
                 <button class="text-primary dark:text-ds-text-primary hover:text-secondary transition-colors">
                     <span class="material-symbols-outlined">menu</span>
@@ -252,10 +252,10 @@
             </div>
             <div class="flex items-center gap-6">
                 <!-- Search bar di Header -->
-                <div class="hidden xl:block relative w-72">
+                <div class="hidden xl:block relative w-80 transition-all duration-300 focus-within:w-96">
                     <form action="{{ url('/ceo/incoming-letters') }}" method="GET">
                         <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-ds-text-secondary text-[20px]">search</span>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari surat atau dokumen..." class="w-full pl-10 pr-4 py-2 bg-surface-container-low dark:bg-[#0F172E] border border-outline-variant/50 dark:border-[#2A3654] rounded-full text-xs font-body-md text-on-surface dark:text-[#E8E6E0] focus:border-brand-amber focus:ring-2 focus:ring-brand-amber/20 focus:outline-none transition-all placeholder:text-outline/70 dark:placeholder:text-[#8B93A8]">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari surat atau dokumen..." class="w-full pl-10 pr-4 py-2 bg-surface-container-low dark:bg-[#0F172E] border border-outline-variant/50 dark:border-[#2A3654] rounded-full text-sm font-body-md text-on-surface dark:text-[#E8E6E0] focus:border-brand-amber focus:ring-2 focus:ring-brand-amber/20 focus:outline-none transition-all placeholder:text-outline/70 dark:placeholder:text-[#8B93A8]">
                     </form>
                 </div>
                 <div class="hidden lg:flex items-center gap-2 text-on-surface-variant dark:text-ds-text-secondary font-body-md text-sm">
@@ -280,7 +280,7 @@
                             @endif
                         </button>
                         <!-- Notification Dropdown -->
-                        <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-surface dark:bg-[#141C33] border border-outline-variant/30 dark:border-[#2A3654] rounded-xl shadow-lg py-2 z-50">
+                        <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-[#141C33] border border-outline-variant/50 dark:border-[#2A3654] rounded-xl shadow-2xl py-2 z-[100]">
                             <div class="px-4 py-3 border-b border-outline-variant/30 dark:border-[#2A3654] flex justify-between items-center">
                                 <h3 class="font-label-md text-sm font-bold text-on-surface dark:text-ds-text-primary">Notifikasi Surat</h3>
                                 @if($pendingCount > 0)

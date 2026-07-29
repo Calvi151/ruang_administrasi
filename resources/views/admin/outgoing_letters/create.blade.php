@@ -60,29 +60,54 @@
             <div id="reply-select-container" class="p-5 rounded-2xl bg-[#0055CC]/5 dark:bg-[#1A2440]/80 border-2 border-dashed border-[#0055CC]/40 dark:border-amber-400/50 {{ old('category', !empty($replyTo) ? 'balasan' : 'umum') === 'balasan' ? '' : 'hidden' }} transition-all shadow-sm">
                 <label for="incoming_letter_id" class="block font-extrabold text-sm text-[#0055CC] dark:text-amber-300 mb-2 flex items-center gap-2">
                     <span class="material-symbols-outlined text-[20px] text-amber-500">mark_email_read</span>
-                    <span>Pilih Surat Masuk yang Akan Dibalas (Referensi)</span>
+                    <span>Surat Masuk yang Dibalas (Referensi)</span>
                     <span class="text-red-500">*</span>
                 </label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-[20px]">search</span>
-                    <select name="incoming_letter_id" id="incoming_letter_id" class="block w-full rounded-xl border border-outline-variant dark:border-ds-border bg-white dark:bg-[#0B1220] text-on-surface dark:text-white shadow-sm focus:border-[#0055CC] dark:focus:border-amber-400 focus:ring-2 focus:ring-[#0055CC]/20 dark:focus:ring-amber-400/20 py-3 pl-10 pr-10 text-xs font-semibold outline-none transition-all" onchange="autoFillFromIncoming(this)" {{ old('category', !empty($replyTo) ? 'balasan' : 'umum') === 'balasan' ? 'required' : '' }}>
-                        <option value="">-- Cari & Pilih Nomor / Pengirim Surat Masuk yang Dibalas --</option>
-                        @if(isset($incomingLetters))
-                            @foreach($incomingLetters as $inLetter)
-                                <option value="{{ $inLetter->id }}" 
-                                    data-sender="{{ $inLetter->sender }}" 
-                                    data-subject="{{ strip_tags($inLetter->subject) }}" 
-                                    {{ old('incoming_letter_id', !empty($replyTo) ? $replyTo->id : '') == $inLetter->id ? 'selected' : '' }}>
-                                    [#{{ $inLetter->letter_number }}] - Dari: {{ $inLetter->sender }} (Perihal: {{ Str::limit(strip_tags($inLetter->subject), 65) }})
-                                </option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-                <p class="text-[11px] text-on-surface-variant dark:text-ds-text-secondary mt-2.5 flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px] text-emerald-500">auto_awesome</span>
-                    <span><strong>Fitur Pintar:</strong> Memilih surat di atas akan <strong>otomatis mengisi field Tujuan (Penerima)</strong> dan <strong>Perihal</strong> di bawah tanpa perlu diketik ulang!</span>
-                </p>
+                
+                @if(!empty($replyTo))
+                    <!-- TAMPILAN TERKUNCI (Jika masuk dari klik tombol balas di tabel) -->
+                    <div class="bg-white dark:bg-[#0B1220] border border-emerald-500/50 rounded-xl p-4 shadow-sm flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                            <span class="material-symbols-outlined">verified_user</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm text-on-surface dark:text-ds-text-primary">Membalas Surat: {{ $replyTo->letter_number }}</p>
+                            <p class="text-xs text-on-surface-variant dark:text-ds-text-secondary mt-1">Dari: <strong>{{ $replyTo->sender }}</strong></p>
+                            <p class="text-xs text-on-surface-variant dark:text-ds-text-secondary line-clamp-1 mt-0.5">Perihal: {{ strip_tags($replyTo->subject) }}</p>
+                            
+                            <!-- Hidden input agar ID tetap terkirim saat disubmit -->
+                            <input type="hidden" name="incoming_letter_id" id="incoming_letter_id" value="{{ $replyTo->id }}" data-sender="{{ $replyTo->sender }}" data-subject="{{ strip_tags($replyTo->subject) }}">
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-emerald-600 dark:text-emerald-400 mt-2.5 flex items-center gap-1.5 font-medium">
+                        <span class="material-symbols-outlined text-[16px]">lock</span>
+                        <span>Referensi surat telah dikunci agar tidak salah ubah. Tujuan dan Perihal otomatis terisi.</span>
+                    </p>
+                @else
+                    <!-- TAMPILAN DROPDOWN (Jika buat surat balasan manual) -->
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-[20px]">search</span>
+                        <select name="incoming_letter_id" id="incoming_letter_id" class="block w-full rounded-xl border border-outline-variant dark:border-ds-border bg-white dark:bg-[#0B1220] text-on-surface dark:text-white shadow-sm focus:border-[#0055CC] dark:focus:border-amber-400 focus:ring-2 focus:ring-[#0055CC]/20 dark:focus:ring-amber-400/20 py-3 pl-10 pr-10 text-xs font-semibold outline-none transition-all" onchange="autoFillFromIncoming(this)" {{ old('category') === 'balasan' ? 'required' : '' }}>
+                            @if(isset($incomingLetters) && $incomingLetters->count() > 0)
+                                <option value="">-- Cari & Pilih Nomor / Pengirim Surat Masuk yang Dibalas --</option>
+                                @foreach($incomingLetters as $inLetter)
+                                    <option value="{{ $inLetter->id }}" 
+                                        data-sender="{{ $inLetter->sender }}" 
+                                        data-subject="{{ strip_tags($inLetter->subject) }}" 
+                                        {{ old('incoming_letter_id') == $inLetter->id ? 'selected' : '' }}>
+                                        [#{{ $inLetter->letter_number }}] - Dari: {{ $inLetter->sender }} (Perihal: {{ Str::limit(strip_tags($inLetter->subject), 65) }})
+                                    </option>
+                                @endforeach
+                            @else
+                                <option value="">-- Semua Surat Masuk Sudah Dibalas (Tidak ada antrean balasan) --</option>
+                            @endif
+                        </select>
+                    </div>
+                    <p class="text-[11px] text-on-surface-variant dark:text-ds-text-secondary mt-2.5 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[16px] text-emerald-500">auto_awesome</span>
+                        <span><strong>Fitur Pintar:</strong> Memilih surat di atas akan <strong>otomatis mengisi field Tujuan (Penerima)</strong> dan <strong>Perihal</strong> di bawah tanpa perlu diketik ulang!</span>
+                    </p>
+                @endif
             </div>
 
             <h4 class="font-title-md text-title-md text-primary dark:text-ds-text-primary flex items-center gap-2 border-b border-outline-variant/30 dark:border-ds-border/30 pb-2">
@@ -470,6 +495,11 @@ ${customBody}
                     }
                 });
             }
+
+            const incSelect = document.getElementById('incoming_letter_id');
+            if (incSelect && incSelect.value) {
+                autoFillFromIncoming(incSelect);
+            }
         }
     });
 
@@ -479,21 +509,39 @@ ${customBody}
         const select = document.getElementById('incoming_letter_id');
         if (checkedVal === 'balasan') {
             container.classList.remove('hidden');
-            if (select) select.required = true;
+            if (select) {
+                if (select.tagName === 'SELECT') select.required = true;
+                select.disabled = false;
+            }
         } else {
             container.classList.add('hidden');
             if (select) {
-                select.required = false;
-                select.value = "";
+                if (select.tagName === 'SELECT') {
+                    select.required = false;
+                    select.value = "";
+                }
+                select.disabled = true;
             }
         }
     }
 
     function autoFillFromIncoming(selectElem) {
-        const selectedOpt = selectElem.options[selectElem.selectedIndex];
-        if (selectedOpt && selectedOpt.value) {
-            const sender = selectedOpt.getAttribute('data-sender') || '';
-            const subject = selectedOpt.getAttribute('data-subject') || '';
+        let sender = '';
+        let subject = '';
+        
+        if (selectElem.tagName === 'SELECT') {
+            const selectedOpt = selectElem.options[selectElem.selectedIndex];
+            if (selectedOpt && selectedOpt.value) {
+                sender = selectedOpt.getAttribute('data-sender') || '';
+                subject = selectedOpt.getAttribute('data-subject') || '';
+            }
+        } else if (selectElem.tagName === 'INPUT') {
+            // Jika elemen adalah hidden input (Terkunci)
+            sender = selectElem.getAttribute('data-sender') || '';
+            subject = selectElem.getAttribute('data-subject') || '';
+        }
+
+        if (sender || subject) {
             const recipientInput = document.getElementById('recipient');
             const subjectInput = document.getElementById('subject');
             

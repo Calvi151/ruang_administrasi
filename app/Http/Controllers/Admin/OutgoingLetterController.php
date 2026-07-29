@@ -72,7 +72,13 @@ class OutgoingLetterController extends Controller
             $replyTo = \App\Models\IncomingLetter::find($request->reply_to);
         }
 
-        $incomingLetters = \App\Models\IncomingLetter::orderByDesc('date_received')->get();
+        // Hanya sertakan Surat Masuk yang BELUM dibalas (atau yang sedang dipilih via parameter reply_to)
+        $incomingLetters = \App\Models\IncomingLetter::whereDoesntHave('replies')
+            ->when($request->filled('reply_to'), function($query) use ($request) {
+                $query->orWhere('id', $request->reply_to);
+            })
+            ->orderByDesc('date_received')
+            ->get();
 
         return view('admin.outgoing_letters.create', compact('letterTypes', 'nextLetterNumbers', 'replyTo', 'incomingLetters'));
     }
@@ -86,11 +92,11 @@ class OutgoingLetterController extends Controller
         return $map[(int)$monthNumber];
     }
 
-    private function getNextSequenceNumber($letterTypeId, $year)
+    private function getNextSequenceNumber($letterCode, $year)
     {
-        // Cari semua nomor surat untuk jenis dan tahun ini
-        $letters = OutgoingLetter::where('letter_type_id', $letterTypeId)
-                                 ->whereYear('created_at', $year)
+        // Cari semua nomor surat yang mengandung KODE SURAT yang sama di tahun yang sama
+        // Agar jika ada banyak jenis surat dengan kode (misal "SK") yang sama, urutannya tetap berlanjut (tidak reset ke 1)
+        $letters = OutgoingLetter::where('letter_number', 'LIKE', "%/{$letterCode}/%/{$year}")
                                  ->get(['letter_number']);
         
         $maxNum = 0;
@@ -133,7 +139,7 @@ class OutgoingLetterController extends Controller
         $letterType = LetterType::find($validated['letter_type_id']);
         $kodeSurat = $letterType->letter_code;
 
-        $nextSeq = $this->getNextSequenceNumber($validated['letter_type_id'], $year);
+        $nextSeq = $this->getNextSequenceNumber($kodeSurat, $year);
         $noUrut = str_pad($nextSeq, 2, '0', STR_PAD_LEFT);
         
         $companyCode = env('COMPANY_CODE', 'TAP');
