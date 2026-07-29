@@ -387,7 +387,10 @@
         <!-- TopNavBar (Administrative Authority) -->
         <header class="w-full h-20 sticky top-0 z-50 bg-surface dark:bg-ds-bg border-b border-on-primary-container/10 dark:border-ds-border flex justify-between items-center px-margin-edge">
             <div class="flex items-center gap-6">
-                <h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-ds-text-primary hidden md:block">@yield('page-title', 'Ruang Administrasi')</h1>
+                <div class="hidden md:block">
+                    <h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-ds-text-primary">@yield('page-title', 'Ruang Administrasi')</h1>
+                    <p class="font-body-sm text-xs text-on-surface-variant dark:text-ds-text-secondary mt-0.5">@yield('page-subtitle', 'Halo, ' . (auth()->user()->employee->name ?? 'Admin'))</p>
+                </div>
                 <!-- Search bar di Header -->
                 <div class="hidden lg:block relative w-80 transition-all duration-300 focus-within:w-96">
                     <form action="{{ route('incoming-letters.index') }}" method="GET">
