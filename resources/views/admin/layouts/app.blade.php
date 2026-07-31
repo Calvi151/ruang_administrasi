@@ -333,9 +333,15 @@
     
     <!-- SideNavBar (Administrative Authority: dark navy, amber active, border-l-4) -->
     <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col bg-primary-container dark:bg-ds-sidebar border-r border-outline/10 dark:border-ds-border py-8 z-50">
-        <div class="px-6 mb-12">
-            <h1 class="font-headline-md text-headline-md font-bold text-secondary-fixed-dim dark:text-ds-accent leading-tight">Ruang Administrasi</h1>
-            <p class="font-body-sm text-body-sm text-on-primary-container dark:text-ds-text-secondary mt-1">Sistem Kelola Surat</p>
+        <div class="px-6 mb-12 flex items-center gap-3">
+            <!-- Tempat Logo -->
+            <div class="w-12 h-12 rounded-lg bg-[#ffffff] shrink-0 flex items-center justify-center p-1 border border-outline-variant/20 shadow-sm overflow-hidden">
+                <img src="{{ asset('images/logo.png') }}" alt="The Prime Logo" class="w-full h-full object-contain" onerror="this.src='https://ui-avatars.com/api/?name=PRIME&background=0D8ABC&color=fff&rounded=true&bold=true'">
+            </div>
+            <div>
+                <h1 class="font-headline-md text-[20px] font-bold text-secondary-fixed-dim dark:text-ds-accent leading-tight">Ruang Administrasi</h1>
+                <p class="font-body-sm text-xs text-on-primary-container dark:text-ds-text-secondary mt-0.5">Sistem Kelola Surat</p>
+            </div>
         </div>
         
         <!-- Main Navigation -->
@@ -358,6 +364,21 @@
             <a href="{{ route('letter-types.index') }}" class="flex items-center gap-3 py-3 px-6 border-l-4 transition-colors duration-200 {{ request()->routeIs('letter-types.*') ? 'border-secondary dark:border-ds-accent text-secondary-fixed-dim dark:text-ds-accent font-semibold bg-primary/10 dark:bg-ds-sidebar-active' : 'border-transparent text-on-primary-container dark:text-[#94a3b8] hover:bg-primary/5 dark:hover:bg-ds-sidebar-active hover:text-on-primary dark:hover:text-ds-text-primary' }}">
                 <span class="material-symbols-outlined {{ request()->routeIs('letter-types.*') ? 'fill-icon' : '' }}">topic</span>
                 <span class="font-label-md text-label-md">Jenis Surat</span>
+            </a>
+            
+            <a href="{{ route('attendances.index') }}" class="flex items-center gap-3 py-3 px-6 border-l-4 transition-colors duration-200 {{ request()->routeIs('attendances.*') ? 'border-secondary dark:border-ds-accent text-secondary-fixed-dim dark:text-ds-accent font-semibold bg-primary/10 dark:bg-ds-sidebar-active' : 'border-transparent text-on-primary-container dark:text-[#94a3b8] hover:bg-primary/5 dark:hover:bg-ds-sidebar-active hover:text-on-primary dark:hover:text-ds-text-primary' }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('attendances.*') ? 'fill-icon' : '' }}">assignment_ind</span>
+                <span class="font-label-md text-label-md">Laporan Absensi</span>
+            </a>
+            
+            <a href="{{ route('leave-requests.index') }}" class="flex items-center gap-3 py-3 px-6 border-l-4 transition-colors duration-200 {{ request()->routeIs('leave-requests.*') ? 'border-secondary dark:border-ds-accent text-secondary-fixed-dim dark:text-ds-accent font-semibold bg-primary/10 dark:bg-ds-sidebar-active' : 'border-transparent text-on-primary-container dark:text-[#94a3b8] hover:bg-primary/5 dark:hover:bg-ds-sidebar-active hover:text-on-primary dark:hover:text-ds-text-primary' }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('leave-requests.*') ? 'fill-icon' : '' }}">event_busy</span>
+                <span class="font-label-md text-label-md">Pengajuan Cuti</span>
+            </a>
+            
+            <a href="{{ route('overtime-requests.index') }}" class="flex items-center gap-3 py-3 px-6 border-l-4 transition-colors duration-200 {{ request()->routeIs('overtime-requests.*') ? 'border-secondary dark:border-ds-accent text-secondary-fixed-dim dark:text-ds-accent font-semibold bg-primary/10 dark:bg-ds-sidebar-active' : 'border-transparent text-on-primary-container dark:text-[#94a3b8] hover:bg-primary/5 dark:hover:bg-ds-sidebar-active hover:text-on-primary dark:hover:text-ds-text-primary' }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('overtime-requests.*') ? 'fill-icon' : '' }}">more_time</span>
+                <span class="font-label-md text-label-md">Data Lembur</span>
             </a>
             
             <a href="{{ route('employees.index') }}" class="flex items-center gap-3 py-3 px-6 border-l-4 transition-colors duration-200 {{ request()->routeIs('employees.*') ? 'border-secondary dark:border-ds-accent text-secondary-fixed-dim dark:text-ds-accent font-semibold bg-primary/10 dark:bg-ds-sidebar-active' : 'border-transparent text-on-primary-container dark:text-[#94a3b8] hover:bg-primary/5 dark:hover:bg-ds-sidebar-active hover:text-on-primary dark:hover:text-ds-text-primary' }}">
@@ -399,18 +420,21 @@
                     </form>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-surface-container-low dark:bg-ds-surface border border-outline-variant dark:border-ds-border rounded-full">
-                    <span class="material-symbols-outlined text-on-surface-variant dark:text-ds-text-secondary text-sm">calendar_today</span>
-                    <span class="font-label-md text-label-md text-on-surface-variant dark:text-ds-text-secondary">{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d M Y') }}</span>
+            <div class="flex items-center gap-3 lg:gap-4">
+                <!-- Calendar Chip -->
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-surface-container-low dark:bg-[#0F172E] border border-outline-variant/60 dark:border-[#2A3654] rounded-xl text-sm font-medium text-on-surface-variant dark:text-[#8B93A8]">
+                    <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                    <span>{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d M Y') }}</span>
                 </div>
+                
                 <!-- Dark Mode Toggle -->
                 <button id="dark-mode-toggle" onclick="toggleDarkMode()"
-                    class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant dark:text-ds-accent hover:bg-surface-container-high dark:hover:bg-ds-hover transition-colors scale-95 active:scale-90"
+                    class="p-2 flex items-center justify-center text-on-surface-variant dark:text-[#8B93A8] hover:text-primary dark:hover:text-white transition-colors"
                     title="Toggle Dark Mode">
-                    <span id="dark-icon" class="material-symbols-outlined fill-icon hidden">dark_mode</span>
-                    <span id="light-icon" class="material-symbols-outlined">light_mode</span>
+                    <span id="dark-icon" class="material-symbols-outlined hidden">light_mode</span>
+                    <span id="light-icon" class="material-symbols-outlined">dark_mode</span>
                 </button>
+                
                 <!-- Notifications -->
                 <div class="relative">
                     @php
@@ -421,7 +445,7 @@
                         $hasNotif = $notifications->count() > 0;
                         $latestNotifTime = $hasNotif ? $notifications->first()->updated_at->timestamp : 0;
                     @endphp
-                    <button id="notification-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant dark:text-ds-text-secondary hover:bg-surface-container-high dark:hover:bg-ds-hover transition-colors scale-95 active:scale-90 relative">
+                    <button id="notification-btn" class="p-2 flex items-center justify-center text-on-surface-variant dark:text-[#8B93A8] hover:text-primary dark:hover:text-white transition-colors relative">
                         <span class="material-symbols-outlined">notifications</span>
                         @if($hasNotif)
                             <span id="notif-badge" data-time="{{ $latestNotifTime }}" class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
@@ -466,12 +490,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="h-8 w-px bg-outline-variant dark:bg-ds-border mx-2"></div>
-                <a href="{{ route('profile.edit') }}" title="Profil Saya" class="hover:opacity-80 transition-opacity">
+                
+                <!-- Separator -->
+                <div class="h-6 w-px bg-outline-variant/50 dark:bg-[#2A3654] mx-1"></div>
+                
+                <!-- Profile Squircle Avatar -->
+                <a href="{{ route('profile.edit') }}" title="Profil Saya" class="hover:scale-105 transition-transform ml-1 shrink-0">
                     @if(Auth::user()->employee && Auth::user()->employee->photo)
-                        <img alt="Profil Pengguna" class="w-9 h-9 rounded-full border border-outline-variant dark:border-ds-border object-cover" src="{{ asset('storage/' . Auth::user()->employee->photo) }}">
+                        <img alt="Profil Pengguna" class="w-10 h-10 shrink-0 rounded-2xl border border-outline-variant/30 dark:border-[#2A3654] object-cover shadow-sm" src="{{ asset('storage/' . Auth::user()->employee->photo) }}">
                     @else
-                        <div class="w-9 h-9 rounded-full bg-primary dark:bg-ds-surface text-on-primary dark:text-ds-text-primary flex items-center justify-center font-bold text-sm border border-outline-variant dark:border-ds-border">
+                        <div class="w-10 h-10 shrink-0 rounded-2xl bg-[#000210] dark:bg-[#141C33] text-[#dbe1ff] dark:text-[#E5B04D] flex items-center justify-center font-bold text-sm border border-outline-variant/20 dark:border-[#2A3654] shadow-sm">
                             {{ strtoupper(substr(Auth::user()->employee->name ?? 'Admin', 0, 2)) }}
                         </div>
                     @endif

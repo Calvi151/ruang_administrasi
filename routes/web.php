@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\IncomingLetterController;
 use App\Http\Controllers\Admin\OutgoingLetterController;
 use App\Http\Controllers\Admin\LetterTypeController;
+use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\LeaveRequestController;
+use App\Http\Controllers\Admin\OvertimeRequestController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Ceo\DashboardController as CeoDashboardController;
@@ -32,6 +35,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/outgoing-letters/{outgoingLetter}/deliver', [OutgoingLetterController::class, 'deliver'])->name('outgoing-letters.deliver');
         Route::resource('/outgoing-letters', OutgoingLetterController::class);
         Route::resource('/letter-types', LetterTypeController::class);
+        Route::resource('/attendances', AttendanceController::class);
+        Route::resource('/leave-requests', LeaveRequestController::class);
+        Route::post('/leave-requests/{leave_request}/approve', [LeaveRequestController::class, 'approve'])->name('leave-requests.approve');
+        Route::post('/leave-requests/{leave_request}/reject', [LeaveRequestController::class, 'reject'])->name('leave-requests.reject');
+        
+        Route::resource('/overtime-requests', OvertimeRequestController::class);
+        Route::post('/overtime-requests/{overtime_request}/approve', [OvertimeRequestController::class, 'approve'])->name('overtime-requests.approve');
+        Route::post('/overtime-requests/{overtime_request}/reject', [OvertimeRequestController::class, 'reject'])->name('overtime-requests.reject');
         Route::resource('/employees', EmployeeController::class);
         Route::resource('/users', UserController::class);
     });

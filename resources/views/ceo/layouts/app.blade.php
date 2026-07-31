@@ -179,9 +179,15 @@
 <body class="font-body-md text-body-md text-on-surface antialiased flex h-screen overflow-hidden selection:bg-brand-amber/30">
     <!-- SideNavBar (Source of Truth untuk 5 halaman CEO) -->
     <nav class="hidden md:flex flex-col bg-brand-navy fixed left-0 top-0 h-screen w-[280px] py-stack-lg z-20 border-r border-white/5">
-        <div class="px-6 mb-8">
-            <h1 class="font-headline-md text-headline-md text-brand-amber font-bold leading-tight">Ruang Administrasi</h1>
-            <p class="font-body-md text-xs text-white/70 mt-1">Panel Pimpinan</p>
+        <div class="px-6 mb-8 flex items-center gap-3">
+            <!-- Tempat Logo -->
+            <div class="w-12 h-12 rounded-lg bg-[#ffffff] shrink-0 flex items-center justify-center p-1 border border-white/10 shadow-sm overflow-hidden">
+                <img src="{{ asset('images/logo.png') }}" alt="The Prime Logo" class="w-full h-full object-contain" onerror="this.src='https://ui-avatars.com/api/?name=PRIME&background=0D8ABC&color=fff&rounded=true&bold=true'">
+            </div>
+            <div>
+                <h1 class="font-headline-md text-[20px] text-brand-amber font-bold leading-tight">Ruang Administrasi</h1>
+                <p class="font-body-md text-xs text-white/70 mt-0.5">Panel Pimpinan</p>
+            </div>
         </div>
         
         <div class="flex-1 overflow-y-auto">

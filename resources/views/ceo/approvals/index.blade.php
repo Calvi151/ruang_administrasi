@@ -142,13 +142,10 @@
                     </td>
 
                     <!-- 5. TINDAKAN -->
-                    <td class="py-5 px-6 text-right vertical-align-top" onclick="event.stopPropagation();">
-                        <a href="{{ url('ceo/letter-approvals/' . $letter->id) }}" class="inline-flex flex-col items-center justify-center gap-1 px-4 py-2.5 bg-brand-navy hover:bg-blue-900 dark:bg-brand-amber dark:hover:bg-amber-400 text-white dark:text-brand-navy rounded-xl font-bold transition-all duration-200 shadow-md hover:shadow-lg w-full min-w-[125px]">
-                            <div class="flex items-center gap-1 text-xs">
-                                <span class="material-symbols-outlined text-[18px]">draw</span>
-                                <span class="uppercase font-extrabold tracking-wider">Periksa & ACC</span>
-                            </div>
-                            <span class="text-[9px] opacity-80 font-normal">Tinjau Dokumen Utuh</span>
+                    <td class="py-5 px-6 text-right vertical-align-middle" onclick="event.stopPropagation();">
+                        <a href="{{ url('ceo/letter-approvals/' . $letter->id) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-navy hover:bg-blue-900 dark:bg-brand-amber dark:hover:bg-amber-400 text-white dark:text-brand-navy rounded-lg font-bold text-xs transition-all duration-200 hover:scale-[1.02] active:scale-95 shadow-sm">
+                            <span class="material-symbols-outlined text-[16px]">fact_check</span>
+                            <span>Tinjau</span>
                         </a>
                     </td>
                 </tr>
