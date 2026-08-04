@@ -386,7 +386,7 @@
                     // =========================================================
                     const typeNameLower = typeName.toLowerCase();
                     // Deteksi apakah ini Surat Naskah Khusus (Group 2)
-                    const isNaskahKhusus = ['keterangan', 'tugas', 'keputusan', 'sk', 'perintah', 'kuasa', 'rekomendasi'].some(keyword => typeNameLower.includes(keyword));
+                    const isNaskahKhusus = ['keterangan', 'tugas', 'keputusan', 'sk', 'perintah', 'kuasa', 'rekomendasi', 'peringatan', 'perjanjian'].some(keyword => typeNameLower.includes(keyword));
 
                     let template = '';
 

@@ -5,17 +5,25 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Employee;
 use App\Models\Attendance;
+use App\Models\Position;
 use Carbon\Carbon;
 
 class DummyAttendanceSeeder extends Seeder
 {
     public function run(): void
     {
+        // Create dummy positions
+        $positions = [
+            'HR Manager' => Position::firstOrCreate(['name' => 'HR Manager'], ['description' => 'Mengelola sumber daya manusia']),
+            'IT Support' => Position::firstOrCreate(['name' => 'IT Support'], ['description' => 'Menangani infrastruktur IT']),
+            'Finance Staff' => Position::firstOrCreate(['name' => 'Finance Staff'], ['description' => 'Mengurus keuangan perusahaan']),
+        ];
+
         // Create dummy employees
         $employees = [
-            ['nip' => '19850101', 'name' => 'Budi Santoso', 'email' => 'budi@example.com', 'number' => '08123456789'],
-            ['nip' => '19850102', 'name' => 'Siti Aisyah', 'email' => 'siti@example.com', 'number' => '08123456780'],
-            ['nip' => '19850103', 'name' => 'Agus Pratama', 'email' => 'agus@example.com', 'number' => '08123456781'],
+            ['nip' => '19850101', 'name' => 'Budi Santoso', 'email' => 'budi@example.com', 'number' => '08123456789', 'position_id' => $positions['HR Manager']->id],
+            ['nip' => '19850102', 'name' => 'Siti Aisyah', 'email' => 'siti@example.com', 'number' => '08123456780', 'position_id' => $positions['Finance Staff']->id],
+            ['nip' => '19850103', 'name' => 'Agus Pratama', 'email' => 'agus@example.com', 'number' => '08123456781', 'position_id' => $positions['IT Support']->id],
         ];
 
         $employeeIds = [];

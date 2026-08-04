@@ -47,7 +47,8 @@
         
         .meta-surat td {
             vertical-align: top;
-            padding: 2px 0;
+            padding: 0;
+            line-height: 1.2;
         }
 
         .tanggal-surat {
@@ -84,7 +85,7 @@
     
     // Deteksi kategori Surat Naskah Khusus (SK, Keterangan, Tugas, Keputusan, Peringatan, dll)
     $isNaskahKhusus = false;
-    $keywords = ['keterangan', 'tugas', 'keputusan', 'sk', 'perintah', 'kuasa', 'rekomendasi', 'peringatan'];
+    $keywords = ['keterangan', 'tugas', 'keputusan', 'sk', 'perintah', 'kuasa', 'rekomendasi', 'peringatan', 'perjanjian'];
     foreach ($keywords as $kw) {
         if (str_contains($typeNameLower, $kw)) {
             $isNaskahKhusus = true;
@@ -111,32 +112,28 @@
     </div>
 
     @if(!$isNaskahKhusus)
-        <!-- TANGGAL SURAT -->
-        <div class="tanggal-surat">
-            Bogor, {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}
-        </div>
-
-        <!-- META SURAT (3 POIN: NOMOR, LAMPIRAN, PERIHAL) -->
-        <table class="meta-surat">
+        <!-- META SURAT (3 POIN: NOMOR, LAMPIRAN, PERIHAL) DAN TANGGAL -->
+        <table class="meta-surat" style="margin-bottom: 25px;">
             <tr>
                 <td width="70">Nomor</td>
                 <td width="10">:</td>
-                <td>{{ $outgoingLetter->letter_number }}</td>
+                <td width="280">{{ $outgoingLetter->letter_number }}</td>
+                <td align="right">Bogor, {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}</td>
             </tr>
             <tr>
                 <td>Lampiran</td>
                 <td>:</td>
-                <td>-</td>
+                <td colspan="2">-</td>
             </tr>
             <tr>
                 <td>Perihal</td>
                 <td>:</td>
-                <td><strong>{{ $outgoingLetter->subject }}</strong></td>
+                <td colspan="2"><strong>{{ $outgoingLetter->subject }}</strong></td>
             </tr>
         </table>
 
         <!-- TUJUAN -->
-        <div style="margin-bottom: 20px;">
+        <div style="margin-top: 30px; margin-bottom: 20px;">
             Yth. <strong>{{ $outgoingLetter->recipient }}</strong><br>
             di Tempat
         </div>
@@ -147,58 +144,7 @@
         {!! $content !!}
     </div>
 
-    <!-- KOLOM CAP STEMPEL & TANDA TANGAN -->
-    <table style="width: 100%; margin-top: 40px; page-break-inside: avoid; border-collapse: collapse;">
-        <tr>
-            <td style="width: 50%; vertical-align: top; text-align: center;">
-                <p style="margin: 0; font-weight: bold; color: #444;">Cap Stempel Perusahaan,</p>
-                <div style="margin: 12px auto; height: 85px; width: 150px; display: flex; align-items: center; justify-content: center;">
-                    @if(in_array($outgoingLetter->status, ['acc', 'delivered']))
-                        <!-- Cap Stempel Digital Resmi -->
-                        <div style="border: 2.5px solid #0044BB; border-radius: 50%; width: 80px; height: 80px; margin: 0 auto; line-height: 1.15; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0044BB; font-family: Arial, sans-serif; font-weight: bold; font-size: 7.5pt; text-align: center; padding: 4px; box-sizing: border-box; transform: rotate(-6deg); box-shadow: inset 0 0 0 1px #0044BB;">
-                            THE PRIME<br><span style="font-size: 6.5pt; color: #008037;">★ SEAL ★</span><br>TEKHNOLOGI
-                        </div>
-                    @else
-                        <!-- Kolom Kosong Stempel -->
-                        <div style="border: 1.5px dotted #999; width: 130px; height: 70px; line-height: 70px; color: #777; font-size: 9.5pt; margin: 0 auto; text-align: center; font-family: Arial, sans-serif;">
-                            [ Kolom Cap Stempel ]
-                        </div>
-                    @endif
-                </div>
-                <p style="margin: 0; font-size: 9pt; color: #666; font-style: italic;">Otorisasi PT The Prime Tekhnologi</p>
-            </td>
-            <td style="width: 50%; vertical-align: top; text-align: center;">
-                <p style="margin: 0; font-weight: bold;">Pimpinan / Chief Executive Officer,</p>
-                
-                <div style="margin: 12px auto; height: 85px; display: flex; align-items: center; justify-content: center;">
-                    @if(in_array($outgoingLetter->status, ['acc', 'delivered']))
-                        <!-- TTD Digital Resmi -->
-                        <div style="border: 2px solid #008037; padding: 8px 14px; border-radius: 6px; background-color: #f6fff9; display: inline-block; text-align: center; max-width: 210px;">
-                            <div style="font-size: 11px; font-weight: bold; color: #008037; letter-spacing: 0.5px;">
-                                [✔] SIGNED & APPROVED
-                            </div>
-                            <div style="font-size: 9px; color: #333; margin-top: 3px; font-weight: bold;">
-                                By: Chief Executive Officer
-                            </div>
-                            @if($outgoingLetter->approved_at)
-                            <div style="font-size: 8px; color: #555; margin-top: 3px;">
-                                Tgl: {{ \Carbon\Carbon::parse($outgoingLetter->approved_at)->format('d/m/Y - H:i') }} WIB
-                            </div>
-                            @endif
-                        </div>
-                    @else
-                        <!-- Kolom Kosong Tanda Tangan -->
-                        <div style="border: 1.5px dotted #999; width: 160px; height: 70px; line-height: 70px; color: #777; font-size: 9.5pt; margin: 0 auto; text-align: center; font-family: Arial, sans-serif;">
-                            [ Kolom Tanda Tangan ]
-                        </div>
-                    @endif
-                </div>
-                
-                <p style="font-weight: bold; text-decoration: underline; margin: 0;">{{ optional($outgoingLetter->creator)->name ?? 'Chief Executive Officer' }}</p>
-                <p style="margin: 3px 0 0 0; font-size: 10pt;">NIP. {{ optional($outgoingLetter->creator)->nip ?? '..................................' }}</p>
-            </td>
-        </tr>
-    </table>
+    <!-- Kolom stempel dan tanda tangan dihapus karena sudah ada di dalam template isi surat -->
 
 </body>
 </html>

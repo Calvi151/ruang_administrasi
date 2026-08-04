@@ -61,7 +61,7 @@
                     <!-- KODE SURAT -->
                     <td class="px-6 py-4">
                         <div class="flex flex-col items-start gap-1.5">
-                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-tertiary-fixed dark:bg-[#0A1020] text-on-tertiary-fixed-variant dark:text-brand-amber font-mono text-sm font-extrabold border border-blue-500/20 dark:border-brand-amber/30 shadow-2xs">
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-tertiary-fixed dark:bg-[#0A1020] text-on-tertiary-fixed-variant dark:text-amber-400 font-mono text-sm font-extrabold border border-blue-500/20 dark:border-amber-400/30 shadow-2xs">
                                 {{ $type->letter_code }}
                             </span>
                             @if($isDuplicate)

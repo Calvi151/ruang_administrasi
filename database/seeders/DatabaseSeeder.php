@@ -13,39 +13,34 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Positions
-        $adminPosition = \App\Models\Position::create([
-            'name' => 'System Administrator',
-            'description' => 'Mengelola sistem dan hak akses aplikasi.'
-        ]);
-
-        $ceoPosition = \App\Models\Position::create([
-            'name' => 'Chief Executive Officer',
-            'description' => 'Direktur Utama perusahaan.'
-        ]);
-
         $admin = \App\Models\User::factory()->create([
-            'nip' => '10001',
+            'nip' => 'admin123',
             'role' => 'admin',
         ]);
 
         \App\Models\Employee::create([
-            'nip' => '10001',
+            'nip' => 'admin123',
             'name' => 'Administrator',
             'email' => 'admin@example.com',
-            'position_id' => $adminPosition->id,
         ]);
 
         $ceo = \App\Models\User::factory()->create([
-            'nip' => '20001',
+            'nip' => 'ceo123',
             'role' => 'ceo',
         ]);
 
         \App\Models\Employee::create([
-            'nip' => '20001',
+            'nip' => 'ceo123',
             'name' => 'Chief Executive Officer',
             'email' => 'ceo@example.com',
-            'position_id' => $ceoPosition->id,
+        ]);
+
+        // Call other seeders
+        $this->call([
+            DummyLetterTypeSeeder::class,
+            DummyAttendanceSeeder::class,
+            DummyLeaveRequestSeeder::class,
+            DummyOvertimeRequestSeeder::class,
         ]);
     }
 }

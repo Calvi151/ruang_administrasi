@@ -7,19 +7,27 @@
 <!-- Action & Search Bar -->
 <div class="flex flex-col mb-6 gap-4">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <form action="{{ route('outgoing-letters.index') }}" method="GET" class="flex items-center gap-3 w-full md:w-auto">
-            @if(request('letter_type_id'))
-                <input type="hidden" name="letter_type_id" value="{{ request('letter_type_id') }}">
-            @endif
+        <form action="{{ route('outgoing-letters.index') }}" method="GET" class="flex items-center gap-3 w-full md:w-auto flex-wrap md:flex-nowrap">
             @if(request('category'))
                 <input type="hidden" name="category" value="{{ request('category') }}">
             @endif
             @if(request('status'))
                 <input type="hidden" name="status" value="{{ request('status') }}">
             @endif
+            <div class="relative flex-1 md:w-48">
+                <select name="letter_type_id" class="w-full px-3 py-2 rounded-lg bg-surface-container-lowest dark:bg-ds-bg border border-outline-variant dark:border-ds-border focus:border-primary dark:focus:border-ds-accent focus:ring-2 focus:ring-primary/20 dark:focus:ring-ds-accent/20 outline-none transition-all font-body-sm text-body-sm text-on-surface dark:text-ds-text-primary appearance-none" onchange="this.form.submit()">
+                    <option value="">Semua Jenis Surat</option>
+                    @foreach($letterTypes as $type)
+                        <option value="{{ $type->id }}" {{ request('letter_type_id') == $type->id ? 'selected' : '' }}>
+                            {{ $type->type_name }}
+                        </option>
+                    @endforeach
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">expand_more</span>
+            </div>
             <div class="relative flex-1 md:w-80">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
-                <input name="search" value="{{ request('search') }}" class="w-full pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest dark:bg-ds-bg border border-outline-variant dark:border-ds-border focus:border-primary dark:focus:border-ds-accent focus:ring-2 focus:ring-primary/20 dark:focus:ring-ds-accent/20 outline-none transition-all font-body-sm text-body-sm text-on-surface dark:text-ds-text-primary placeholder:text-outline dark:placeholder:text-ds-text-secondary" placeholder="Cari nomor surat, perihal, atau ref nomor..." type="text">
+                <input name="search" value="{{ request('search') }}" class="w-full pl-10 pr-4 py-2 rounded-lg bg-surface-container-lowest dark:bg-ds-bg border border-outline-variant dark:border-ds-border focus:border-primary dark:focus:border-ds-accent focus:ring-2 focus:ring-primary/20 dark:focus:ring-ds-accent/20 outline-none transition-all font-body-sm text-body-sm text-on-surface dark:text-ds-text-primary placeholder:text-outline dark:placeholder:text-ds-text-secondary" placeholder="Cari nomor, perihal..." type="text">
             </div>
             <button type="submit" class="px-4 py-2 rounded-lg bg-primary/10 text-primary dark:bg-ds-surface dark:text-ds-accent border border-primary/20 text-xs font-semibold hover:bg-primary hover:text-white transition-colors">Cari</button>
             @if(request()->hasAny(['search', 'category', 'status', 'letter_type_id']))
@@ -178,10 +186,10 @@
                             </a>
                             @endif
                             @if(!in_array($letter->status, ['acc', 'delivered']))
-                            <form action="{{ route('outgoing-letters.destroy', $letter->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                            <form id="delete-form-{{ $letter->id }}" action="{{ route('outgoing-letters.destroy', $letter->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-500/15 transition-colors" title="Hapus">
+                                <button type="button" onclick="openDeleteModal('delete-form-{{ $letter->id }}', '{{ $letter->letter_number }}')" class="w-8 h-8 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-500/15 transition-colors" title="Hapus">
                                     <span class="material-symbols-outlined text-[18px]">delete</span>
                                 </button>
                             </form>
@@ -256,7 +264,47 @@
     </div>
 </div>
 
+<!-- Modal Konfirmasi Hapus -->
+<div id="delete-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+    <div class="bg-white dark:bg-[#151D2A] rounded-2xl shadow-xl border border-outline-variant/50 dark:border-ds-border w-full max-w-sm p-6 relative transform transition-all text-center">
+        <div class="w-16 h-16 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-500 mx-auto flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-3xl">delete_forever</span>
+        </div>
+        <h3 class="font-headline-sm text-lg font-bold text-on-surface dark:text-white mb-2">Hapus Surat Keluar?</h3>
+        <p class="text-sm text-on-surface-variant dark:text-ds-text-secondary mb-6">
+            Apakah Anda yakin ingin menghapus surat <strong id="delete-modal-target" class="text-red-500"></strong>? Data yang sudah dihapus tidak dapat dikembalikan.
+        </p>
+        <div class="flex justify-center gap-3">
+            <button type="button" onclick="closeDeleteModal()" class="px-5 py-2.5 rounded-xl border border-outline-variant dark:border-ds-border text-on-surface-variant dark:text-ds-text-secondary font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                Batal
+            </button>
+            <button type="button" onclick="confirmDelete()" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-colors shadow-sm">
+                Ya, Hapus Data
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
+let formToSubmit = null;
+
+function openDeleteModal(formId, letterNum) {
+    formToSubmit = document.getElementById(formId);
+    document.getElementById('delete-modal-target').textContent = letterNum;
+    document.getElementById('delete-modal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('delete-modal').classList.add('hidden');
+    formToSubmit = null;
+}
+
+function confirmDelete() {
+    if (formToSubmit) {
+        formToSubmit.submit();
+    }
+}
+
 function openDeliveryModal(id, letterNum) {
     document.getElementById('modal-letter-number').textContent = letterNum;
     document.getElementById('delivery-form').action = "/admin/outgoing-letters/" + id + "/deliver";

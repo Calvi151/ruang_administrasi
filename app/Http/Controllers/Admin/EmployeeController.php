@@ -13,7 +13,7 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::with(['user', 'position'])->orderBy('created_at', 'desc')->get();
+        $employees = Employee::with('user')->get();
         return view('admin.employees.index', compact('employees'));
     }
 

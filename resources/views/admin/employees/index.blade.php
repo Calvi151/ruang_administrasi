@@ -25,10 +25,9 @@
             <thead>
                 <tr class="bg-surface-container-highest dark:bg-ds-bg border-b border-outline-variant/40 dark:border-ds-border font-label-sm text-label-sm text-on-surface dark:text-ds-text-secondary">
                     <th class="px-6 py-3 font-medium w-12">#</th>
-                    <th class="px-6 py-3 font-medium w-[25%]">Profil</th>
-                    <th class="px-6 py-3 font-medium w-[20%]">NIP / Akses</th>
-                    <th class="px-6 py-3 font-medium w-[20%]">Jabatan</th>
-                    <th class="px-6 py-3 font-medium w-[20%]">Kontak</th>
+                    <th class="px-6 py-3 font-medium w-[30%]">Profil</th>
+                    <th class="px-6 py-3 font-medium w-[25%]">NIP / Akses</th>
+                    <th class="px-6 py-3 font-medium w-[25%]">Kontak</th>
                     <th class="px-6 py-3 font-medium text-right">Aksi</th>
                 </tr>
             </thead>
@@ -56,16 +55,6 @@
                         <span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider {{ ($employee->user && $employee->user->role == 'ceo') ? 'bg-primary-fixed dark:bg-ds-accent/20 text-primary dark:text-ds-accent' : 'bg-surface-variant dark:bg-ds-bg dark:border dark:border-ds-border text-on-surface-variant dark:text-ds-text-secondary' }}">
                             {{ $employee->user ? $employee->user->role : 'karyawan' }}
                         </span>
-                    </td>
-                    <td class="px-6 py-3">
-                        @if($employee->position)
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
-                                <span class="material-symbols-outlined text-[14px]">work</span>
-                                {{ $employee->position->name }}
-                            </span>
-                        @else
-                            <span class="text-xs text-on-surface-variant/70 dark:text-ds-text-secondary italic">- Belum diatur -</span>
-                        @endif
                     </td>
                     <td class="px-6 py-3 text-on-surface dark:text-ds-text-secondary">{{ $employee->number ?? '-' }}</td>
                     <td class="px-6 py-3 text-right">
