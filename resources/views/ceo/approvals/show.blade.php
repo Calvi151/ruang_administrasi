@@ -210,17 +210,17 @@
         
         <div class="space-y-4">
             @if($outgoingLetter->status === 'pending')
-                <form method="POST" action="{{ url('ceo/letter-approvals/' . $outgoingLetter->id . '/approve') }}">
+                <form id="form-approve" method="POST" action="{{ url('ceo/letter-approvals/' . $outgoingLetter->id . '/approve') }}">
                     @csrf
-                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menyetujui (ACC) surat ini dan melekahkan tanda tangan digital?');" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white dark:text-[#0B1220] py-4 rounded-xl font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-emerald-500/20">
+                    <button type="button" onclick="document.getElementById('modal-approve').classList.remove('hidden')" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white dark:text-[#0B1220] py-4 rounded-xl font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-emerald-500/20">
                         <span class="material-symbols-outlined text-[20px]">verified</span>
                         <span>Setujui (ACC) & Tandatangani</span>
                     </button>
                 </form>
                 
-                <form method="POST" action="{{ url('ceo/letter-approvals/' . $outgoingLetter->id . '/reject') }}">
+                <form id="form-reject" method="POST" action="{{ url('ceo/letter-approvals/' . $outgoingLetter->id . '/reject') }}">
                     @csrf
-                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin MENOLAK surat ini?');" class="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#141C33] text-red-600 dark:text-red-400 border-2 border-red-500/50 hover:bg-red-50 dark:hover:bg-red-950/30 py-3.5 rounded-xl font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xs">
+                    <button type="button" onclick="document.getElementById('modal-reject').classList.remove('hidden')" class="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#141C33] text-red-600 dark:text-red-400 border-2 border-red-500/50 hover:bg-red-50 dark:hover:bg-red-950/30 py-3.5 rounded-xl font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xs">
                         <span class="material-symbols-outlined text-[20px]">cancel</span>
                         <span>Tolak Pengajuan Surat</span>
                     </button>
@@ -299,16 +299,22 @@
                         <span>Preview Berkas Lampiran dari Pengirim</span>
                     </span>
                     @if($outgoingLetter->incomingLetter->file_path)
-                        <a href="{{ asset('storage/' . $outgoingLetter->incomingLetter->file_path) }}" target="_blank" class="px-3.5 py-1.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rounded-lg text-xs font-extrabold hover:bg-emerald-200 transition-colors flex items-center gap-1.5 border border-emerald-300 dark:border-emerald-700 shadow-xs">
-                            <span class="material-symbols-outlined text-[16px]">open_in_new</span>
-                            <span>Buka File Full Screen (Tab Baru)</span>
-                        </a>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="toggleFullscreenIframe()" class="px-3.5 py-1.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-extrabold hover:bg-blue-200 transition-colors flex items-center gap-1.5 border border-blue-300 dark:border-blue-700 shadow-xs">
+                                <span class="material-symbols-outlined text-[16px]">fullscreen</span>
+                                <span>Full Screen</span>
+                            </button>
+                            <a href="{{ asset('storage/' . $outgoingLetter->incomingLetter->file_path) }}" target="_blank" class="px-3.5 py-1.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rounded-lg text-xs font-extrabold hover:bg-emerald-200 transition-colors flex items-center gap-1.5 border border-emerald-300 dark:border-emerald-700 shadow-xs">
+                                <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                                <span>Buka (Tab Baru)</span>
+                            </a>
+                        </div>
                     @endif
                 </div>
                 
                 @if($outgoingLetter->incomingLetter->file_path)
-                    <div class="w-full h-[520px] rounded-2xl border-2 border-gray-300 dark:border-[#2A3654] overflow-hidden bg-gray-100 dark:bg-[#080E1A] shadow-inner relative">
-                        <iframe src="{{ asset('storage/' . $outgoingLetter->incomingLetter->file_path) }}#toolbar=1" class="w-full h-full border-none"></iframe>
+                    <div id="iframe-container" class="w-full h-[520px] rounded-2xl border-2 border-gray-300 dark:border-[#2A3654] overflow-hidden bg-gray-100 dark:bg-[#080E1A] shadow-inner relative">
+                        <iframe id="doc-iframe" src="{{ asset('storage/' . $outgoingLetter->incomingLetter->file_path) }}#toolbar=1" allowfullscreen class="w-full h-full border-none bg-white"></iframe>
                     </div>
                 @else
                     <div class="py-16 text-center bg-gray-50 dark:bg-[#0C1326] rounded-2xl border border-dashed border-gray-300 dark:border-[#2A3654]">
@@ -328,5 +334,61 @@
         </div>
     </div>
 </div>
+</div>
 @endif
+
+<!-- Modal Approve -->
+<div id="modal-approve" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden transition-opacity">
+    <div class="bg-white dark:bg-[#141C33] rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border border-emerald-500/30">
+        <div class="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-emerald-500/20 animate-pulse">
+            <span class="material-symbols-outlined text-4xl">verified</span>
+        </div>
+        <h3 class="font-headline-md text-xl font-extrabold text-on-surface dark:text-white mb-2">Setujui Surat Keluar?</h3>
+        <p class="text-sm text-on-surface-variant dark:text-gray-400 mb-6 leading-relaxed">
+            Menyetujui surat ini akan membubuhkan <strong>tanda tangan digital Anda</strong> dan stempel perusahaan ke dalam dokumen cetak (PDF). Tindakan ini bersifat mengikat.
+        </p>
+        <div class="flex items-center gap-3">
+            <button type="button" onclick="document.getElementById('modal-approve').classList.add('hidden')" class="flex-1 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-[#1A2440] dark:hover:bg-[#2A3654] font-bold text-gray-700 dark:text-gray-300 transition-colors">
+                Batal
+            </button>
+            <button type="button" onclick="document.getElementById('form-approve').submit()" class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition-colors shadow-lg shadow-emerald-500/20">
+                Ya, Setujui Sekarang
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reject -->
+<div id="modal-reject" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden transition-opacity">
+    <div class="bg-white dark:bg-[#141C33] rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border border-red-500/30">
+        <div class="w-20 h-20 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-red-500/20">
+            <span class="material-symbols-outlined text-4xl">cancel</span>
+        </div>
+        <h3 class="font-headline-md text-xl font-extrabold text-on-surface dark:text-white mb-2">Tolak Surat Keluar?</h3>
+        <p class="text-sm text-on-surface-variant dark:text-gray-400 mb-6 leading-relaxed">
+            Apakah Anda yakin ingin menolak pengajuan surat ini? Surat akan dikembalikan ke Staf Administrasi dan tidak akan ditandatangani.
+        </p>
+        <div class="flex items-center gap-3">
+            <button type="button" onclick="document.getElementById('modal-reject').classList.add('hidden')" class="flex-1 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-[#1A2440] dark:hover:bg-[#2A3654] font-bold text-gray-700 dark:text-gray-300 transition-colors">
+                Batal
+            </button>
+            <button type="button" onclick="document.getElementById('form-reject').submit()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-colors shadow-lg shadow-red-500/20">
+                Ya, Tolak Surat
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleFullscreenIframe() {
+        const container = document.getElementById('iframe-container');
+        if (!document.fullscreenElement) {
+            container.requestFullscreen().catch(err => {
+                alert(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+</script>
 @endsection

@@ -22,6 +22,20 @@ class LeaveRequestController extends Controller
             });
         }
 
+        // Employee filter
+        if ($request->filled('employee_id')) {
+            $query->where('employee_id', $request->employee_id);
+        }
+        
+        // Month filter (format YYYY-MM)
+        if ($request->filled('month')) {
+            $month = explode('-', $request->month);
+            if (count($month) == 2) {
+                $query->whereYear('created_at', $month[0])
+                      ->whereMonth('created_at', $month[1]);
+            }
+        }
+
         // Status filter
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
@@ -32,7 +46,7 @@ class LeaveRequestController extends Controller
             $query->where('type', $request->type);
         }
 
-        $leaveRequests = $query->orderBy('created_at', 'desc')->paginate(15);
+        $leaveRequests = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         // Stats
         $stats = [
@@ -43,8 +57,9 @@ class LeaveRequestController extends Controller
                                          ->whereYear('created_at', Carbon::now()->year)
                                          ->count(),
         ];
+        $employees = \App\Models\Employee::orderBy('name')->get();
 
-        return view('admin.leave-requests.index', compact('leaveRequests', 'stats'));
+        return view('admin.leave-requests.index', compact('leaveRequests', 'stats', 'employees'));
     }
 
     public function approve(Request $request, LeaveRequest $leaveRequest)

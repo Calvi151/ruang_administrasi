@@ -175,6 +175,56 @@
         }
     </script>
     @yield('styles')
+    
+    <!-- Global Auto-Animation System -->
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slide-in {
+            animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animasi untuk stat cards / glass-card / editorial-card / generic cards
+            const cards = document.querySelectorAll('.glass-card, .editorial-card, .bg-white.rounded-xl, .dark\\:bg-\\[\\#141C33\\].rounded-xl, .bg-white.rounded-2xl, .bg-surface.rounded-2xl, .rounded-3xl, .rounded-2xl');
+            let cardIndex = 1;
+            cards.forEach(el => {
+                // Ensure it's not a tiny element like an icon container
+                if(el.clientWidth > 100 && !el.classList.contains('animate-fade-in') && !el.closest('nav') && !el.closest('header')) {
+                    el.classList.add('animate-fade-in');
+                    if(!el.style.animationDelay) {
+                        el.style.animationDelay = `${cardIndex * 100}ms`;
+                        cardIndex++;
+                    }
+                }
+            });
+            
+            // Animasi untuk baris tabel
+            const rows = document.querySelectorAll('tbody tr, .interactive-row');
+            let rowIndex = 0;
+            rows.forEach(el => {
+                if(!el.classList.contains('animate-slide-in')) {
+                    el.classList.add('animate-slide-in');
+                    if(!el.style.animationDelay) {
+                        el.style.animationDelay = `${400 + (rowIndex * 50)}ms`;
+                        rowIndex++;
+                    }
+                }
+            });
+        });
+    </script>
 </head>
 <body class="font-body-md text-body-md text-on-surface antialiased flex h-screen overflow-hidden selection:bg-brand-amber/30">
     <!-- SideNavBar (Source of Truth untuk 5 halaman CEO) -->

@@ -6,185 +6,129 @@
 
 @section('content')
 <!-- Back Button -->
-<div class="mb-4">
-    <a href="{{ route('incoming-letters.index') }}" class="inline-flex items-center gap-2 text-on-surface-variant dark:text-ds-text-primary dark:hover:text-ds-accent hover:text-primary transition-colors font-label-md text-label-md">
-        <span class="material-symbols-outlined text-[14px]">arrow_back</span>
-        Kembali ke Surat Masuk
+<div class="mb-6 animate-fade-in" style="animation-delay: 50ms;">
+    <a href="{{ route('incoming-letters.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#141C33] border border-outline-variant/30 dark:border-[#2A3654] text-on-surface-variant dark:text-ds-text-secondary hover:text-primary dark:hover:text-ds-accent hover:border-primary/30 dark:hover:border-ds-accent/30 hover:shadow-md transition-all font-label-md text-label-md group">
+        <span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+        Kembali ke Daftar Surat
     </a>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-    <!-- Info Card -->
-    <div class="lg:col-span-2 flex flex-col gap-4">
-        <div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-4 relative overflow-hidden">
-            <div class="absolute right-4 top-4 text-primary/10 dark:text-primary/5 pointer-events-none select-none">
-                <span class="material-symbols-outlined text-[80px] icon-fill">drafts</span>
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    <!-- Main Info Card -->
+    <div class="lg:col-span-2 flex flex-col gap-6">
+        <div class="glass-card bg-white dark:bg-[#141C33] rounded-3xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm relative overflow-hidden animate-fade-in" style="animation-delay: 100ms;">
+            <!-- Decorative Glow -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 dark:bg-ds-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
             
-            <div class="relative z-10">
-                <div class="flex items-center gap-4 mb-5 pb-6 border-b border-border-muted">
-                    <div class="w-16 h-16 rounded-2xl bg-primary-fixed text-primary flex items-center justify-center shadow-inner">
-                        <span class="material-symbols-outlined text-[48px] icon-fill">mark_email_read</span>
+            <div class="p-8 relative z-10">
+                <!-- Header Section -->
+                <div class="flex flex-col sm:flex-row sm:items-center gap-6 mb-8 pb-8 border-b border-outline-variant/20 dark:border-[#2A3654]">
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 dark:from-ds-accent/20 dark:to-ds-accent/5 text-primary dark:text-ds-accent flex items-center justify-center shadow-inner shrink-0 border border-primary/10 dark:border-ds-accent/10">
+                        <span class="material-symbols-outlined text-[40px] icon-fill">mark_email_read</span>
                     </div>
                     <div>
-                        <h3 class="font-headline-md text-headline-md text-on-background font-bold tracking-tight">{{ $incomingLetter->letter_number }}</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-4 mt-1">
-                            <span class="material-symbols-outlined text-[14px]">domain</span>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-bold tracking-wide uppercase mb-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Surat Masuk
+                        </div>
+                        <h3 class="font-headline-md text-2xl md:text-3xl text-on-background dark:text-[#E8E6E0] font-bold tracking-tight mb-2">{{ $incomingLetter->letter_number }}</h3>
+                        <p class="font-body-md text-on-surface-variant dark:text-ds-text-secondary flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px]">domain</span>
                             {{ $incomingLetter->sender }}
                         </p>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <!-- Content Details -->
+                <div class="space-y-8">
+                    <!-- Date -->
                     <div>
-                        <h4 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2">Tanggal Diterima</h4>
-                        <div class="flex items-center gap-4 font-body-lg text-body-lg text-on-background bg-surface-container-low px-2 py-1 rounded-3xl inline-flex border border-border-muted/50">
-                            <span class="material-symbols-outlined text-primary">calendar_month</span>
-                            {{ \Carbon\Carbon::parse($incomingLetter->date_received)->translatedFormat('d F Y') }}
+                        <h4 class="font-label-sm text-[11px] text-on-surface-variant dark:text-ds-text-secondary uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[14px] text-primary dark:text-ds-accent">calendar_month</span>
+                            Tanggal Diterima
+                        </h4>
+                        <div class="inline-flex items-center gap-3 px-4 py-2.5 bg-slate-50 dark:bg-[#0F172E] border border-outline-variant/30 dark:border-[#2A3654] rounded-xl text-on-background dark:text-[#E8E6E0] font-medium shadow-sm">
+                            <span class="text-primary dark:text-ds-accent font-bold">{{ \Carbon\Carbon::parse($incomingLetter->date_received)->translatedFormat('d') }}</span>
+                            <span class="w-px h-4 bg-outline-variant/30 dark:bg-[#2A3654]"></span>
+                            <span>{{ \Carbon\Carbon::parse($incomingLetter->date_received)->translatedFormat('F Y') }}</span>
                         </div>
                     </div>
 
+                    <!-- Subject -->
                     <div>
-                        <h4 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2">Perihal / Ringkasan</h4>
-                        <div class="bg-surface-bright border border-border-muted rounded-2xl p-4">
-                            <div class="font-body-lg text-body-lg text-on-background leading-relaxed prose prose-slate max-w-none">
+                        <h4 class="font-label-sm text-[11px] text-on-surface-variant dark:text-ds-text-secondary uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[14px] text-primary dark:text-ds-accent">subject</span>
+                            Perihal / Ringkasan
+                        </h4>
+                        <div class="bg-slate-50 dark:bg-[#0F172E] border border-outline-variant/30 dark:border-[#2A3654] rounded-2xl p-6 shadow-sm group hover:border-primary/30 dark:hover:border-ds-accent/30 transition-colors">
+                            <div class="font-body-lg text-on-background dark:text-[#E8E6E0] leading-relaxed prose prose-slate dark:prose-invert max-w-none">
                                 {!! $incomingLetter->subject !!}
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="mt-6 flex flex-wrap gap-4">
+                <!-- Action Buttons -->
+                <div class="mt-10 pt-8 border-t border-outline-variant/20 dark:border-[#2A3654] flex flex-wrap gap-4 items-center">
                     @if($incomingLetter->replies->isNotEmpty())
-                    <button type="button" onclick="alert('✅ Surat ini sudah memiliki dokumen balasan resmi (\'\'+ {{ json_encode($incomingLetter->replies->first()->letter_number) }} +\'\').\n\nSilakan cek riwayat thread balasan pada panel sebelah kanan untuk melihat status atau mengunduhnya.');" class="px-5 py-2.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold font-label-md text-label-md cursor-not-allowed flex items-center gap-2 shadow-2xs select-none" title="Surat sudah dibalas">
-                        <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                    <button type="button" onclick="alert('✅ Surat ini sudah dibalas (No: {{ $incomingLetter->replies->first()->letter_number }}).');" class="px-6 py-3 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold text-sm cursor-not-allowed flex items-center gap-2 shadow-sm">
+                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
                         Sudah Dibalas ({{ $incomingLetter->replies->count() }}x)
                     </button>
                     @else
-                    <a href="{{ route('outgoing-letters.create', ['reply_to' => $incomingLetter->id]) }}" class="px-5 py-2.5 rounded-full bg-amber-400 text-[#0B1220] font-bold font-label-md text-label-md hover:shadow-lg hover:shadow-amber-400/30 hover:-translate-y-0.5 transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px]">reply</span>
+                    <a href="{{ route('outgoing-letters.create', ['reply_to' => $incomingLetter->id]) }}" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-white dark:text-[#0B1220] font-bold text-sm hover:shadow-lg hover:shadow-amber-500/30 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px]">reply</span>
                         Balas Surat Ini
                     </a>
                     @endif
-                    <a href="{{ route('incoming-letters.edit', $incomingLetter->id) }}" class="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                    <a href="{{ route('incoming-letters.edit', $incomingLetter->id) }}" class="px-6 py-3 rounded-xl bg-slate-100 dark:bg-[#1A2440] text-on-surface dark:text-[#E8E6E0] border border-outline-variant/30 dark:border-[#2A3654] font-bold text-sm hover:border-primary dark:hover:border-ds-accent hover:text-primary dark:hover:text-ds-accent transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px]">edit</span>
                         Edit Surat
                     </a>
                 </div>
             </div>
         </div>
-
-        <!-- Gmail-style Thread Balasan -->
-        <div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-6 relative">
-            <h3 class="font-headline-sm text-headline-sm text-on-background font-bold mb-4 flex items-center gap-2 border-b border-border-muted pb-4">
-                <span class="material-symbols-outlined text-primary dark:text-ds-accent">forum</span>
-                <span>Thread Balasan (Gmail Style)</span>
-                @if($incomingLetter->replies && $incomingLetter->replies->count() > 0)
-                    <span class="px-2.5 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 font-bold ml-2">
-                        {{ $incomingLetter->replies->count() }} Balasan
-                    </span>
-                @else
-                    <span class="px-2.5 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 font-bold ml-2">
-                        0 Balasan
-                    </span>
-                @endif
-            </h3>
-
-            <div class="space-y-4">
-                @forelse($incomingLetter->replies as $reply)
-                    <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/50 dark:border-ds-border hover:border-primary/50 transition-all">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-outline-variant/30 pb-3 mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-brand-amber">shortcut</span>
-                                <div>
-                                    <h4 class="font-headline-sm font-bold text-sm text-on-background">{{ $reply->letter_number }}</h4>
-                                    <span class="text-xs text-on-surface-variant">Kepada: <strong>{{ $reply->recipient }}</strong></span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                @if($reply->status == 'pending')
-                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-full flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Menunggu ACC
-                                    </span>
-                                @elseif($reply->status == 'acc')
-                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[13px]">check_circle</span> Disetujui (Siap Kirim)
-                                    </span>
-                                @elseif($reply->status == 'delivered')
-                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 rounded-full flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[13px]">local_shipping</span> Terkirim (Delivered)
-                                    </span>
-                                @else
-                                    <span class="px-2.5 py-1 text-[11px] font-bold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 rounded-full">Ditolak</span>
-                                @endif
-                                <span class="text-xs text-on-surface-variant ml-2">{{ \Carbon\Carbon::parse($reply->created_at)->diffForHumans() }}</span>
-                            </div>
-                        </div>
-                        <div class="text-xs text-on-background line-clamp-2 mb-3 bg-white/50 dark:bg-black/20 p-3 rounded-xl border border-outline-variant/20">
-                            {!! strip_tags($reply->content) !!}
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[11px] text-on-surface-variant flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px]">calendar_today</span>
-                                Tgl Surat: {{ \Carbon\Carbon::parse($reply->date_sent)->translatedFormat('d M Y') }}
-                            </span>
-                            <div class="flex gap-2">
-                                <a href="{{ route('outgoing-letters.show', $reply->id) }}" class="px-3 py-1 bg-primary/10 text-primary dark:text-ds-accent hover:bg-primary hover:text-white rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">visibility</span> Lihat Balasan
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="text-center py-8 text-on-surface-variant dark:text-ds-text-secondary">
-                        <span class="material-symbols-outlined text-4xl opacity-40 mb-2">mark_email_unread</span>
-                        <p class="text-sm font-semibold">Belum ada surat balasan untuk surat masuk ini.</p>
-                        <p class="text-xs opacity-80 mt-1">Klik "Balas Surat Ini" di atas untuk membuat tanggapan secara langsung.</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
     </div>
 
-    <!-- Attachment Card -->
-    <div class="bg-surface-container-lowest rounded-3xl border border-border-muted ambient-shadow p-4">
-        <h3 class="font-headline-md text-headline-md text-on-background font-bold mb-4 flex items-center gap-4 border-b border-border-muted pb-4">
-            <span class="material-symbols-outlined text-primary">attachment</span>
-            Lampiran Surat
+    <!-- Attachment Side Card -->
+    <div class="glass-card bg-white dark:bg-[#141C33] rounded-3xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm p-6 animate-fade-in" style="animation-delay: 200ms;">
+        <h3 class="font-headline-sm text-lg text-on-background dark:text-[#E8E6E0] font-bold mb-5 flex items-center gap-3 border-b border-outline-variant/20 dark:border-[#2A3654] pb-4">
+            <div class="w-8 h-8 rounded-lg bg-primary/10 dark:bg-ds-accent/10 text-primary dark:text-ds-accent flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">attachment</span>
+            </div>
+            Lampiran Dokumen
         </h3>
         
         @if($incomingLetter->file_path)
-            <div class="bg-primary-fixed/20 border border-primary-fixed-dim/30 rounded-2xl p-4 flex flex-col items-center text-center gap-4 transition-all hover:bg-primary-fixed/40 hover:border-primary/20 group">
-                <div class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <span class="material-symbols-outlined text-[48px]">picture_as_pdf</span>
+            <div class="bg-gradient-to-b from-slate-50 to-white dark:from-[#0F172E] dark:to-[#141C33] border border-outline-variant/40 dark:border-[#2A3654] rounded-2xl p-6 flex flex-col items-center text-center gap-4 transition-all hover:shadow-md hover:border-primary/40 dark:hover:border-ds-accent/40 group relative overflow-hidden">
+                <!-- Hover Glow -->
+                <div class="absolute inset-0 bg-primary/5 dark:bg-ds-accent/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="w-20 h-20 rounded-2xl bg-white dark:bg-[#1A2440] shadow-sm border border-outline-variant/30 dark:border-[#2A3654] text-red-500 dark:text-red-400 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300 relative z-10">
+                    <span class="material-symbols-outlined text-[48px] icon-fill">picture_as_pdf</span>
                 </div>
-                <div>
-                    <h4 class="font-label-md text-label-md text-on-background font-bold truncate max-w-[200px]" title="{{ basename($incomingLetter->file_path) }}">File Dokumen</h4>
-                    <p class="font-label-sm text-label-sm text-outline mt-1">Format PDF</p>
+                <div class="relative z-10 mt-2">
+                    <h4 class="font-bold text-on-background dark:text-[#E8E6E0] truncate max-w-[180px]" title="{{ basename($incomingLetter->file_path) }}">File Resmi</h4>
+                    <p class="text-xs text-on-surface-variant dark:text-ds-text-secondary mt-1">Dokumen PDF Terlampir</p>
                 </div>
-                <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank" class="mt-2 w-full px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-2">
+                <a href="{{ asset('storage/' . $incomingLetter->file_path) }}" target="_blank" class="mt-4 w-full px-5 py-2.5 rounded-xl bg-primary dark:bg-ds-accent text-on-primary dark:text-[#0B1220] font-bold text-sm hover:shadow-lg hover:shadow-primary/30 dark:hover:shadow-ds-accent/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 relative z-10">
                     <span class="material-symbols-outlined text-[18px]">open_in_new</span>
                     Buka Dokumen
                 </a>
             </div>
         @else
-            <div class="bg-surface-container-low border border-dashed border-border-muted rounded-2xl p-4 flex flex-col items-center text-center gap-4">
-                <div class="w-16 h-16 rounded-full bg-surface-variant text-outline flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[48px]">description</span>
+            <div class="bg-slate-50 dark:bg-[#0F172E] border-2 border-dashed border-outline-variant/40 dark:border-[#2A3654] rounded-2xl p-8 flex flex-col items-center text-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-surface-variant dark:bg-[#1A2440] text-outline dark:text-ds-text-secondary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[32px]">description_empty</span>
                 </div>
                 <div>
-                    <h4 class="font-label-md text-label-md text-on-background">Tidak ada lampiran</h4>
-                    <p class="font-label-sm text-label-sm text-outline mt-1">Dokumen fisik belum didigitalisasi.</p>
+                    <h4 class="font-bold text-on-background dark:text-[#E8E6E0]">Tidak Ada Dokumen</h4>
+                    <p class="text-xs text-on-surface-variant dark:text-ds-text-secondary mt-2 max-w-[200px] mx-auto leading-relaxed">
+                        Surat fisik belum didigitalisasi ke dalam bentuk file PDF.
+                    </p>
                 </div>
             </div>
         @endif
     </div>
 </div>
 @endsection
-
-
-
-
-
-
-

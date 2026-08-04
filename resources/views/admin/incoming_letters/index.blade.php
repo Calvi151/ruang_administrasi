@@ -30,6 +30,7 @@
                     <th class="px-6 py-3 font-medium">Tanggal</th>
                     <th class="px-6 py-3 font-medium">Pengirim</th>
                     <th class="px-6 py-3 font-medium">Perihal</th>
+                    <th class="px-6 py-3 font-medium text-center">Status</th>
                     <th class="px-6 py-3 font-medium text-right">Aksi</th>
                 </tr>
             </thead>
@@ -48,6 +49,17 @@
                     <td class="px-6 py-3 text-on-surface-variant dark:text-ds-text-secondary max-w-xs truncate">
                         <a href="{{ route('incoming-letters.show', $letter->id) }}" class="hover:text-blue-600 dark:hover:text-blue-400 hover:underline block truncate" title="Klik untuk lihat detail">{{ strip_tags($letter->subject) }}</a>
                     </td>
+                    <td class="px-6 py-3 text-center">
+                        @if($letter->replies->isNotEmpty())
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                                <span class="material-symbols-outlined text-[13px]">check_circle</span> Terbalas
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-variant text-on-surface-variant dark:bg-ds-hover dark:text-ds-text-secondary border border-outline-variant/50">
+                                <span class="material-symbols-outlined text-[13px]">pending</span> Menunggu
+                            </span>
+                        @endif
+                    </td>
                     <td class="px-6 py-3 text-right">
                         <div class="flex items-center justify-end gap-2">
                             @if($letter->file_path)
@@ -58,17 +70,7 @@
                                 </svg>
                             </a>
                             @endif
-                            @if($letter->replies->isNotEmpty())
-                            <span class="px-2.5 py-1.5 flex items-center gap-1 rounded-lg text-xs font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 cursor-not-allowed opacity-90 shadow-2xs select-none" title="Surat ini sudah dibalas (No Balasan: {{ $letter->replies->first()->letter_number ?? 'Terbalas' }}).">
-                                <span class="material-symbols-outlined text-[15px]">check_circle</span>
-                                <span class="font-label-sm">Sudah Dibalas</span>
-                            </span>
-                            @else
-                            <a href="{{ route('outgoing-letters.create', ['reply_to' => $letter->id]) }}" class="px-2.5 py-1.5 flex items-center gap-1 rounded-lg text-xs font-semibold bg-[#0055CC]/10 dark:bg-amber-400/15 text-[#0055CC] dark:text-amber-300 border border-[#0055CC]/30 dark:border-amber-400/30 hover:bg-[#0055CC] hover:text-white dark:hover:bg-amber-400 dark:hover:text-[#0B1220] transition-colors" title="Balas Surat ini">
-                                <span class="material-symbols-outlined text-[15px]">reply</span>
-                                <span class="font-label-sm">Balas</span>
-                            </a>
-                            @endif
+
                             <a href="{{ route('incoming-letters.show', $letter->id) }}" class="w-8 h-8 flex items-center justify-center rounded-lg text-sky-400 hover:bg-sky-400/15 hover:text-sky-300 transition-colors" title="Detail">
                                 <span class="material-symbols-outlined text-[18px]">visibility</span>
                             </a>
@@ -87,7 +89,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-6 py-12 text-center">
+                    <td colspan="6" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center gap-3 text-on-surface-variant dark:text-ds-text-secondary">
                             <span class="material-symbols-outlined text-[48px] opacity-30">drafts</span>
                             <h4 class="font-h3 text-h3 text-on-surface dark:text-ds-text-primary">Belum ada surat masuk</h4>

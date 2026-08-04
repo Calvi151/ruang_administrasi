@@ -22,12 +22,26 @@ class OvertimeRequestController extends Controller
             });
         }
 
+        // Employee filter
+        if ($request->filled('employee_id')) {
+            $query->where('employee_id', $request->employee_id);
+        }
+        
+        // Month filter (format YYYY-MM)
+        if ($request->filled('month')) {
+            $month = explode('-', $request->month);
+            if (count($month) == 2) {
+                $query->whereYear('created_at', $month[0])
+                      ->whereMonth('created_at', $month[1]);
+            }
+        }
+
         // Status filter
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
 
-        $overtimeRequests = $query->orderBy('created_at', 'desc')->paginate(15);
+        $overtimeRequests = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         // Stats
         $stats = [
@@ -38,8 +52,9 @@ class OvertimeRequestController extends Controller
                                             ->whereYear('created_at', Carbon::now()->year)
                                             ->count(),
         ];
+        $employees = \App\Models\Employee::orderBy('name')->get();
 
-        return view('admin.overtime-requests.index', compact('overtimeRequests', 'stats'));
+        return view('admin.overtime-requests.index', compact('overtimeRequests', 'stats', 'employees'));
     }
 
     public function approve(Request $request, OvertimeRequest $overtimeRequest)

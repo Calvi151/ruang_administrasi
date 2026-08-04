@@ -56,6 +56,25 @@
         70% { box-shadow: 0 0 0 6px rgba(234, 179, 8, 0); }
         100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
     }
+    
+    /* Entry Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
+    
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-slide-in {
+        animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
 </style>
 @endsection
 
@@ -75,7 +94,7 @@
     {{-- 1. WIDGET STATISTIK INTERAKTIF --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         {{-- Card 1: Menunggu Persetujuan --}}
-        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-amber-500 transition-colors cursor-default">
+        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-amber-500 transition-colors cursor-default animate-fade-in" style="animation-delay: 100ms;">
             <div>
                 <p class="text-xs font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1">Menunggu ACC</p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['pending'] }} <span class="text-sm font-normal text-on-surface-variant">pengajuan</span></h3>
@@ -86,7 +105,7 @@
         </div>
 
         {{-- Card 2: Disetujui --}}
-        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-emerald-500 transition-colors cursor-default">
+        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-emerald-500 transition-colors cursor-default animate-fade-in" style="animation-delay: 200ms;">
             <div>
                 <p class="text-xs font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1">Disetujui</p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['approved'] }} <span class="text-sm font-normal text-on-surface-variant">pengajuan</span></h3>
@@ -97,7 +116,7 @@
         </div>
 
         {{-- Card 3: Ditolak --}}
-        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-red-500 transition-colors cursor-default">
+        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-red-500 transition-colors cursor-default animate-fade-in" style="animation-delay: 300ms;">
             <div>
                 <p class="text-xs font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1">Ditolak</p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['rejected'] }} <span class="text-sm font-normal text-on-surface-variant">pengajuan</span></h3>
@@ -108,7 +127,7 @@
         </div>
 
         {{-- Card 4: Total Bulan Ini --}}
-        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-indigo-500 transition-colors cursor-default">
+        <div class="glass-card rounded-2xl p-5 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-indigo-500 transition-colors cursor-default animate-fade-in" style="animation-delay: 400ms;">
             <div>
                 <p class="text-xs font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1">Bulan Ini</p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['total_month'] }} <span class="text-sm font-normal text-on-surface-variant">total</span></h3>
@@ -119,29 +138,48 @@
         </div>
     </div>
 
-    {{-- Header & Filter Tabs --}}
+    {{-- Header & Filter Form --}}
     <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-6">
         <div>
             <h2 class="font-display-lg text-[24px] md:text-[28px] font-bold text-on-surface dark:text-[#E8E6E0] mb-1">Daftar Lembur</h2>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-            {{-- Filter by status --}}
-            <div class="flex bg-white dark:bg-[#141C33] border border-outline-variant/50 dark:border-[#2A3654] rounded-lg overflow-hidden shadow-sm">
-                <a href="{{ route('overtime-requests.index') }}" class="px-3 py-2 text-xs font-semibold transition-colors {{ !request('status') ? 'bg-[#091426] dark:bg-ds-accent text-white dark:text-[#091426]' : 'text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-50 dark:hover:bg-[#1D2847]' }}">Semua</a>
-                <a href="{{ route('overtime-requests.index', ['status' => 'pending']) }}" class="px-3 py-2 text-xs font-semibold transition-colors border-l border-outline-variant/30 dark:border-[#2A3654] {{ request('status') == 'pending' ? 'bg-amber-500 text-white' : 'text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-50 dark:hover:bg-[#1D2847]' }}">
-                    Pending
-                    @if($stats['pending'] > 0)
-                        <span class="ml-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold rounded-full {{ request('status') == 'pending' ? 'bg-white/30 text-white' : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' }}">{{ $stats['pending'] }}</span>
-                    @endif
-                </a>
-                <a href="{{ route('overtime-requests.index', ['status' => 'approved']) }}" class="px-3 py-2 text-xs font-semibold transition-colors border-l border-outline-variant/30 dark:border-[#2A3654] {{ request('status') == 'approved' ? 'bg-emerald-500 text-white' : 'text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-50 dark:hover:bg-[#1D2847]' }}">Disetujui</a>
-                <a href="{{ route('overtime-requests.index', ['status' => 'rejected']) }}" class="px-3 py-2 text-xs font-semibold transition-colors border-l border-outline-variant/30 dark:border-[#2A3654] {{ request('status') == 'rejected' ? 'bg-red-500 text-white' : 'text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-50 dark:hover:bg-[#1D2847]' }}">Ditolak</a>
-            </div>
+            <form action="{{ route('overtime-requests.index') }}" method="GET" class="flex flex-wrap items-center gap-2 bg-white dark:bg-[#141C33] p-1.5 rounded-xl border border-outline-variant/60 dark:border-[#2A3654] shadow-sm">
+                
+                <select name="employee_id" class="px-3 py-1.5 bg-transparent border-none text-xs font-semibold text-on-surface dark:text-[#E8E6E0] focus:ring-0 cursor-pointer">
+                    <option value="">Semua Karyawan</option>
+                    @foreach($employees as $emp)
+                        <option value="{{ $emp->id }}" {{ request('employee_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
+                    @endforeach
+                </select>
+                
+                <div class="w-px h-5 bg-outline-variant/40 dark:bg-[#2A3654]"></div>
+                
+                <input type="month" name="month" value="{{ request('month') }}" class="px-3 py-1.5 bg-transparent border-none text-xs font-semibold text-on-surface dark:text-[#E8E6E0] focus:ring-0 cursor-pointer" title="Bulan Pengajuan">
+                
+                <div class="w-px h-5 bg-outline-variant/40 dark:bg-[#2A3654]"></div>
+                
+                <select name="status" class="px-3 py-1.5 bg-transparent border-none text-xs font-semibold text-on-surface dark:text-[#E8E6E0] focus:ring-0 cursor-pointer">
+                    <option value="">Semua Status</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Disetujui</option>
+                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                </select>
+                
+                <button type="submit" class="bg-primary/10 hover:bg-primary text-primary hover:text-white dark:bg-ds-accent/10 dark:hover:bg-ds-accent dark:text-ds-accent dark:hover:text-[#0B1220] px-3 py-1.5 rounded-lg font-bold text-xs transition-colors flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">filter_list</span>
+                    Filter
+                </button>
+                
+                @if(request()->hasAny(['employee_id', 'month', 'status']))
+                    <a href="{{ route('overtime-requests.index') }}" class="px-3 py-1.5 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg font-bold transition-colors">Reset</a>
+                @endif
+            </form>
         </div>
     </div>
 
     {{-- Data Table Card --}}
-    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-visible">
+    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-visible animate-fade-in" style="animation-delay: 500ms;">
         {{-- Table Header --}}
         <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant/30 dark:border-[#2A3654] bg-slate-50/50 dark:bg-[#0F172E]/50 items-center text-[11px] font-bold text-on-surface-variant dark:text-[#8B93A8] uppercase tracking-wider">
             <div class="col-span-3">Pegawai</div>
@@ -155,7 +193,7 @@
         {{-- Table Body --}}
         <div class="flex flex-col divide-y divide-outline-variant/20 dark:divide-[#2A3654]">
             @forelse($overtimeRequests as $overtime)
-                <div class="interactive-row grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#141C33] rounded-lg m-1">
+                <div class="interactive-row grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#141C33] rounded-lg m-1 animate-slide-in" style="animation-delay: {{ 600 + ($loop->index * 50) }}ms;">
                     {{-- Employee --}}
                     <div class="col-span-3 flex items-center gap-3">
                         @if($overtime->employee && $overtime->employee->photo)
@@ -232,13 +270,10 @@
                     <div class="col-span-2 flex justify-end gap-2">
                         @if($overtime->status == 'pending')
                             {{-- ACC Button --}}
-                            <form action="{{ route('overtime-requests.approve', $overtime->id) }}" method="POST" onsubmit="return confirm('Setujui pengajuan lembur dari {{ $overtime->employee->name }}?')">
-                                @csrf
-                                <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 font-semibold text-xs border border-emerald-200 dark:border-emerald-700/50 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
-                                    <span class="material-symbols-outlined text-[14px]">check</span>
-                                    ACC
-                                </button>
-                            </form>
+                            <button onclick="openModal('approveModal-{{ $overtime->id }}')" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 font-semibold text-xs border border-emerald-200 dark:border-emerald-700/50 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
+                                <span class="material-symbols-outlined text-[14px]">check</span>
+                                ACC
+                            </button>
 
                             {{-- Reject Button --}}
                             <button onclick="openModal('rejectModal-{{ $overtime->id }}')" class="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-700 dark:text-red-400 font-semibold text-xs border border-red-200 dark:border-red-700/50 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
@@ -269,6 +304,38 @@
                 </div>
 
                 {{-- MODALS --}}
+
+                {{-- Approve Modal --}}
+                <div id="approveModal-{{ $overtime->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-emerald-50/50 dark:bg-emerald-900/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Setujui Pengajuan</h3>
+                                    <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $overtime->employee->name }} — Lembur</p>
+                                </div>
+                            </div>
+                            <button onclick="closeModal('approveModal-{{ $overtime->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
+                                <span class="material-symbols-outlined text-xl">close</span>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-on-surface-variant dark:text-[#8B93A8] mb-6">
+                                Anda akan menyetujui pengajuan lembur dari <strong>{{ $overtime->employee->name }}</strong>. Tindakan ini akan mengubah status lembur menjadi "Disetujui". Lanjutkan?
+                            </p>
+                            <form action="{{ route('overtime-requests.approve', $overtime->id) }}" method="POST">
+                                @csrf
+                                <div class="flex justify-end gap-3">
+                                    <button type="button" onclick="closeModal('approveModal-{{ $overtime->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
+                                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/30 transition-all active:scale-95">Ya, Setujui</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
                 {{-- Reject Modal --}}
                 <div id="rejectModal-{{ $overtime->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">

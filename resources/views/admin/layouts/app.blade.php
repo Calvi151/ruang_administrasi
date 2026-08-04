@@ -328,6 +328,55 @@
         }
     </style>
     @yield('styles')
+    
+    <!-- Global Auto-Animation System -->
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slide-in {
+            animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animasi untuk stat cards / glass-card / editorial-card
+            const cards = document.querySelectorAll('.glass-card, .editorial-card, .bg-white.rounded-xl, .dark\\:bg-\\[\\#141C33\\].rounded-xl');
+            let cardIndex = 1;
+            cards.forEach(el => {
+                if(!el.classList.contains('animate-fade-in')) {
+                    el.classList.add('animate-fade-in');
+                    if(!el.style.animationDelay) {
+                        el.style.animationDelay = `${cardIndex * 100}ms`;
+                        cardIndex++;
+                    }
+                }
+            });
+            
+            // Animasi untuk baris tabel
+            const rows = document.querySelectorAll('tbody tr, .interactive-row');
+            let rowIndex = 0;
+            rows.forEach(el => {
+                if(!el.classList.contains('animate-slide-in')) {
+                    el.classList.add('animate-slide-in');
+                    if(!el.style.animationDelay) {
+                        el.style.animationDelay = `${400 + (rowIndex * 50)}ms`;
+                        rowIndex++;
+                    }
+                }
+            });
+        });
+    </script>
 </head>
 <body class="bg-background dark:bg-ds-bg text-on-surface dark:text-ds-text-primary font-body-md min-h-screen flex antialiased items-stretch selection:bg-primary-fixed selection:text-on-primary-fixed">
     

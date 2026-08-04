@@ -20,8 +20,27 @@ class AttendanceController extends Controller
                   ->orWhere('nip', 'like', "%{$search}%");
             });
         }
+        
+        // Employee filter
+        if ($request->filled('employee_id')) {
+            $query->where('employee_id', $request->employee_id);
+        }
+        
+        // Month filter (format YYYY-MM)
+        if ($request->filled('month')) {
+            $month = explode('-', $request->month);
+            if (count($month) == 2) {
+                $query->whereYear('date', $month[0])
+                      ->whereMonth('date', $month[1]);
+            }
+        }
+        
+        // Status filter (check_in_status)
+        if ($request->filled('status')) {
+            $query->where('check_in_status', $request->status);
+        }
 
-        $attendances = $query->orderBy('date', 'desc')->paginate(15);
+        $attendances = $query->orderBy('date', 'desc')->paginate(15)->withQueryString();
         
         // Cepat Hitung Statistik Harian (Konsep Laporan yang lebih hidup)
         $today = \Carbon\Carbon::today();
@@ -30,7 +49,9 @@ class AttendanceController extends Controller
             'late_today' => Attendance::whereDate('date', $today)->where('check_in_status', 'late')->count(),
             'missing_checkout' => Attendance::whereNull('check_out_time')->count(),
         ];
+        
+        $employees = \App\Models\Employee::orderBy('name')->get();
 
-        return view('admin.attendances.index', compact('attendances', 'stats'));
+        return view('admin.attendances.index', compact('attendances', 'stats', 'employees'));
     }
 }

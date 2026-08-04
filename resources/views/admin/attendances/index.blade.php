@@ -56,6 +56,25 @@
         70% { box-shadow: 0 0 0 6px rgba(234, 179, 8, 0); }
         100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
     }
+    
+    /* Entry Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
+    
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-slide-in {
+        animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
 </style>
 @endsection
 
@@ -65,7 +84,7 @@
     <!-- 1. KONSEP BARU: Widget Statistik Interaktif -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Card 1: Total Hadir -->
-        <div class="glass-card rounded-2xl p-6 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-[#2563eb] transition-colors cursor-default">
+        <div class="glass-card rounded-2xl p-6 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-[#2563eb] transition-colors cursor-default animate-fade-in" style="animation-delay: 100ms;">
             <div>
                 <p class="text-sm font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1">Hadir Hari Ini</p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['total_today'] ?? 0 }} <span class="text-sm font-normal text-on-surface-variant">pegawai</span></h3>
@@ -76,7 +95,7 @@
         </div>
         
         <!-- Card 2: Terlambat -->
-        <div class="glass-card rounded-2xl p-6 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-red-500 transition-colors cursor-default">
+        <div class="glass-card rounded-2xl p-6 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-red-500 transition-colors cursor-default animate-fade-in" style="animation-delay: 200ms;">
             <div>
                 <p class="text-sm font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1">Terlambat Masuk</p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['late_today'] ?? 0 }} <span class="text-sm font-normal text-on-surface-variant">pegawai</span></h3>
@@ -87,7 +106,7 @@
         </div>
         
         <!-- Card 3: Anomali / Belum Pulang -->
-        <div class="glass-card rounded-2xl p-6 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-amber-500 transition-colors cursor-pointer" onclick="alert('Ini bisa memfilter tabel untuk menampilkan yang belum pulang saja!')">
+        <div class="glass-card rounded-2xl p-6 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-amber-500 transition-colors cursor-pointer animate-fade-in" style="animation-delay: 300ms;" onclick="alert('Ini bisa memfilter tabel untuk menampilkan yang belum pulang saja!')">
             <div>
                 <p class="text-sm font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1 flex items-center gap-2">Belum Pulang <span class="w-2 h-2 rounded-full bg-amber-500 pulse-dot"></span></p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['missing_checkout'] ?? 0 }} <span class="text-sm font-normal text-on-surface-variant">tindakan</span></h3>
@@ -105,12 +124,38 @@
         </div>
         <div class="flex flex-wrap items-center gap-3">
             <!-- Filter Interaktif -->
-            <button class="bg-white dark:bg-[#141C33] border border-outline-variant/60 dark:border-[#2A3654] hover:bg-[#f8fafc] dark:hover:bg-[#1D2847] text-on-surface dark:text-[#E8E6E0] px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 shadow-sm active:scale-95">
-                <span class="material-symbols-outlined text-[18px]">filter_list</span>
-                Filter Lanjutan
-            </button>
+            <form action="{{ route('attendances.index') }}" method="GET" class="flex flex-wrap items-center gap-2 bg-white dark:bg-[#141C33] p-1.5 rounded-xl border border-outline-variant/60 dark:border-[#2A3654] shadow-sm">
+                
+                <select name="employee_id" class="px-3 py-1.5 bg-transparent border-none text-sm font-medium text-on-surface dark:text-[#E8E6E0] focus:ring-0 cursor-pointer">
+                    <option value="">Semua Karyawan</option>
+                    @foreach($employees as $emp)
+                        <option value="{{ $emp->id }}" {{ request('employee_id') == $emp->id ? 'selected' : '' }}>{{ $emp->name }}</option>
+                    @endforeach
+                </select>
+                
+                <div class="w-px h-5 bg-outline-variant/40 dark:bg-[#2A3654]"></div>
+                
+                <input type="month" name="month" value="{{ request('month') }}" class="px-3 py-1.5 bg-transparent border-none text-sm font-medium text-on-surface dark:text-[#E8E6E0] focus:ring-0 cursor-pointer" title="Bulan Absensi">
+                
+                <div class="w-px h-5 bg-outline-variant/40 dark:bg-[#2A3654]"></div>
+                
+                <select name="status" class="px-3 py-1.5 bg-transparent border-none text-sm font-medium text-on-surface dark:text-[#E8E6E0] focus:ring-0 cursor-pointer">
+                    <option value="">Semua Status</option>
+                    <option value="on_time" {{ request('status') == 'on_time' ? 'selected' : '' }}>Tepat Waktu</option>
+                    <option value="late" {{ request('status') == 'late' ? 'selected' : '' }}>Terlambat</option>
+                </select>
+                
+                <button type="submit" class="bg-primary/10 hover:bg-primary text-primary hover:text-white dark:bg-ds-accent/10 dark:hover:bg-ds-accent dark:text-ds-accent dark:hover:text-[#0B1220] px-3 py-1.5 rounded-lg font-bold text-xs transition-colors flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">filter_list</span>
+                    Filter
+                </button>
+                
+                @if(request()->hasAny(['employee_id', 'month', 'status']))
+                    <a href="{{ route('attendances.index') }}" class="px-3 py-1.5 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg font-bold transition-colors">Reset</a>
+                @endif
+            </form>
             
-            <button class="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 shadow-sm shadow-blue-500/30 active:scale-95 hover:shadow-blue-500/50">
+            <button class="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shadow-blue-500/30 active:scale-95 hover:shadow-blue-500/50">
                 <span class="material-symbols-outlined text-[18px]">download</span>
                 Export Data
             </button>
@@ -118,7 +163,7 @@
     </div>
     
     <!-- Data Table Card -->
-    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-visible">
+    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-visible animate-fade-in" style="animation-delay: 400ms;">
         <!-- Table Header -->
         <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant/30 dark:border-[#2A3654] bg-slate-50/50 dark:bg-[#0F172E]/50 items-center text-[11px] font-bold text-on-surface-variant dark:text-[#8B93A8] uppercase tracking-wider">
             <div class="col-span-3">Pegawai</div>
@@ -133,7 +178,7 @@
         <!-- Table Body -->
         <div class="flex flex-col divide-y divide-outline-variant/20 dark:divide-[#2A3654]">
             @forelse($attendances as $attendance)
-                <div class="interactive-row grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#141C33] rounded-lg m-1">
+                <div class="interactive-row grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#141C33] rounded-lg m-1 animate-slide-in" style="animation-delay: {{ 500 + ($loop->index * 50) }}ms;">
                     <!-- Employee -->
                     <div class="col-span-3 flex items-center gap-3">
                         @if($attendance->employee->photo)
