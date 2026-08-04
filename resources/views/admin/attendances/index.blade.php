@@ -106,7 +106,7 @@
         </div>
         
         <!-- Card 3: Anomali / Belum Pulang -->
-        <div class="glass-card rounded-2xl p-6 border border-outline-variant/40 dark:border-[#2A3654] shadow-sm flex items-center justify-between group hover:border-amber-500 transition-colors cursor-pointer animate-fade-in" style="animation-delay: 300ms;" onclick="alert('Ini bisa memfilter tabel untuk menampilkan yang belum pulang saja!')">
+        <div class="glass-card rounded-2xl p-6 border {{ request('missing_checkout') ? 'border-amber-500 bg-amber-500/5 dark:bg-amber-500/10' : 'border-outline-variant/40 dark:border-[#2A3654]' }} shadow-sm flex items-center justify-between group hover:border-amber-500 transition-colors cursor-pointer animate-fade-in" style="animation-delay: 300ms;" onclick="window.location.href='{{ route('attendances.index', array_merge(request()->query(), ['missing_checkout' => request('missing_checkout') ? null : 'true'])) }}'">
             <div>
                 <p class="text-sm font-medium text-on-surface-variant dark:text-[#8B93A8] mb-1 flex items-center gap-2">Belum Pulang <span class="w-2 h-2 rounded-full bg-amber-500 pulse-dot"></span></p>
                 <h3 class="text-3xl font-bold text-on-surface dark:text-[#E8E6E0]">{{ $stats['missing_checkout'] ?? 0 }} <span class="text-sm font-normal text-on-surface-variant">tindakan</span></h3>
@@ -155,10 +155,10 @@
                 @endif
             </form>
             
-            <button class="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shadow-blue-500/30 active:scale-95 hover:shadow-blue-500/50">
+            <a href="{{ route('attendances.export', request()->query()) }}" class="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shadow-blue-500/30 active:scale-95 hover:shadow-blue-500/50">
                 <span class="material-symbols-outlined text-[18px]">download</span>
                 Export Data
-            </button>
+            </a>
         </div>
     </div>
     

@@ -434,6 +434,11 @@
                 <span class="material-symbols-outlined {{ request()->routeIs('employees.*') ? 'fill-icon' : '' }}">group</span>
                 <span class="font-label-md text-label-md">Karyawan</span>
             </a>
+            
+            <a href="{{ route('positions.index') }}" class="flex items-center gap-3 py-3 px-6 border-l-4 transition-colors duration-200 {{ request()->routeIs('positions.*') ? 'border-secondary dark:border-ds-accent text-secondary-fixed-dim dark:text-ds-accent font-semibold bg-primary/10 dark:bg-ds-sidebar-active' : 'border-transparent text-on-primary-container dark:text-[#94a3b8] hover:bg-primary/5 dark:hover:bg-ds-sidebar-active hover:text-on-primary dark:hover:text-ds-text-primary' }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('positions.*') ? 'fill-icon' : '' }}">work</span>
+                <span class="font-label-md text-label-md">Jabatan</span>
+            </a>
         </div>
         
         <!-- Footer Nav -->
