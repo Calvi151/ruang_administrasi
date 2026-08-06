@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
         // Call other seeders
         $this->call([
             DummyLetterTypeSeeder::class,
+            DummyEmployeeUserSeeder::class,
             DummyAttendanceSeeder::class,
             DummyLeaveRequestSeeder::class,
             DummyOvertimeRequestSeeder::class,

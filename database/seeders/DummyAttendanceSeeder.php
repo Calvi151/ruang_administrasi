@@ -33,7 +33,7 @@ class DummyAttendanceSeeder extends Seeder
                 ['nip' => $emp['nip']],
                 [
                     'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                    'role' => 'admin',
+                    'role' => 'pegawai',
                 ]
             );
 

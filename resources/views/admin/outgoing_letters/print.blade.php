@@ -118,7 +118,7 @@
                 <td width="70">Nomor</td>
                 <td width="10">:</td>
                 <td width="280">{{ $outgoingLetter->letter_number }}</td>
-                <td align="right">Bogor, {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}</td>
+                <td align="right" style="white-space: nowrap;">Bogor, {{ \Carbon\Carbon::parse($outgoingLetter->date_sent)->translatedFormat('d F Y') }}</td>
             </tr>
             <tr>
                 <td>Lampiran</td>
