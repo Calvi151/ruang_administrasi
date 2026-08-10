@@ -106,9 +106,25 @@
 
     <!-- KOP SURAT -->
     <div class="kop-surat">
-        <h1>THE PRIME TEKHNOLOGI</h1>
-        <p>Jl. Veteran No. 123, Kota Bogor, Jawa Barat 16124<br>
-        Email: info@theprimetekhnologi.com | Telp: (0251) 123456</p>
+        <table style="width: 100%; border-collapse: collapse; border: none;">
+            <tr>
+                <td style="width: 100px; text-align: left; vertical-align: middle;">
+                    @if(file_exists(public_path('images/logo.png')))
+                        <img src="{{ public_path('images/logo.png') }}" style="width: 80px; height: auto;" alt="Logo">
+                    @endif
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <h1 style="margin: 0; font-size: 17pt; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">THE PRIME TEKHNOLOGI</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 10pt; line-height: 1.3;">
+                        Bangau Village Regency, Ruko No, RT.04/RW.2, Bojong, Kec. Cianjur,<br>Kabupaten Cianjur, Jawa Barat 43281<br>
+                        Email: info@theprimetekhnologi.com | Telp: (0251) 123456
+                    </p>
+                </td>
+                <td style="width: 100px;">
+                    <!-- Spacer untuk menjaga keseimbangan judul agar tetap center -->
+                </td>
+            </tr>
+        </table>
     </div>
 
     @if(!$isNaskahKhusus)

@@ -80,6 +80,20 @@
                     </div>
                 </div>
                 <div>
+                    <label for="position_id" class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-1">Jabatan / Posisi</label>
+                    <div class="relative">
+                        <select name="position_id" id="position_id" class="block w-full rounded-lg border-outline-variant dark:border-ds-border bg-surface-container-lowest dark:bg-ds-surface text-on-surface dark:text-ds-text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary/20 py-2.5 pl-3 pr-10 font-body-sm text-body-sm appearance-none bg-none">
+                            <option value="">-- Pilih Jabatan --</option>
+                            @foreach($positions as $position)
+                                <option value="{{ $position->id }}" {{ old('position_id') == $position->id ? 'selected' : '' }}>{{ $position->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
                     <label for="number" class="block font-label-md text-label-md text-on-surface dark:text-ds-text-primary mb-1">Nomor Telepon</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline dark:text-ds-text-secondary text-[20px] pointer-events-none">phone</span>

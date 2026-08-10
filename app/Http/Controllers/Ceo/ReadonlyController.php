@@ -64,14 +64,18 @@ class ReadonlyController extends Controller
     public function employees(Request $request)
     {
         $search = $request->input('search');
-        $query = \App\Models\Employee::with('user');
+        $query = \App\Models\Employee::with(['user', 'position']);
         
         if ($search) {
-            $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('position', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($q) use ($search) {
-                      $q->where('nip', 'like', "%{$search}%");
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhereHas('position', function($pq) use ($search) {
+                      $pq->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('nip', 'like', "%{$search}%");
                   });
+            });
         }
         
         $employees = $query->get();

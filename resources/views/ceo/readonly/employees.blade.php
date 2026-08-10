@@ -63,7 +63,7 @@
                             @endif
                             <div>
                                 <div class="text-sm font-bold text-brand-navy dark:text-ds-text-primary group-hover:text-brand-amber transition-colors">{{ $employee->name }}</div>
-                                <div class="text-[11px] text-gray-500 dark:text-gray-400 font-normal md:hidden">{{ $employee->position ?? '-' }}</div>
+                                <div class="text-[11px] text-gray-500 dark:text-gray-400 font-normal md:hidden">{{ optional($employee->position)->name ?? '-' }}</div>
                             </div>
                         </div>
                     </td>
@@ -74,7 +74,7 @@
                     </td>
                     <td class="py-4 px-6 text-on-surface dark:text-[#E8E6E0] font-medium">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF0FA] dark:bg-brand-amber/10 text-brand-navy dark:text-brand-amber font-label-md text-xs font-bold border border-brand-navy/15 dark:border-brand-amber/20">
-                            {{ $employee->position ?? '-' }}
+                            {{ optional($employee->position)->name ?? '-' }}
                         </span>
                     </td>
                     <td class="py-4 px-6 text-gray-600 dark:text-gray-300 text-xs font-medium">

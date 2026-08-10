@@ -46,7 +46,7 @@ class DummyEmployeeUserSeeder extends Seeder
             ['nip' => '1002'],
             [
                 'name' => 'Budi Pegawai',
-                'email' => 'budi@example.com',
+                'email' => 'budi2@example.com',
                 'position_id' => null, 
                 'number' => '089876543210',
             ]

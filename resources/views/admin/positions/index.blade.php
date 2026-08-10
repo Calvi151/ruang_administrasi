@@ -53,9 +53,16 @@
                                 <p class="text-sm text-on-surface-variant dark:text-[#8B93A8] line-clamp-1 max-w-md">{{ $position->description ?? '-' }}</p>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full {{ $position->employees_count > 0 ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400' }} text-xs font-bold border {{ $position->employees_count > 0 ? 'border-blue-200 dark:border-blue-800' : 'border-slate-200 dark:border-slate-700' }}">
-                                    {{ $position->employees_count }} Orang
-                                </span>
+                                @if($position->employees_count > 0)
+                                    <a href="{{ route('employees.index', ['position_id' => $position->id]) }}" title="Klik untuk lihat daftar pegawai" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 text-xs font-bold border border-blue-200 dark:border-blue-800 transition-all hover:scale-105 group">
+                                        <span>{{ $position->employees_count }} Orang</span>
+                                        <span class="material-symbols-outlined text-[14px] opacity-70 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                                    </a>
+                                @else
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 text-xs font-bold border border-slate-200 dark:border-slate-700">
+                                        0 Orang
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
                                 <a href="{{ route('positions.edit', $position->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 dark:text-amber-400 transition-colors">
