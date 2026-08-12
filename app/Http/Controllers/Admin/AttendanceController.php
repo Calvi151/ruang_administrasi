@@ -139,4 +139,10 @@ class AttendanceController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function destroy(Attendance $attendance)
+    {
+        $attendance->delete();
+        return redirect()->route('attendances.index')->with('success', 'Data absensi berhasil dihapus.');
+    }
 }

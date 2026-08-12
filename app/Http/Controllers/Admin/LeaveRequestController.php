@@ -88,4 +88,10 @@ class LeaveRequestController extends Controller
         return redirect()->route('leave-requests.index')
             ->with('success', 'Pengajuan cuti/izin atas nama ' . $leaveRequest->employee->name . ' telah ditolak.');
     }
+
+    public function destroy(LeaveRequest $leaveRequest)
+    {
+        $leaveRequest->delete();
+        return redirect()->route('leave-requests.index')->with('success', 'Data pengajuan cuti/izin berhasil dihapus.');
+    }
 }

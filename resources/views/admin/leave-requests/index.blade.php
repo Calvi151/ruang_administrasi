@@ -312,6 +312,10 @@
                                 <span class="material-symbols-outlined text-[14px]">close</span>
                                 Tolak
                             </button>
+                            
+                            <button type="button" onclick="openModal('deleteModal-{{ $leave->id }}')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-red-100 dark:bg-[#1D2847] dark:hover:bg-red-900/40 text-slate-500 hover:text-red-600 dark:text-[#8B93A8] dark:hover:text-red-400 font-semibold text-xs border border-outline-variant/30 dark:border-[#2A3654] transition-all flex items-center gap-1 active:scale-95 shadow-sm" title="Hapus">
+                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                            </button>
                         @else
                             {{-- Detail dropdown --}}
                             <div class="relative inline-block text-left">
@@ -329,6 +333,11 @@
                                             Alasan Penolakan
                                         </button>
                                     @endif
+                                    <div class="border-t border-outline-variant/20 dark:border-[#2A3654] my-1"></div>
+                                    <button type="button" onclick="openModal('deleteModal-{{ $leave->id }}')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
+                                        <span class="material-symbols-outlined text-[16px]">delete</span>
+                                        Hapus
+                                    </button>
                                 </div>
                             </div>
                         @endif
@@ -366,6 +375,37 @@
                                 </div>
                             </form>
                         </div>
+                    </div>
+                </div>
+
+                {{-- Delete Modal --}}
+                <div id="deleteModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
+                                    <span class="material-symbols-outlined">delete_forever</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Hapus Pengajuan</h3>
+                                    <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $leave->employee->name ?? '-' }}</p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="closeModal('deleteModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
+                                <span class="material-symbols-outlined text-xl">close</span>
+                            </button>
+                        </div>
+                        <form action="{{ route('leave-requests.destroy', $leave->id) }}" method="POST" class="p-6">
+                            @csrf
+                            @method('DELETE')
+                            <div class="mb-6">
+                                <p class="text-sm text-on-surface dark:text-[#E8E6E0]">Apakah Anda yakin ingin menghapus pengajuan {{ ucfirst($leave->type) }} ini secara permanen? Data yang dihapus tidak dapat dikembalikan.</p>
+                            </div>
+                            <div class="flex justify-end gap-3 pt-2">
+                                <button type="button" onclick="closeModal('deleteModal-{{ $leave->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
+                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold shadow-lg shadow-red-500/30 transition-all active:scale-95">Ya, Hapus Data</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 

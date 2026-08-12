@@ -126,13 +126,9 @@
                                 <span class="material-symbols-outlined text-[19px]">edit_note</span>
                             </a>
                             @if($type->outgoing_letters_count == 0)
-                                <form action="{{ route('letter-types.destroy', $type->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus permanen jenis surat ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-2 flex items-center justify-center rounded-xl text-red-600 dark:text-red-400 bg-red-500/15 hover:bg-red-600 hover:text-white dark:hover:bg-red-500 dark:hover:text-white transition-all border border-red-500/30 shadow-2xs hover:shadow-sm" title="Hapus Jenis Surat">
-                                        <span class="material-symbols-outlined text-[19px]">delete</span>
-                                    </button>
-                                </form>
+                                <button type="button" onclick="openModal('deleteModal-{{ $type->id }}')" class="p-2 flex items-center justify-center rounded-xl text-red-600 dark:text-red-400 bg-red-500/15 hover:bg-red-600 hover:text-white dark:hover:bg-red-500 dark:hover:text-white transition-all border border-red-500/30 shadow-2xs hover:shadow-sm" title="Hapus Jenis Surat">
+                                    <span class="material-symbols-outlined text-[19px]">delete</span>
+                                </button>
                             @else
                                 <button type="button" onclick="alert('🔒 MENOLAK PENGHAPUSAN: Jenis Surat \'{{ $type->type_name }}\' tidak dapat dihapus karena terlanjur terhubung ke {{ $type->outgoing_letters_count }} dokumen surat keluar (Dummy/Resmi).\n\n💡 SOLUSI: Karena saat ini masih berupa data Dummy, silakan gunakan tombol EDIT (ikon pensil kuning) untuk mengganti Kode atau Nama surat ke referensi yang benar agar tidak perlu menghapus database relasionalnya.');" class="p-2 flex items-center justify-center rounded-xl text-gray-400 bg-gray-100 dark:bg-[#1A2440]/30 border border-gray-300 dark:border-gray-700 cursor-not-allowed opacity-70" title="Dikunci dari Penghapusan (Klik untuk Info)">
                                     <span class="material-symbols-outlined text-[19px]">lock</span>
@@ -141,6 +137,7 @@
                         </div>
                     </td>
                 </tr>
+
                 @empty
                 <tr>
                     <td colspan="6" class="px-6 py-16 text-center">
@@ -156,6 +153,41 @@
         </table>
     </div>
 </div>
+
+{{-- Modals Container (Rendered OUTSIDE the table to prevent HTML layout break and black screen bug) --}}
+@foreach($types as $type)
+    {{-- Delete Modal --}}
+    <div id="deleteModal-{{ $type->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
+                        <span class="material-symbols-outlined">delete_forever</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface dark:text-white text-lg">Hapus Jenis Surat</h3>
+                        <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $type->type_name }}</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('deleteModal-{{ $type->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <form action="{{ route('letter-types.destroy', $type->id) }}" method="POST" class="p-6">
+                @csrf
+                @method('DELETE')
+                <div class="mb-6">
+                    <p class="text-sm text-on-surface dark:text-[#E8E6E0]">Apakah Anda yakin ingin menghapus permanen jenis surat ini? Data yang dihapus tidak dapat dikembalikan.</p>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('deleteModal-{{ $type->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold shadow-lg shadow-red-500/30 transition-all active:scale-95">Ya, Hapus Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endforeach
+
 @endsection
 
 

@@ -331,6 +331,26 @@
     
     <!-- Global Auto-Animation System -->
     <style>
+        /* Native UI Modals Base Styles */
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-out;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content-box {
+            transform: scale(0.95) translateY(10px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .modal-content-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -741,6 +761,42 @@
                 });
                 observer.observe(document.body, { attributes: true, attributeFilter: ['style'] });
             })();
+        });
+
+        // Global Modal Controller
+        window.openModal = function(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeModal = function(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        // Close modal on overlay click globally
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close modals and dropdowns on Escape key globally
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+                document.querySelectorAll('.action-dropdown').forEach(d => d.classList.add('hidden'));
+            }
         });
     </script>
 </body>

@@ -83,4 +83,10 @@ class OvertimeRequestController extends Controller
         return redirect()->route('overtime-requests.index')
             ->with('success', 'Pengajuan lembur atas nama ' . $overtimeRequest->employee->name . ' telah ditolak.');
     }
+
+    public function destroy(OvertimeRequest $overtimeRequest)
+    {
+        $overtimeRequest->delete();
+        return redirect()->route('overtime-requests.index')->with('success', 'Data pengajuan lembur berhasil dihapus.');
+    }
 }
