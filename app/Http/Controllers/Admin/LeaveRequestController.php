@@ -62,6 +62,20 @@ class LeaveRequestController extends Controller
         return view('admin.leave-requests.index', compact('leaveRequests', 'stats', 'employees'));
     }
 
+    public function update(Request $request, LeaveRequest $leaveRequest)
+    {
+        $request->validate([
+            'type' => 'required|in:cuti,izin,sakit',
+        ]);
+
+        $leaveRequest->update([
+            'type' => $request->type,
+        ]);
+
+        return redirect()->route('leave-requests.index')
+            ->with('success', 'Kategori pengajuan atas nama ' . $leaveRequest->employee->name . ' berhasil diperbarui.');
+    }
+
     public function approve(Request $request, LeaveRequest $leaveRequest)
     {
         $leaveRequest->update([

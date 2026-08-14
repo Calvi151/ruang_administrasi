@@ -98,6 +98,48 @@
     </div>
 </section>
 
+<!-- HR Summary Cards -->
+<section class="mb-8">
+    <div class="flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined text-on-surface-variant dark:text-ds-text-secondary">group</span>
+        <h3 class="font-headline-sm text-headline-sm text-primary dark:text-ds-text-primary">Ringkasan SDM</h3>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-component-gap">
+        <!-- Absensi -->
+        <a href="{{ route('attendances.index') }}" class="editorial-card rounded-xl p-5 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-900/30 dark:to-[#141C33] border border-emerald-200/60 dark:border-[#2A3654] flex items-center justify-between shadow-sm cursor-pointer hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors">
+            <div>
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Hadir Hari Ini</p>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $attendanceToday }} <span class="text-sm font-normal text-slate-500">pegawai</span></h3>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-white/60 dark:bg-slate-800/80 flex items-center justify-center text-emerald-600 dark:text-emerald-500 border border-emerald-100 dark:border-slate-700">
+                <span class="material-symbols-outlined text-xl">how_to_reg</span>
+            </div>
+        </a>
+
+        <!-- Cuti Pending -->
+        <a href="{{ route('leave-requests.index') }}" class="editorial-card rounded-xl p-5 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-[#141C33] border border-blue-200/60 dark:border-[#2A3654] flex items-center justify-between shadow-sm cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
+            <div>
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Cuti Pending</p>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $leavePending }} <span class="text-sm font-normal text-slate-500">pengajuan</span></h3>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-white/60 dark:bg-slate-800/80 flex items-center justify-center text-blue-600 dark:text-blue-500 border border-blue-100 dark:border-slate-700">
+                <span class="material-symbols-outlined text-xl">beach_access</span>
+            </div>
+        </a>
+
+        <!-- Lembur Pending -->
+        <a href="{{ route('overtime-requests.index') }}" class="editorial-card rounded-xl p-5 bg-gradient-to-br from-amber-50 to-white dark:from-amber-900/30 dark:to-[#141C33] border border-amber-200/60 dark:border-[#2A3654] flex items-center justify-between shadow-sm cursor-pointer hover:border-amber-300 dark:hover:border-amber-700 transition-colors">
+            <div>
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Lembur Pending</p>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $overtimePending }} <span class="text-sm font-normal text-slate-500">pengajuan</span></h3>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-white/60 dark:bg-slate-800/80 flex items-center justify-center text-amber-600 dark:text-amber-500 border border-amber-100 dark:border-slate-700">
+                <span class="material-symbols-outlined text-xl">more_time</span>
+            </div>
+        </a>
+    </div>
+</section>
+
 <!-- Tables Row (2 equal columns) -->
 <section class="grid grid-cols-1 md:grid-cols-2 gap-component-gap">
     <!-- Surat Masuk Terbaru -->
@@ -274,6 +316,28 @@
         </div>
     </div>
 </section>
+
+<!-- HR Chart Row -->
+<section class="mt-8 mb-8">
+    <div class="editorial-card p-8 rounded-xl flex flex-col">
+        <div class="flex justify-between items-center mb-8">
+            <h3 class="font-headline-sm text-headline-sm text-primary dark:text-ds-text-primary">Aktivitas SDM: Cuti vs Lembur</h3>
+            <div class="flex gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-blue-500 dark:bg-blue-400"></span>
+                    <span class="font-label-md text-label-md text-on-surface-variant dark:text-ds-text-secondary">Cuti/Izin</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-amber-500 dark:bg-amber-400"></span>
+                    <span class="font-label-md text-label-md text-on-surface-variant dark:text-ds-text-secondary">Lembur</span>
+                </div>
+            </div>
+        </div>
+        <div style="position:relative; height:260px;">
+            <canvas id="hrChart"></canvas>
+        </div>
+    </div>
+</section>
 @endsection
 
 @php
@@ -282,6 +346,8 @@
     $jsonMonths    = json_encode(!empty($months) ? $months : $defaultMonths);
     $jsonIncoming  = json_encode(!empty($monthlyIncomingData) ? $monthlyIncomingData : $defaultZeros);
     $jsonOutgoing  = json_encode(!empty($monthlyOutgoingData) ? $monthlyOutgoingData : $defaultZeros);
+    $jsonLeave     = json_encode(!empty($monthlyLeaveData) ? $monthlyLeaveData : $defaultZeros);
+    $jsonOvertime  = json_encode(!empty($monthlyOvertimeData) ? $monthlyOvertimeData : $defaultZeros);
 @endphp
 
 @section('scripts')
@@ -302,6 +368,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const displayMonths = {!! $jsonMonths !!};
     const incomingData = {!! $jsonIncoming !!};
     const outgoingData = {!! $jsonOutgoing !!};
+    const leaveData = {!! $jsonLeave !!};
+    const overtimeData = {!! $jsonOvertime !!};
 
     // --- Line Chart: Tren Volume Surat ---
     const trendCtx = document.getElementById('trendChart').getContext('2d');
@@ -350,6 +418,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 y: { 
                     grid: { color: gridColor }, 
                     ticks: { color: textColor, font: { family: 'Plus Jakarta Sans', size: 11 } }, 
+                    beginAtZero: true 
+                }
+            }
+        }
+    });
+
+    // --- Bar Chart: HR Activity (Cuti vs Lembur) ---
+    const hrCtx = document.getElementById('hrChart').getContext('2d');
+    
+    // Colorful pastel colors for HR chart
+    const blueColor = isDark ? '#60A5FA' : '#3B82F6';
+    const amberColor = isDark ? '#FBBF24' : '#F59E0B';
+
+    new Chart(hrCtx, {
+        type: 'bar',
+        data: {
+            labels: displayMonths,
+            datasets: [
+                {
+                    label: 'Cuti / Izin',
+                    data: leaveData,
+                    backgroundColor: blueColor,
+                    borderRadius: 4,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8
+                },
+                {
+                    label: 'Lembur',
+                    data: overtimeData,
+                    backgroundColor: amberColor,
+                    borderRadius: 4,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: { 
+                    grid: { display: false }, 
+                    ticks: { color: textColor, font: { family: 'Plus Jakarta Sans', size: 11 } } 
+                },
+                y: { 
+                    grid: { color: gridColor, borderDash: [4, 4] }, 
+                    ticks: { color: textColor, font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 1 }, 
                     beginAtZero: true 
                 }
             }

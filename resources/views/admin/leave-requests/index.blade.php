@@ -199,357 +199,373 @@
     </div>
 
     {{-- Data Table Card --}}
-    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-visible animate-fade-in" style="animation-delay: 500ms;">
-        {{-- Table Header --}}
-        <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant/30 dark:border-[#2A3654] bg-slate-50/50 dark:bg-[#0F172E]/50 items-center text-[11px] font-bold text-on-surface-variant dark:text-[#8B93A8] uppercase tracking-wider">
-            <div class="col-span-3">Pegawai</div>
-            <div class="col-span-1">Jenis</div>
-            <div class="col-span-2 text-center">Periode</div>
-            <div class="col-span-1 text-center">Durasi</div>
-            <div class="col-span-2">Alasan</div>
-            <div class="col-span-1 text-center">Status</div>
-            <div class="col-span-2 text-right">Aksi</div>
-        </div>
-
-        {{-- Table Body --}}
-        <div class="flex flex-col divide-y divide-outline-variant/20 dark:divide-[#2A3654]">
-            @forelse($leaveRequests as $leave)
-                <div class="interactive-row grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#141C33] rounded-lg m-1 animate-slide-in" style="animation-delay: {{ 600 + ($loop->index * 50) }}ms;">
-                    {{-- Employee --}}
-                    <div class="col-span-3 flex items-center gap-3">
-                        @if($leave->employee && $leave->employee->photo)
-                            <img src="{{ asset('storage/' . $leave->employee->photo) }}" alt="Photo" class="w-10 h-10 rounded-full border-2 border-white dark:border-[#2A3654] shadow-sm object-cover shrink-0">
-                        @else
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#091426] to-[#1e293b] dark:from-[#2A3654] dark:to-[#141C33] shadow-sm text-white flex items-center justify-center font-bold text-sm shrink-0 border border-outline-variant/30">
-                                {{ strtoupper(substr($leave->employee->name ?? '?', 0, 2)) }}
-                            </div>
-                        @endif
-                        <div class="flex flex-col min-w-0">
-                            <span class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0] truncate">{{ $leave->employee->name ?? 'Unknown' }}</span>
-                            <span class="text-[11px] text-on-surface-variant dark:text-[#8B93A8] font-mono mt-0.5">{{ $leave->employee->nip ?? '-' }}</span>
-                        </div>
-                    </div>
-
-                    {{-- Type Badge --}}
-                    <div class="col-span-1">
-                        @php
-                            $typeConfig = match($leave->type) {
-                                'cuti'  => ['bg' => 'bg-blue-50 dark:bg-blue-900/20', 'text' => 'text-blue-700 dark:text-blue-400', 'border' => 'border-blue-200 dark:border-blue-800/50', 'icon' => 'beach_access', 'label' => 'Cuti'],
-                                'izin'  => ['bg' => 'bg-purple-50 dark:bg-purple-900/20', 'text' => 'text-purple-700 dark:text-purple-400', 'border' => 'border-purple-200 dark:border-purple-800/50', 'icon' => 'description', 'label' => 'Izin'],
-                                'sakit' => ['bg' => 'bg-orange-50 dark:bg-orange-900/20', 'text' => 'text-orange-700 dark:text-orange-400', 'border' => 'border-orange-200 dark:border-orange-800/50', 'icon' => 'local_hospital', 'label' => 'Sakit'],
-                                default => ['bg' => 'bg-slate-50 dark:bg-slate-900/20', 'text' => 'text-slate-700 dark:text-slate-400', 'border' => 'border-slate-200 dark:border-slate-800/50', 'icon' => 'help', 'label' => ucfirst($leave->type)],
-                            };
-                        @endphp
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg {{ $typeConfig['bg'] }} {{ $typeConfig['text'] }} {{ $typeConfig['border'] }} border text-[11px] font-bold">
-                            <span class="material-symbols-outlined text-[14px]">{{ $typeConfig['icon'] }}</span>
-                            {{ $typeConfig['label'] }}
-                        </span>
-                    </div>
-
-                    {{-- Period --}}
-                    <div class="col-span-2 text-center">
-                        <div class="text-xs font-semibold text-on-surface dark:text-[#E8E6E0]">
-                            {{ \Carbon\Carbon::parse($leave->start_date)->translatedFormat('d M') }}
-                        </div>
-                        <div class="text-[10px] text-on-surface-variant dark:text-[#8B93A8] my-0.5">s/d</div>
-                        <div class="text-xs font-semibold text-on-surface dark:text-[#E8E6E0]">
-                            {{ \Carbon\Carbon::parse($leave->end_date)->translatedFormat('d M Y') }}
-                        </div>
-                    </div>
-
-                    {{-- Duration --}}
-                    <div class="col-span-1 text-center">
-                        @php
-                            $days = \Carbon\Carbon::parse($leave->start_date)->diffInDays(\Carbon\Carbon::parse($leave->end_date)) + 1;
-                        @endphp
-                        <span class="inline-block font-mono font-bold text-[#2563eb] dark:text-[#60a5fa] bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded-md border border-blue-100 dark:border-blue-800/50 text-sm">
-                            {{ $days }} <span class="text-[10px] font-normal">hari</span>
-                        </span>
-                    </div>
-
-                    {{-- Reason --}}
-                    <div class="col-span-2">
-                        <p class="text-xs text-on-surface-variant dark:text-[#8B93A8] line-clamp-2 leading-relaxed">{{ $leave->reason ?? '-' }}</p>
-                        @if($leave->attachment)
-                            <button onclick="openModal('attachModal-{{ $leave->id }}')" class="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">
-                                <span class="material-symbols-outlined text-[14px]">attach_file</span>
-                                Lihat Lampiran
-                            </button>
-                        @endif
-                    </div>
-
-                    {{-- Status --}}
-                    <div class="col-span-1 flex justify-center">
-                        @if($leave->status == 'pending')
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-100/50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-700/50">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 pulse-dot"></span>
-                                Pending
-                            </div>
-                        @elseif($leave->status == 'approved')
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800/50">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Disetujui
-                            </div>
-                        @else
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-bold border border-red-200 dark:border-red-800/50">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                Ditolak
-                            </div>
-                        @endif
-                    </div>
-
-                    {{-- Actions --}}
-                    <div class="col-span-2 flex justify-end gap-2">
-                        @if($leave->status == 'pending')
-                            {{-- ACC Button --}}
-                            <button onclick="openModal('approveModal-{{ $leave->id }}')" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 font-semibold text-xs border border-emerald-200 dark:border-emerald-700/50 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
-                                <span class="material-symbols-outlined text-[14px]">check</span>
-                                ACC
-                            </button>
-
-                            {{-- Reject Button --}}
-                            <button onclick="openModal('rejectModal-{{ $leave->id }}')" class="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-700 dark:text-red-400 font-semibold text-xs border border-red-200 dark:border-red-700/50 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
-                                <span class="material-symbols-outlined text-[14px]">close</span>
-                                Tolak
-                            </button>
-                            
-                            <button type="button" onclick="openModal('deleteModal-{{ $leave->id }}')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-red-100 dark:bg-[#1D2847] dark:hover:bg-red-900/40 text-slate-500 hover:text-red-600 dark:text-[#8B93A8] dark:hover:text-red-400 font-semibold text-xs border border-outline-variant/30 dark:border-[#2A3654] transition-all flex items-center gap-1 active:scale-95 shadow-sm" title="Hapus">
-                                <span class="material-symbols-outlined text-[14px]">delete</span>
-                            </button>
-                        @else
-                            {{-- Detail dropdown --}}
-                            <div class="relative inline-block text-left">
-                                <button onclick="toggleDropdown('dropdown-{{ $leave->id }}', event)" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-[#1D2847] flex items-center justify-center text-outline dark:text-[#8B93A8] hover:text-[#091426] dark:hover:text-white transition-colors focus:outline-none">
-                                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
-                                </button>
-                                <div id="dropdown-{{ $leave->id }}" class="action-dropdown hidden absolute right-0 mt-1 w-44 bg-white dark:bg-[#141C33] border border-outline-variant/40 dark:border-[#2A3654] rounded-xl shadow-lg z-[60] py-1 overflow-hidden">
-                                    <button onclick="openModal('detailModal-{{ $leave->id }}')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-on-surface dark:text-[#E8E6E0] hover:bg-slate-50 dark:hover:bg-[#1D2847] flex items-center gap-2 transition-colors">
-                                        <span class="material-symbols-outlined text-[16px]">visibility</span>
-                                        Lihat Detail
-                                    </button>
-                                    @if($leave->status == 'rejected' && $leave->rejected_reason)
-                                        <button onclick="openModal('reasonModal-{{ $leave->id }}')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
-                                            <span class="material-symbols-outlined text-[16px]">info</span>
-                                            Alasan Penolakan
-                                        </button>
+    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <!-- Table Header -->
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-[#0F172E]/50 border-b border-outline-variant/30 dark:border-[#2A3654] text-[11px] font-bold text-on-surface-variant dark:text-[#8B93A8] uppercase tracking-wider">
+                        <th class="px-6 py-4 font-semibold">Pegawai</th>
+                        <th class="px-6 py-4 font-semibold">Jenis</th>
+                        <th class="px-6 py-4 font-semibold text-center">Periode</th>
+                        <th class="px-6 py-4 font-semibold text-center">Durasi</th>
+                        <th class="px-6 py-4 font-semibold">Alasan</th>
+                        <th class="px-6 py-4 font-semibold text-center">Status</th>
+                        <th class="px-6 py-4 font-semibold text-right">Aksi</th>
+                    </tr>
+                </thead>
+                
+                <!-- Table Body -->
+                <tbody class="divide-y divide-outline-variant/20 dark:divide-[#2A3654]">
+                    @forelse($leaveRequests as $leave)
+                        <tr class="hover:bg-slate-50 dark:hover:bg-[#1D2847]/50 transition-colors">
+                            <!-- Employee -->
+                            <td class="px-6 py-3">
+                                <div class="flex items-center gap-3">
+                                    @if($leave->employee && $leave->employee->photo)
+                                        <img src="{{ asset('storage/' . $leave->employee->photo) }}" alt="Photo" class="w-8 h-8 rounded-full border border-outline-variant/30 dark:border-[#2A3654] object-cover shrink-0">
+                                    @else
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#2A3654] text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs shrink-0 border border-outline-variant/30">
+                                            {{ strtoupper(substr($leave->employee->name ?? '?', 0, 2)) }}
+                                        </div>
                                     @endif
-                                    <div class="border-t border-outline-variant/20 dark:border-[#2A3654] my-1"></div>
-                                    <button type="button" onclick="openModal('deleteModal-{{ $leave->id }}')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
-                                        <span class="material-symbols-outlined text-[16px]">delete</span>
-                                        Hapus
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0] truncate">{{ $leave->employee->name ?? 'Unknown' }}</span>
+                                        <span class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $leave->employee->nip ?? '-' }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <!-- Type Badge -->
+                            <td class="px-6 py-3">
+                                @php
+                                    $typeConfig = match($leave->type) {
+                                        'cuti'  => ['bg' => 'bg-blue-50 dark:bg-blue-900/20', 'text' => 'text-blue-700 dark:text-blue-400', 'border' => 'border-blue-200/60 dark:border-blue-800/50', 'icon' => 'beach_access', 'label' => 'Cuti'],
+                                        'izin'  => ['bg' => 'bg-purple-50 dark:bg-purple-900/20', 'text' => 'text-purple-700 dark:text-purple-400', 'border' => 'border-purple-200/60 dark:border-purple-800/50', 'icon' => 'description', 'label' => 'Izin'],
+                                        'sakit' => ['bg' => 'bg-orange-50 dark:bg-orange-900/20', 'text' => 'text-orange-700 dark:text-orange-400', 'border' => 'border-orange-200/60 dark:border-orange-800/50', 'icon' => 'local_hospital', 'label' => 'Sakit'],
+                                        default => ['bg' => 'bg-slate-50 dark:bg-slate-900/20', 'text' => 'text-slate-700 dark:text-slate-400', 'border' => 'border-slate-200/60 dark:border-slate-800/50', 'icon' => 'help', 'label' => ucfirst($leave->type)],
+                                    };
+                                @endphp
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md {{ $typeConfig['bg'] }} {{ $typeConfig['text'] }} {{ $typeConfig['border'] }} border text-[11px] font-medium">
+                                    <span class="material-symbols-outlined text-[14px]">{{ $typeConfig['icon'] }}</span>
+                                    {{ $typeConfig['label'] }}
+                                </span>
+                            </td>
+                            
+                            <!-- Period -->
+                            <td class="px-6 py-3 text-center whitespace-nowrap">
+                                <div class="text-sm text-slate-700 dark:text-slate-300">
+                                    {{ \Carbon\Carbon::parse($leave->start_date)->translatedFormat('d M') }}
+                                    <span class="text-slate-400 mx-1">-</span>
+                                    {{ \Carbon\Carbon::parse($leave->end_date)->translatedFormat('d M Y') }}
+                                </div>
+                            </td>
+                            
+                            <!-- Duration -->
+                            <td class="px-6 py-3 text-center">
+                                @php
+                                    $days = \Carbon\Carbon::parse($leave->start_date)->diffInDays(\Carbon\Carbon::parse($leave->end_date)) + 1;
+                                @endphp
+                                <span class="inline-flex items-center justify-center font-mono font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm border border-slate-200 dark:border-slate-700">
+                                    {{ $days }} <span class="text-[10px] ml-1 font-normal text-slate-500">hari</span>
+                                </span>
+                            </td>
+                            
+                            <!-- Reason -->
+                            <td class="px-6 py-3">
+                                <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 max-w-[200px]">{{ $leave->reason ?? '-' }}</p>
+                                @if($leave->attachment)
+                                    <button onclick="openModal('attachModal-{{ $leave->id }}')" class="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                                        <span class="material-symbols-outlined text-[14px]">attach_file</span>
+                                        Lampiran
                                     </button>
+                                @endif
+                            </td>
+                            
+                            <!-- Status -->
+                            <td class="px-6 py-3 text-center">
+                                @if($leave->status == 'pending')
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs font-medium border border-amber-200/60 dark:border-amber-800/50">
+                                        Pending
+                                    </span>
+                                @elseif($leave->status == 'approved')
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium border border-emerald-200/60 dark:border-emerald-800/50">
+                                        Disetujui
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-xs font-medium border border-red-200/60 dark:border-red-800/50">
+                                        Ditolak
+                                    </span>
+                                @endif
+                            </td>
+                            
+                            <!-- Actions -->
+                            <td class="px-6 py-3 text-right">
+                                <div class="flex justify-end gap-2 items-center">
+                                    @if($leave->status == 'pending')
+                                        <button onclick="openModal('editCategoryModal-{{ $leave->id }}')" class="px-2 py-1 rounded bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 font-medium text-xs border border-slate-200/60 dark:border-slate-700 transition-colors flex items-center gap-1" title="Edit Kategori">
+                                            <span class="material-symbols-outlined text-[14px]">edit</span>
+                                            Edit
+                                        </button>
+                                        <button onclick="openModal('approveModal-{{ $leave->id }}')" class="px-2 py-1 rounded bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 font-medium text-xs border border-emerald-200/60 dark:border-emerald-800/50 transition-colors flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[14px]">check</span>
+                                            ACC
+                                        </button>
+                                        <button onclick="openModal('rejectModal-{{ $leave->id }}')" class="px-2 py-1 rounded bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-700 dark:text-red-400 font-medium text-xs border border-red-200/60 dark:border-red-800/50 transition-colors flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[14px]">close</span>
+                                            Tolak
+                                        </button>
+                                    @else
+                                        <div class="relative inline-block text-left">
+                                            <button onclick="toggleDropdown('dropdown-{{ $leave->id }}', event)" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-[#1D2847] flex items-center justify-center text-slate-500 transition-colors">
+                                                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+                                            </button>
+                                            <div id="dropdown-{{ $leave->id }}" class="action-dropdown hidden absolute right-0 mt-1 w-40 bg-white dark:bg-[#141C33] border border-outline-variant/40 dark:border-[#2A3654] rounded-lg shadow-lg z-[60] py-1">
+                                                <button onclick="openModal('detailModal-{{ $leave->id }}')" class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1D2847] flex items-center gap-2">
+                                                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                                                    Lihat Detail
+                                                </button>
+                                                <button onclick="openModal('editCategoryModal-{{ $leave->id }}')" class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1D2847] flex items-center gap-2">
+                                                    <span class="material-symbols-outlined text-[16px]">edit</span>
+                                                    Edit Kategori
+                                                </button>
+                                                @if($leave->status == 'rejected' && $leave->rejected_reason)
+                                                    <button onclick="openModal('reasonModal-{{ $leave->id }}')" class="w-full text-left px-4 py-2 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-[16px]">info</span>
+                                                        Alasan Penolakan
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
-                {{-- MODALS --}}
-
-                {{-- Approve Modal --}}
-                <div id="approveModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-emerald-50/50 dark:bg-emerald-900/10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                                    <span class="material-symbols-outlined">check_circle</span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-3">inbox</span>
+                                    <h3 class="font-medium text-sm text-slate-900 dark:text-slate-200">Belum Ada Pengajuan</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Belum ada pegawai yang mengajukan cuti, izin, atau sakit pada periode ini.</p>
                                 </div>
-                                <div>
-                                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Setujui Pengajuan</h3>
-                                    <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $leave->employee->name }} — {{ ucfirst($leave->type) }}</p>
-                                </div>
-                            </div>
-                            <button onclick="closeModal('approveModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <div class="p-6">
-                            <p class="text-sm text-on-surface-variant dark:text-[#8B93A8] mb-6">
-                                Anda akan menyetujui pengajuan {{ $leave->type }} dari <strong>{{ $leave->employee->name }}</strong>. Lanjutkan?
-                            </p>
-                            <form action="{{ route('leave-requests.approve', $leave->id) }}" method="POST">
-                                @csrf
-                                <div class="flex justify-end gap-3">
-                                    <button type="button" onclick="closeModal('approveModal-{{ $leave->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
-                                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/30 transition-all active:scale-95">Ya, Setujui</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Delete Modal --}}
-                <div id="deleteModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
-                                    <span class="material-symbols-outlined">delete_forever</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Hapus Pengajuan</h3>
-                                    <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $leave->employee->name ?? '-' }}</p>
-                                </div>
-                            </div>
-                            <button type="button" onclick="closeModal('deleteModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <form action="{{ route('leave-requests.destroy', $leave->id) }}" method="POST" class="p-6">
-                            @csrf
-                            @method('DELETE')
-                            <div class="mb-6">
-                                <p class="text-sm text-on-surface dark:text-[#E8E6E0]">Apakah Anda yakin ingin menghapus pengajuan {{ ucfirst($leave->type) }} ini secara permanen? Data yang dihapus tidak dapat dikembalikan.</p>
-                            </div>
-                            <div class="flex justify-end gap-3 pt-2">
-                                <button type="button" onclick="closeModal('deleteModal-{{ $leave->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
-                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold shadow-lg shadow-red-500/30 transition-all active:scale-95">Ya, Hapus Data</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                {{-- Reject Modal --}}
-                <div id="rejectModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
-                                    <span class="material-symbols-outlined">block</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Tolak Pengajuan</h3>
-                                    <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $leave->employee->name }} — {{ ucfirst($leave->type) }}</p>
-                                </div>
-                            </div>
-                            <button onclick="closeModal('rejectModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <form action="{{ route('leave-requests.reject', $leave->id) }}" method="POST" class="p-6">
-                            @csrf
-                            <div class="mb-5">
-                                <label class="block text-sm font-semibold text-on-surface dark:text-[#E8E6E0] mb-2">Alasan Penolakan <span class="text-red-500">*</span></label>
-                                <textarea name="rejected_reason" required rows="3" placeholder="Jelaskan alasan penolakan..." class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0F172E] border border-outline-variant/60 dark:border-[#2A3654] rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-on-surface dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                            <div class="flex justify-end gap-3 pt-2">
-                                <button type="button" onclick="closeModal('rejectModal-{{ $leave->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
-                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold shadow-lg shadow-red-500/30 transition-all active:scale-95">Konfirmasi Tolak</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                {{-- Detail Modal --}}
-                <div id="detailModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654]">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                    <span class="material-symbols-outlined">info</span>
-                                </div>
-                                <h3 class="font-bold text-on-surface dark:text-white text-lg">Detail Pengajuan</h3>
-                            </div>
-                            <button onclick="closeModal('detailModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <div class="p-6 space-y-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Pegawai</p>
-                                    <p class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0]">{{ $leave->employee->name ?? '-' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Jenis</p>
-                                    <p class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0]">{{ ucfirst($leave->type) }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Mulai</p>
-                                    <p class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0]">{{ \Carbon\Carbon::parse($leave->start_date)->translatedFormat('d M Y') }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Selesai</p>
-                                    <p class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0]">{{ \Carbon\Carbon::parse($leave->end_date)->translatedFormat('d M Y') }}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Alasan</p>
-                                <p class="text-sm text-on-surface dark:text-[#E8E6E0] bg-slate-50 dark:bg-[#0F172E] p-3 rounded-lg border border-outline-variant/30 dark:border-[#2A3654]">{{ $leave->reason ?? 'Tidak ada alasan yang dicantumkan.' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Diajukan Pada</p>
-                                <p class="text-sm text-on-surface dark:text-[#E8E6E0]">{{ $leave->created_at->translatedFormat('d M Y, H:i') }}</p>
-                            </div>
-                            @if($leave->status != 'pending' && $leave->approver)
-                                <div>
-                                    <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Diproses Oleh</p>
-                                    <p class="text-sm text-on-surface dark:text-[#E8E6E0]">Admin (NIP: {{ $leave->approver->nip ?? '-' }})</p>
-                                </div>
-                            @endif
-                            @if($leave->status == 'rejected' && $leave->rejected_reason)
-                                <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50 rounded-lg p-3">
-                                    <p class="text-[11px] uppercase tracking-wider font-bold text-red-600 dark:text-red-400 mb-1">Alasan Penolakan</p>
-                                    <p class="text-sm text-red-700 dark:text-red-300">{{ $leave->rejected_reason }}</p>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Reason Modal (quick access) --}}
-                @if($leave->status == 'rejected' && $leave->rejected_reason)
-                <div id="reasonModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-4 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
-                            <h3 class="font-bold text-red-700 dark:text-red-400">Alasan Penolakan</h3>
-                            <button onclick="closeModal('reasonModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-sm text-on-surface dark:text-[#E8E6E0] leading-relaxed">{{ $leave->rejected_reason }}</p>
-                        </div>
-                    </div>
-                </div>
-                @endif
-
-                {{-- Attachment Modal --}}
-                @if($leave->attachment)
-                <div id="attachModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-4 border-b border-outline-variant/20 dark:border-[#2A3654]">
-                            <h3 class="font-bold text-on-surface dark:text-white">Lampiran</h3>
-                            <button onclick="closeModal('attachModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <div class="p-4 flex flex-col items-center bg-slate-50 dark:bg-[#0B1220]">
-                            <img src="{{ asset('storage/' . $leave->attachment) }}" alt="Lampiran" class="w-full max-h-64 object-contain rounded-xl border border-outline-variant/20 dark:border-[#2A3654]">
-                        </div>
-                    </div>
-                </div>
-                @endif
-
-            @empty
-                <div class="px-6 py-16 flex flex-col items-center justify-center text-center">
-                    <div class="w-24 h-24 bg-amber-50 dark:bg-amber-900/10 rounded-full flex items-center justify-center mb-4">
-                        <span class="material-symbols-outlined text-5xl text-amber-300 dark:text-amber-500/50">event_busy</span>
-                    </div>
-                    <h3 class="font-bold text-lg text-on-surface dark:text-[#E8E6E0] mb-1">Belum Ada Pengajuan</h3>
-                    <p class="text-on-surface-variant dark:text-[#8B93A8] max-w-sm">Belum ada pegawai yang mengajukan cuti, izin, atau sakit pada periode ini.</p>
-                </div>
-            @endforelse
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
         {{-- Pagination --}}
         @if($leaveRequests->hasPages())
-        <div class="px-6 py-4 border-t border-outline-variant/30 dark:border-[#2A3654] bg-[#f8f9ff] dark:bg-[#0F172E]">
+        <div class="px-6 py-4 border-t border-outline-variant/30 dark:border-[#2A3654] bg-slate-50/50 dark:bg-[#0F172E]/30">
             {{ $leaveRequests->appends(request()->query())->links() }}
         </div>
         @endif
     </div>
 </div>
+
+{{-- Modals Container (Rendered outside table) --}}
+@foreach($leaveRequests as $leave)
+    {{-- Approve Modal --}}
+    <div id="approveModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-emerald-50/50 dark:bg-emerald-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                        <span class="material-symbols-outlined">check_circle</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface dark:text-white text-lg">Setujui Pengajuan</h3>
+                        <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $leave->employee->name }} — {{ ucfirst($leave->type) }}</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('approveModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-slate-100 dark:hover:bg-[#0F172E]">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-sm text-on-surface-variant dark:text-[#8B93A8] mb-6">
+                    Anda akan menyetujui pengajuan {{ $leave->type }} dari <strong>{{ $leave->employee->name }}</strong>. Lanjutkan?
+                </p>
+                <form action="{{ route('leave-requests.approve', $leave->id) }}" method="POST">
+                    @csrf
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="closeModal('approveModal-{{ $leave->id }}')" class="px-5 py-2.5 rounded-lg font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
+                        <button type="submit" class="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-all active:scale-95">Ya, Setujui</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Edit Category Modal --}}
+    <div id="editCategoryModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-slate-50/50 dark:bg-slate-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+                        <span class="material-symbols-outlined">edit</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface dark:text-[#E8E6E0] text-lg leading-tight">Edit Kategori</h3>
+                        <p class="text-xs text-on-surface-variant dark:text-[#8B93A8] mt-0.5">{{ $leave->employee->name ?? 'Pegawai' }}</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('editCategoryModal-{{ $leave->id }}')" class="w-8 h-8 rounded-full bg-surface-variant/50 dark:bg-[#2A3654]/50 hover:bg-surface-variant dark:hover:bg-[#2A3654] text-on-surface-variant dark:text-[#E8E6E0] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <form action="{{ route('leave-requests.update', $leave->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="mb-5">
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-[#E8E6E0] mb-2">Pilih Kategori Baru</label>
+                        <select name="type" required class="w-full px-4 py-2.5 bg-white dark:bg-[#0F172E] border border-outline-variant/60 dark:border-[#2A3654] rounded-xl text-sm text-slate-700 dark:text-[#E8E6E0] focus:ring-2 focus:ring-primary/20 dark:focus:ring-ds-accent/20 focus:border-primary dark:focus:border-ds-accent transition-all">
+                            <option value="cuti" {{ $leave->type == 'cuti' ? 'selected' : '' }}>🏖️ Cuti</option>
+                            <option value="izin" {{ $leave->type == 'izin' ? 'selected' : '' }}>📋 Izin</option>
+                            <option value="sakit" {{ $leave->type == 'sakit' ? 'selected' : '' }}>🏥 Sakit</option>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-3 justify-end mt-6">
+                        <button type="button" onclick="closeModal('editCategoryModal-{{ $leave->id }}')" class="px-5 py-2.5 text-sm font-bold text-on-surface-variant dark:text-[#8B93A8] bg-surface dark:bg-[#1A2440] hover:bg-surface-variant dark:hover:bg-[#2A3654] rounded-xl transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-slate-900 dark:bg-ds-accent dark:text-[#0B1220] hover:bg-slate-800 dark:hover:bg-amber-400 rounded-xl transition-colors shadow-sm">
+                            Simpan Kategori
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Reject Modal --}}
+    <div id="rejectModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
+                        <span class="material-symbols-outlined">block</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface dark:text-white text-lg">Tolak Pengajuan</h3>
+                        <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $leave->employee->name }} — {{ ucfirst($leave->type) }}</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('rejectModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-slate-100 dark:hover:bg-[#0F172E]">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <form action="{{ route('leave-requests.reject', $leave->id) }}" method="POST" class="p-6">
+                @csrf
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-on-surface dark:text-[#E8E6E0] mb-2">Alasan Penolakan <span class="text-red-500">*</span></label>
+                    <textarea name="rejected_reason" required rows="3" placeholder="Jelaskan alasan penolakan..." class="w-full px-4 py-3 bg-slate-50 dark:bg-[#0F172E] border border-outline-variant/60 dark:border-[#2A3654] rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-on-surface dark:text-white text-sm resize-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('rejectModal-{{ $leave->id }}')" class="px-5 py-2.5 rounded-lg font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium shadow-sm transition-all active:scale-95">Konfirmasi Tolak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Detail Modal --}}
+    <div id="detailModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654]">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                        <span class="material-symbols-outlined">info</span>
+                    </div>
+                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Detail Pengajuan</h3>
+                </div>
+                <button onclick="closeModal('detailModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-slate-100 dark:hover:bg-[#0F172E]">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Pegawai</p>
+                        <p class="text-sm font-medium text-on-surface dark:text-[#E8E6E0]">{{ $leave->employee->name ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Jenis</p>
+                        <p class="text-sm font-medium text-on-surface dark:text-[#E8E6E0]">{{ ucfirst($leave->type) }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Mulai</p>
+                        <p class="text-sm font-medium text-on-surface dark:text-[#E8E6E0]">{{ \Carbon\Carbon::parse($leave->start_date)->translatedFormat('d M Y') }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Selesai</p>
+                        <p class="text-sm font-medium text-on-surface dark:text-[#E8E6E0]">{{ \Carbon\Carbon::parse($leave->end_date)->translatedFormat('d M Y') }}</p>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Alasan</p>
+                    <p class="text-sm text-on-surface dark:text-[#E8E6E0] bg-slate-50 dark:bg-[#0F172E] p-3 rounded-lg border border-outline-variant/30 dark:border-[#2A3654]">{{ $leave->reason ?? 'Tidak ada alasan yang dicantumkan.' }}</p>
+                </div>
+                <div>
+                    <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Diajukan Pada</p>
+                    <p class="text-sm text-on-surface dark:text-[#E8E6E0]">{{ $leave->created_at->translatedFormat('d M Y, H:i') }}</p>
+                </div>
+                @if($leave->status != 'pending' && $leave->approver)
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant dark:text-[#8B93A8] mb-1">Diproses Oleh</p>
+                        <p class="text-sm text-on-surface dark:text-[#E8E6E0]">Admin (NIP: {{ $leave->approver->nip ?? '-' }})</p>
+                    </div>
+                @endif
+                @if($leave->status == 'rejected' && $leave->rejected_reason)
+                    <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50 rounded-lg p-3">
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-red-600 dark:text-red-400 mb-1">Alasan Penolakan</p>
+                        <p class="text-sm text-red-700 dark:text-red-300">{{ $leave->rejected_reason }}</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    {{-- Reason Modal (quick access) --}}
+    @if($leave->status == 'rejected' && $leave->rejected_reason)
+    <div id="reasonModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-sm rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-4 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
+                <h3 class="font-bold text-red-700 dark:text-red-400">Alasan Penolakan</h3>
+                <button onclick="closeModal('reasonModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <div class="p-5">
+                <p class="text-sm text-on-surface dark:text-[#E8E6E0] leading-relaxed">{{ $leave->rejected_reason }}</p>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    {{-- Attachment Modal --}}
+    @if($leave->attachment)
+    <div id="attachModal-{{ $leave->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-sm rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-4 border-b border-outline-variant/20 dark:border-[#2A3654]">
+                <h3 class="font-bold text-on-surface dark:text-white">Lampiran</h3>
+                <button onclick="closeModal('attachModal-{{ $leave->id }}')" class="text-outline hover:text-error transition-colors">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <div class="p-4 flex flex-col items-center bg-slate-50 dark:bg-[#0B1220]">
+                <img src="{{ asset('storage/' . $leave->attachment) }}" alt="Lampiran" class="w-full max-h-64 object-contain rounded-xl border border-outline-variant/20 dark:border-[#2A3654]">
+            </div>
+        </div>
+    </div>
+    @endif
+@endforeach
 @endsection
 
 @section('scripts')

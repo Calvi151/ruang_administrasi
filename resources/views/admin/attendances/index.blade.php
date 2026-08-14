@@ -163,233 +163,102 @@
     </div>
     
     <!-- Data Table Card -->
-    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-visible animate-fade-in" style="animation-delay: 400ms;">
-        <!-- Table Header -->
-        <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant/30 dark:border-[#2A3654] bg-slate-50/50 dark:bg-[#0F172E]/50 items-center text-[11px] font-bold text-on-surface-variant dark:text-[#8B93A8] uppercase tracking-wider">
-            <div class="col-span-3">Pegawai</div>
-            <div class="col-span-2">Tanggal</div>
-            <div class="col-span-2 text-center">Masuk</div>
-            <div class="col-span-1 text-center">Pulang</div>
-            <div class="col-span-2 text-center">Status</div>
-            <div class="col-span-1 text-center">Bukti</div>
-            <div class="col-span-1 text-right">Aksi</div>
-        </div>
-        
-        <!-- Table Body -->
-        <div class="flex flex-col divide-y divide-outline-variant/20 dark:divide-[#2A3654]">
-            @forelse($attendances as $attendance)
-                <div class="interactive-row grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#141C33] rounded-lg m-1 animate-slide-in" style="animation-delay: {{ 500 + ($loop->index * 50) }}ms;">
-                    <!-- Employee -->
-                    <div class="col-span-3 flex items-center gap-3">
-                        @if($attendance->employee->photo)
-                            <img src="{{ asset('storage/' . $attendance->employee->photo) }}" alt="Photo" class="w-10 h-10 rounded-full border-2 border-white dark:border-[#2A3654] shadow-sm object-cover shrink-0">
-                        @else
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#091426] to-[#1e293b] dark:from-[#2A3654] dark:to-[#141C33] shadow-sm text-white flex items-center justify-center font-bold text-sm shrink-0 border border-outline-variant/30">
-                                {{ strtoupper(substr($attendance->employee->name ?? '?', 0, 2)) }}
-                            </div>
-                        @endif
-                        <div class="flex flex-col min-w-0">
-                            <span class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0] truncate">{{ $attendance->employee->name ?? 'Unknown' }}</span>
-                            <span class="text-[11px] text-on-surface-variant dark:text-[#8B93A8] font-mono mt-0.5">{{ $attendance->employee->nip ?? '-' }}</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Date -->
-                    <div class="col-span-2 text-sm text-on-surface-variant dark:text-[#8B93A8]">
-                        {{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('d M Y') }}
-                    </div>
-                    
-                    <!-- Time In -->
-                    <div class="col-span-2 text-center">
-                        @if($attendance->check_in_time)
-                            <span class="inline-block font-mono font-bold text-[#2563eb] dark:text-[#60a5fa] bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md border border-blue-100 dark:border-blue-800/50">{{ \Carbon\Carbon::parse($attendance->check_in_time)->format('H:i') }}</span>
-                        @else
-                            <span class="font-mono text-outline font-light">-</span>
-                        @endif
-                    </div>
-                    
-                    <!-- Time Out -->
-                    <div class="col-span-1 text-center">
-                        @if($attendance->check_out_time)
-                            <span class="inline-block font-mono font-bold text-[#059669] dark:text-[#34d399] bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-md border border-emerald-100 dark:border-emerald-800/50">{{ \Carbon\Carbon::parse($attendance->check_out_time)->format('H:i') }}</span>
-                        @else
-                            <span class="font-mono text-outline font-light">-</span>
-                        @endif
-                    </div>
-                    
-                    <!-- Status -->
-                    <div class="col-span-2 flex justify-center">
-                        @if(!$attendance->check_out_time)
-                            <!-- Gantung / Belum Pulang -->
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-100/50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-700/50">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 pulse-dot"></span>
-                                Belum Pulang
-                            </div>
-                        @elseif($attendance->check_in_status == 'late')
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-bold border border-red-200 dark:border-red-800/50">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                Terlambat
-                            </div>
-                        @else
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800/50">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Tepat Waktu
-                            </div>
-                        @endif
-                    </div>
-                    
-                    <!-- Proof Chips (Interactive Modals) -->
-                    <div class="col-span-1 flex justify-center gap-2">
-                        <!-- Photo Button -->
-                        <button onclick="openModal('photoModal-{{ $attendance->id }}')" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0F172E] hover:bg-[#2563eb] hover:text-white dark:hover:bg-[#2563eb] border border-outline-variant/30 dark:border-[#2A3654] flex items-center justify-center text-on-surface-variant dark:text-[#8B93A8] transition-all transform hover:scale-110 hover:rotate-3 shadow-sm tooltip" title="Lihat Foto">
-                            <span class="material-symbols-outlined text-[16px]">photo_camera</span>
-                        </button>
-                        
-                        <!-- Map Button -->
-                        <button onclick="openModal('mapModal-{{ $attendance->id }}')" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0F172E] hover:bg-[#059669] hover:text-white dark:hover:bg-[#059669] border border-outline-variant/30 dark:border-[#2A3654] flex items-center justify-center text-on-surface-variant dark:text-[#8B93A8] transition-all transform hover:scale-110 hover:-rotate-3 shadow-sm tooltip" title="Lihat Lokasi">
-                            <span class="material-symbols-outlined text-[16px]">location_on</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Action -->
-                    <div class="col-span-1 flex justify-end">
-                        @if(!$attendance->check_out_time)
-                            <!-- Tombol Edit Cepat (Interaktif) -->
-                            <button onclick="openModal('editModal-{{ $attendance->id }}')" class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 text-amber-700 dark:text-amber-400 font-semibold text-xs border border-amber-200 dark:border-amber-700/50 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
-                                <span class="material-symbols-outlined text-[14px]">pending_actions</span>
-                                Edit
-                            </button>
-                        @else
-                            <div class="relative inline-block text-left">
-                                <button onclick="toggleDropdown('dropdown-{{ $attendance->id }}', event)" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-[#1D2847] flex items-center justify-center text-outline dark:text-[#8B93A8] hover:text-[#091426] dark:hover:text-white transition-colors focus:outline-none">
-                                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
-                                </button>
-                                <!-- Dropdown Menu -->
-                                <div id="dropdown-{{ $attendance->id }}" class="action-dropdown hidden absolute right-0 mt-1 w-40 bg-white dark:bg-[#141C33] border border-outline-variant/40 dark:border-[#2A3654] rounded-xl shadow-lg z-[60] py-1 overflow-hidden transform transition-all origin-top-right">
-                                    <button onclick="alert('Fitur Detail sedang dikembangkan')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-on-surface dark:text-[#E8E6E0] hover:bg-slate-50 dark:hover:bg-[#1D2847] flex items-center gap-2 transition-colors">
-                                        <span class="material-symbols-outlined text-[16px]">visibility</span>
-                                        Lihat Detail
-                                    </button>
-                                    <button onclick="alert('Fitur Edit Data sedang dikembangkan')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-on-surface dark:text-[#E8E6E0] hover:bg-slate-50 dark:hover:bg-[#1D2847] flex items-center gap-2 transition-colors">
-                                        <span class="material-symbols-outlined text-[16px]">edit_note</span>
-                                        Edit Data
-                                    </button>
-                                    <div class="border-t border-outline-variant/20 dark:border-[#2A3654] my-1"></div>
-                                    <button type="button" onclick="openModal('deleteModal-{{ $attendance->id }}')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
-                                        <span class="material-symbols-outlined text-[16px]">delete</span>
-                                        Hapus
-                                    </button>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- MODALS FOR THIS ROW (Rendered out of flow) -->
+    <div class="bg-white dark:bg-[#141C33] rounded-xl border border-outline-variant/40 dark:border-[#2A3654] shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <!-- Table Header -->
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-[#0F172E]/50 border-b border-outline-variant/30 dark:border-[#2A3654] text-[11px] font-bold text-on-surface-variant dark:text-[#8B93A8] uppercase tracking-wider">
+                        <th class="px-6 py-4 font-semibold">Pegawai</th>
+                        <th class="px-6 py-4 font-semibold">Tanggal</th>
+                        <th class="px-6 py-4 font-semibold text-center">Masuk</th>
+                        <th class="px-6 py-4 font-semibold text-center">Pulang</th>
+                        <th class="px-6 py-4 font-semibold text-center">Status</th>
+                        <th class="px-6 py-4 font-semibold text-center">Bukti</th>
+                    </tr>
+                </thead>
                 
-                {{-- Delete Modal --}}
-                <div id="deleteModal-{{ $attendance->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-red-50/50 dark:bg-red-900/10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
-                                    <span class="material-symbols-outlined">delete_forever</span>
+                <!-- Table Body -->
+                <tbody class="divide-y divide-outline-variant/20 dark:divide-[#2A3654]">
+                    @forelse($attendances as $attendance)
+                        <tr class="hover:bg-slate-50 dark:hover:bg-[#1D2847]/50 transition-colors cursor-pointer" onclick="openModal('editModal-{{ $attendance->id }}')">
+                            <!-- Employee -->
+                            <td class="px-6 py-3">
+                                <div class="flex items-center gap-3">
+                                    @if($attendance->employee->photo)
+                                        <img src="{{ asset('storage/' . $attendance->employee->photo) }}" alt="Photo" class="w-8 h-8 rounded-full border border-outline-variant/30 dark:border-[#2A3654] object-cover shrink-0">
+                                    @else
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#2A3654] text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs shrink-0 border border-outline-variant/30">
+                                            {{ strtoupper(substr($attendance->employee->name ?? '?', 0, 2)) }}
+                                        </div>
+                                    @endif
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="text-sm font-semibold text-on-surface dark:text-[#E8E6E0] truncate">{{ $attendance->employee->name ?? 'Unknown' }}</span>
+                                        <span class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $attendance->employee->nip ?? '-' }}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Hapus Riwayat Absensi</h3>
-                                    <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $attendance->employee->name ?? '-' }}</p>
+                            </td>
+                            
+                            <!-- Date -->
+                            <td class="px-6 py-3 text-sm text-on-surface-variant dark:text-[#8B93A8] whitespace-nowrap">
+                                {{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('d M Y') }}
+                            </td>
+                            
+                            <!-- Time In -->
+                            <td class="px-6 py-3 text-center">
+                                @if($attendance->check_in_time)
+                                    <span class="font-mono text-sm font-medium text-slate-700 dark:text-slate-300">{{ \Carbon\Carbon::parse($attendance->check_in_time)->format('H:i') }}</span>
+                                @else
+                                    <span class="font-mono text-outline font-light">-</span>
+                                @endif
+                            </td>
+                            
+                            <!-- Time Out -->
+                            <td class="px-6 py-3 text-center">
+                                @if($attendance->check_out_time)
+                                    <span class="font-mono text-sm font-medium text-slate-700 dark:text-slate-300">{{ \Carbon\Carbon::parse($attendance->check_out_time)->format('H:i') }}</span>
+                                @else
+                                    <span class="font-mono text-outline font-light">-</span>
+                                @endif
+                            </td>
+                            
+                            <!-- Status -->
+                            <td class="px-6 py-3 text-center">
+                                @if(!$attendance->check_out_time)
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs font-medium border border-amber-200/60 dark:border-amber-800/50">
+                                        Belum Pulang
+                                    </span>
+                                @elseif($attendance->check_in_status == 'late')
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-xs font-medium border border-red-200/60 dark:border-red-800/50">
+                                        Terlambat
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium border border-emerald-200/60 dark:border-emerald-800/50">
+                                        Tepat Waktu
+                                    </span>
+                                @endif
+                            </td>
+                            
+                            <!-- Proof Chips -->
+                            <td class="px-6 py-3 text-center">
+                                <button onclick="event.stopPropagation(); openModal('photoModal-{{ $attendance->id }}')" class="inline-flex items-center justify-center w-7 h-7 rounded bg-slate-50 dark:bg-[#0F172E] hover:bg-slate-200 dark:hover:bg-[#1D2847] border border-outline-variant/30 dark:border-[#2A3654] text-slate-500 dark:text-[#8B93A8] transition-colors tooltip" title="Lihat Foto">
+                                    <span class="material-symbols-outlined text-[16px]">photo_camera</span>
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-3">event_available</span>
+                                    <h3 class="font-medium text-sm text-slate-900 dark:text-slate-200">Tidak Ada Data</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Belum ada pegawai yang melakukan absensi pada rentang tanggal ini.</p>
                                 </div>
-                            </div>
-                            <button type="button" onclick="closeModal('deleteModal-{{ $attendance->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <form action="{{ route('attendances.destroy', $attendance->id) }}" method="POST" class="p-6">
-                            @csrf
-                            @method('DELETE')
-                            <div class="mb-6">
-                                <p class="text-sm text-on-surface dark:text-[#E8E6E0]">Apakah Anda yakin ingin menghapus riwayat absensi ini secara permanen? Data yang dihapus tidak dapat dikembalikan.</p>
-                            </div>
-                            <div class="flex justify-end gap-3 pt-2">
-                                <button type="button" onclick="closeModal('deleteModal-{{ $attendance->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
-                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold shadow-lg shadow-red-500/30 transition-all active:scale-95">Ya, Hapus Data</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Photo Modal -->
-                <div id="photoModal-{{ $attendance->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-4 border-b border-outline-variant/20 dark:border-[#2A3654]">
-                            <h3 class="font-bold text-on-surface dark:text-white">Bukti Foto Masuk</h3>
-                            <button onclick="closeModal('photoModal-{{ $attendance->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <div class="p-4 flex flex-col items-center bg-slate-50 dark:bg-[#0B1220]">
-                            @if($attendance->check_in_photo)
-                                <img src="{{ asset('storage/' . $attendance->check_in_photo) }}" alt="Foto Absen" class="w-full max-h-64 object-cover rounded-xl shadow-inner border border-outline-variant/20 dark:border-[#2A3654]">
-                            @else
-                                <div class="w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant/50 dark:border-[#2A3654] rounded-xl text-outline dark:text-[#5D6A85]">
-                                    <span class="material-symbols-outlined text-4xl mb-2 opacity-50">no_photography</span>
-                                    <span class="text-sm">Tidak ada foto terekam</span>
-                                </div>
-                            @endif
-                            <p class="text-xs text-on-surface-variant dark:text-[#8B93A8] mt-4 font-mono">Timestamp: {{ $attendance->check_in_time ?? '-' }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Edit Jam Pulang Modal -->
-                <div id="editModal-{{ $attendance->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
-                        <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-amber-50/50 dark:bg-amber-900/10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                                    <span class="material-symbols-outlined">pending_actions</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-on-surface dark:text-white text-lg">Input Jam Pulang Manual</h3>
-                                    <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $attendance->employee->name }}</p>
-                                </div>
-                            </div>
-                            <button onclick="closeModal('editModal-{{ $attendance->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-surface-container-low dark:hover:bg-[#0F172E]">
-                                <span class="material-symbols-outlined text-xl">close</span>
-                            </button>
-                        </div>
-                        <form action="#" method="POST" class="p-6" onsubmit="event.preventDefault(); alert('Demo: Data jam pulang berhasil disimpan secara instan via API!'); closeModal('editModal-{{ $attendance->id }}');">
-                            @csrf
-                            @method('PUT')
-                            <div class="mb-5">
-                                <label class="block text-sm font-semibold text-on-surface dark:text-[#E8E6E0] mb-2">Pilih Jam Pulang</label>
-                                <div class="relative">
-                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">schedule</span>
-                                    <input type="time" name="check_out_time" value="16:00" required class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-[#0F172E] border border-outline-variant/60 dark:border-[#2A3654] rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-on-surface dark:text-white font-mono text-lg">
-                                </div>
-                                <p class="text-xs text-on-surface-variant dark:text-[#5D6A85] mt-2 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">info</span>
-                                    Tindakan ini akan mem-bypass validasi lokasi dan foto.
-                                </p>
-                            </div>
-                            <div class="flex justify-end gap-3 pt-2">
-                                <button type="button" onclick="closeModal('editModal-{{ $attendance->id }}')" class="px-5 py-2.5 rounded-xl font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
-                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold shadow-lg shadow-amber-500/30 transition-all active:scale-95">Simpan Jam</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- End Modals -->
-
-            @empty
-                <div class="px-6 py-16 flex flex-col items-center justify-center text-center">
-                    <div class="w-24 h-24 bg-blue-50 dark:bg-blue-900/10 rounded-full flex items-center justify-center mb-4">
-                        <span class="material-symbols-outlined text-5xl text-blue-300 dark:text-blue-500/50">event_available</span>
-                    </div>
-                    <h3 class="font-bold text-lg text-on-surface dark:text-[#E8E6E0] mb-1">Rekap Kosong</h3>
-                    <p class="text-on-surface-variant dark:text-[#8B93A8] max-w-sm">Belum ada pegawai yang melakukan absensi pada rentang tanggal ini.</p>
-                </div>
-            @endforelse
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
         
         <!-- Pagination -->
@@ -400,6 +269,72 @@
         @endif
     </div>
 </div>
+
+{{-- Modals Container (Rendered outside table) --}}
+@foreach($attendances as $attendance)
+    <!-- Photo Modal -->
+    <div id="photoModal-{{ $attendance->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-sm rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-4 border-b border-outline-variant/20 dark:border-[#2A3654]">
+                <h3 class="font-bold text-on-surface dark:text-white">Bukti Foto Masuk</h3>
+                <button onclick="closeModal('photoModal-{{ $attendance->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-slate-100 dark:hover:bg-[#0F172E]">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <div class="p-4 flex flex-col items-center bg-slate-50 dark:bg-[#0B1220]">
+                @if($attendance->check_in_photo)
+                    <img src="{{ asset('storage/' . $attendance->check_in_photo) }}" alt="Foto Absen" class="w-full max-h-64 object-cover rounded-xl border border-outline-variant/20 dark:border-[#2A3654]">
+                @else
+                    <div class="w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant/50 dark:border-[#2A3654] rounded-xl text-outline dark:text-[#5D6A85]">
+                        <span class="material-symbols-outlined text-4xl mb-2 opacity-50">no_photography</span>
+                        <span class="text-sm">Tidak ada foto terekam</span>
+                    </div>
+                @endif
+                <p class="text-xs text-on-surface-variant dark:text-[#8B93A8] mt-4 font-mono">Timestamp: {{ $attendance->check_in_time ?? '-' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Jam Pulang Modal -->
+    <div id="editModal-{{ $attendance->id }}" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="modal-content-box bg-white dark:bg-[#141C33] w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 dark:border-[#2A3654]">
+            <div class="flex justify-between items-center p-5 border-b border-outline-variant/20 dark:border-[#2A3654] bg-amber-50/50 dark:bg-amber-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                        <span class="material-symbols-outlined">pending_actions</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface dark:text-white text-lg">Input Jam Pulang Manual</h3>
+                        <p class="text-xs text-on-surface-variant dark:text-[#8B93A8]">{{ $attendance->employee->name }}</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('editModal-{{ $attendance->id }}')" class="text-outline hover:text-error transition-colors rounded-full p-1 hover:bg-slate-100 dark:hover:bg-[#0F172E]">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            <form action="#" method="POST" class="p-6" onsubmit="event.preventDefault(); alert('Demo: Data jam pulang berhasil disimpan secara instan via API!'); closeModal('editModal-{{ $attendance->id }}');">
+                @csrf
+                @method('PUT')
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-on-surface dark:text-[#E8E6E0] mb-2">Pilih Jam Pulang</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">schedule</span>
+                        <input type="time" name="check_out_time" value="16:00" required class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-[#0F172E] border border-outline-variant/60 dark:border-[#2A3654] rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-on-surface dark:text-white font-mono text-lg">
+                    </div>
+                    <p class="text-xs text-on-surface-variant dark:text-[#5D6A85] mt-2 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">info</span>
+                        Tindakan ini akan mem-bypass validasi lokasi dan foto.
+                    </p>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('editModal-{{ $attendance->id }}')" class="px-5 py-2.5 rounded-lg font-semibold text-on-surface-variant dark:text-[#8B93A8] hover:bg-slate-100 dark:hover:bg-[#0F172E] transition-colors">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-medium shadow-sm transition-all active:scale-95">Simpan Jam</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endforeach
+
 @endsection
 
 @section('scripts')

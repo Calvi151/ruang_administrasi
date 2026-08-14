@@ -22,6 +22,8 @@ class DashboardController extends Controller
         $months = [];
         $monthlyIncomingData = [];
         $monthlyOutgoingData = [];
+        $monthlyLeaveData = [];
+        $monthlyOvertimeData = [];
 
         for ($i = 5; $i >= 0; $i--) {
             $dt = now()->subMonths($i);
@@ -33,10 +35,26 @@ class DashboardController extends Controller
             $outCount = \App\Models\OutgoingLetter::whereMonth('created_at', $dt->month)
                 ->whereYear('created_at', $dt->year)
                 ->count();
+            
+            $leaveCount = \App\Models\LeaveRequest::whereMonth('created_at', $dt->month)
+                ->whereYear('created_at', $dt->year)
+                ->count();
+                
+            $overtimeCount = \App\Models\OvertimeRequest::whereMonth('created_at', $dt->month)
+                ->whereYear('created_at', $dt->year)
+                ->count();
 
             $monthlyIncomingData[] = $inCount;
             $monthlyOutgoingData[] = $outCount;
+            $monthlyLeaveData[] = $leaveCount;
+            $monthlyOvertimeData[] = $overtimeCount;
         }
+
+        // HR Data Summary
+        $todayStr = now()->format('Y-m-d');
+        $attendanceToday = \App\Models\Attendance::where('date', $todayStr)->count();
+        $leavePending = \App\Models\LeaveRequest::where('status', 'pending')->count();
+        $overtimePending = \App\Models\OvertimeRequest::where('status', 'pending')->count();
 
         // Kategori surat per jenis (untuk donut chart)
         $categoryData = \App\Models\OutgoingLetter::selectRaw('letter_type_id, COUNT(*) as total')
@@ -53,7 +71,9 @@ class DashboardController extends Controller
             'totalIncoming', 'totalOutgoing',
             'outgoingPending', 'outgoingAcc', 'outgoingReject',
             'totalEmployees', 'recentOutgoing', 'recentIncoming',
-            'months', 'monthlyIncomingData', 'monthlyOutgoingData', 'categoryData'
+            'months', 'monthlyIncomingData', 'monthlyOutgoingData', 'categoryData',
+            'attendanceToday', 'leavePending', 'overtimePending',
+            'monthlyLeaveData', 'monthlyOvertimeData'
         ));
     }
 }
