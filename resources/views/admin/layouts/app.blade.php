@@ -401,7 +401,7 @@
 <body class="bg-background dark:bg-ds-bg text-on-surface dark:text-ds-text-primary font-body-md min-h-screen flex antialiased items-stretch selection:bg-primary-fixed selection:text-on-primary-fixed">
     
     <!-- SideNavBar (Administrative Authority: dark navy, amber active, border-l-4) -->
-    <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col bg-primary-container dark:bg-ds-sidebar border-r border-outline/10 dark:border-ds-border py-8 z-50">
+    <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col bg-primary-container dark:bg-ds-sidebar border-r border-outline/10 dark:border-ds-border py-8 z-50 rounded-r-[24px] shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden">
         <div class="px-6 mb-12 flex items-center gap-3">
             <!-- Tempat Logo -->
             <div class="w-12 h-12 rounded-lg bg-[#ffffff] shrink-0 flex items-center justify-center p-1 border border-outline-variant/20 shadow-sm overflow-hidden">
