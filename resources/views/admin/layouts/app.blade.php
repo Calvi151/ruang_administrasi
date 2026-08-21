@@ -401,7 +401,7 @@
 <body class="bg-background dark:bg-ds-bg text-on-surface dark:text-ds-text-primary font-body-md min-h-screen flex antialiased items-stretch selection:bg-primary-fixed selection:text-on-primary-fixed">
     
     <!-- SideNavBar (Administrative Authority: dark navy, amber active, border-l-4) -->
-    <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col bg-primary-container dark:bg-ds-sidebar border-r border-outline/10 dark:border-ds-border py-8 z-50 rounded-r-[24px] shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden">
+    <nav class="w-sidebar_width h-screen fixed left-0 top-0 hidden md:flex flex-col bg-primary-container dark:bg-ds-sidebar border-r border-outline/10 dark:border-ds-border py-8 z-50">
         <div class="px-6 mb-12 flex items-center gap-3">
             <!-- Tempat Logo -->
             <div class="w-12 h-12 rounded-lg bg-[#ffffff] shrink-0 flex items-center justify-center p-1 border border-outline-variant/20 shadow-sm overflow-hidden">
@@ -463,10 +463,7 @@
         
         <!-- Footer Nav -->
         <div class="mt-auto px-6 flex flex-col gap-1 border-t border-outline/10 dark:border-ds-border pt-4">
-            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 py-3 text-on-primary-container dark:text-[#94a3b8] transition-colors hover:text-on-primary dark:hover:text-ds-text-primary">
-                <span class="material-symbols-outlined">account_circle</span>
-                <span class="font-label-md text-label-md">Profil Saya</span>
-            </a>
+            <!-- Removed Profil Saya link -->
             <form action="{{ route('logout') }}" method="POST" style="width: 100%;">
                 @csrf
                 <button type="submit" class="w-full flex items-center gap-3 py-3 text-error dark:text-[#ff7070] transition-colors hover:text-on-primary dark:hover:text-ds-text-primary">
@@ -568,8 +565,12 @@
                 <!-- Separator -->
                 <div class="h-6 w-px bg-outline-variant/50 dark:bg-[#2A3654] mx-1"></div>
                 
-                <!-- Profile Squircle Avatar -->
-                <a href="{{ route('profile.edit') }}" title="Profil Saya" class="hover:scale-105 transition-transform ml-1 shrink-0">
+                <!-- Profile Avatar + Nama -->
+                <a href="{{ route('profile.edit') }}" title="Profil Saya" class="flex items-center gap-3 hover:bg-surface-container dark:hover:bg-[#1D2847] p-1.5 rounded-2xl transition-colors ml-1">
+                    <div class="hidden sm:block text-right pr-1">
+                        <div class="font-label-md text-[13px] text-on-surface dark:text-ds-text-primary leading-none font-bold">{{ Auth::user()->employee->name ?? Auth::user()->nip ?? 'Administrator' }}</div>
+                        <div class="font-body-md text-[10px] text-on-surface-variant dark:text-ds-text-secondary capitalize mt-1">{{ Auth::user()->role ?? 'Admin' }}</div>
+                    </div>
                     @if(Auth::user()->employee && Auth::user()->employee->photo)
                         <img alt="Profil Pengguna" class="w-10 h-10 shrink-0 rounded-2xl border border-outline-variant/30 dark:border-[#2A3654] object-cover shadow-sm" src="{{ asset('storage/' . Auth::user()->employee->photo) }}">
                     @else
