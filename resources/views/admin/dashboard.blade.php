@@ -7,7 +7,7 @@
 <!-- Header Section (Editorial Greeting) -->
 <section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-component-gap">
     <div>
-        <h2 class="font-display-lg text-display-lg text-primary dark:text-ds-text-primary tracking-tight">Selamat {{ now()->hour < 1 ? 'pagi' : (now()->hour < 15 ? 'siang' : (now()->hour < 18 ? 'sore' : 'malam')) }}, {{ Auth::user()->employee->name ?? 'Admin' }}.</h2>
+        <h2 class="font-display-lg text-display-lg text-primary dark:text-ds-text-primary tracking-tight">Selamat {{ now()->hour < 10 ? 'pagi' : (now()->hour < 14 ? 'siang' : (now()->hour < 18 ? 'sore' : 'malam')) }}, {{ Auth::user()->employee->name ?? 'Admin' }}.</h2>
         <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-ds-text-secondary mt-4 max-w-2xl">Ringkasan aktivitas persuratan dan kegiatan anda hari ini. Pastikan untuk meninjau dokumen yang memerlukan persetujuan segera.</p>
     </div>
     <!-- Summary Card -->
